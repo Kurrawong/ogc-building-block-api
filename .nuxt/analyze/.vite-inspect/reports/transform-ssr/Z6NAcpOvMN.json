@@ -1,0 +1,258 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/helpers/str.ts",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import type { HeaderLink } from '~/lib/prez.d'\nimport mustache, { render } from 'mustache';\nimport { constants, type OverrideTexts, type Texts } from '~/constants'\nimport overrides from '~/constantsOverride'\n\nexport function isURI(str: string): boolean {\n  try {\n    new URL(str);\n    return true;\n  } catch (ex) {\n    return false;\n  }\n}\n\n// tests if any uppercase char exists in a string\nexport function containsUppercase(input: string): boolean {\n  const regex = /[A-Z\\p{Lu}]/u;\n  return regex.test(input);\n}\n\n// tests if an uppercase char appears in a word that has at least one lowercase char, e.g. version IRI, returns false\nexport function containsUppercaseInWord(input: string): boolean {\n  // Define a regular expression to match words with at least one lowercase letter\n  const wordWithLowercaseRegex = /\\b[a-z\\p{Ll}]+\\b/u;\n\n  // Find all words that match the regular expression\n  const wordsWithLowercase = input.match(wordWithLowercaseRegex);\n\n  if (wordsWithLowercase) {\n    // Check if any of the matched words contain an uppercase letter\n    for (const word of wordsWithLowercase) {\n      if (/[A-Z\\p{Lu}]/u.test(word)) {\n        return true; // Found an uppercase letter in a word with lowercase\n      }\n    }\n  }\n\n  return false; // No uppercase letter in a word with lowercase\n}\n\nexport function capitalizeFirstLetterIfNoUpperCase(input: string): string {\n  if (containsUppercaseInWord(input)) {\n    return input;\n  } else {\n    return input.charAt(0).toUpperCase() + input.slice(1);\n  }\n}\n\nexport function getDefaultLabelFromURIOrString(uriOrStr: string): string {\n  return uriOrStr;\n  let name = '';\n  try {\n    const urlObject = new URL(uriOrStr);\n    // Check if there is a fragment identifier\n    if (urlObject.hash) {\n      name = urlObject.hash.substring(1).trim(); // Remove the \"#\" symbol\n    }\n    if(name == '') {\n      const pathSegments = urlObject.pathname.split('/').filter(segment => segment !== '');\n      if (pathSegments.length > 0) {\n        name = pathSegments[pathSegments.length - 1];\n      }\n    }\n    if(name == '') {\n      return uriOrStr;\n    }\n  } catch (ex) {\n    name = uriOrStr;\n  }\n  return capitalizeFirstLetterIfNoUpperCase(name);\n}\n\nexport function parseLinkHeader(headerString: string): HeaderLink[] {\n  const headersArray: HeaderLink[] = [];\n\n  if(typeof(headerString) != 'string') {\n    return [];\n  }\n\n  // Split the string by commas and process each header\n  headerString.split(',').forEach(header => {\n    // Extract URI and components\n    const [uri, ...components] = header.split(';').map(item => item.trim());\n\n    // Create an object for the header and set its main key\n    const headerObject: HeaderLink = { iri: uri.replace(/[<>]/g, '') };\n\n    // Process components into key-value pairs\n    components.forEach(component => {\n      const [key, value] = component.split('=');\n      const trimmedKey = key.trim();\n      const trimmedValue = value.replace(/[\"<>]/g, '').trim();\n\n      // Check if the property exists on the object type before setting\n      headerObject[trimmedKey] = trimmedValue;\n    });\n\n    // Store the header object in the array\n    headersArray.push(headerObject);\n  });\n\n  return headersArray;\n}\n\ninterface NestedObject {\n  [key: string]: any;//NestedObject | string | number | boolean | null | Array<any>;\n};\n\nexport const template = (templateString:string, obj:NestedObject) => {\n  const replacedTemplate = templateString.replace(/{{(.*?)}}/g, (match, p1) => {\n    // Replace colons with double underscores within {{ }}\n    const replaced = p1.replace(/:/g, '__');\n    return `{{${replaced}}}`;\n  });\n  return mustache.render(replacedTemplate, transformKeysForMustache(obj));\n};\n\n\nconst transformKeysForMustache = (obj: NestedObject): NestedObject => {\n  const transformedObj: NestedObject = {};\n\n  for (const key in obj) {\n    if (Object.prototype.hasOwnProperty.call(obj, key)) {\n      const value = obj[key];\n\n      // Recursively transform nested objects\n      if (value !== null && typeof value === 'object') {\n        transformedObj[key.replace(/:/g, '__')] = transformKeysForMustache(value as NestedObject);\n      } else {\n        transformedObj[key.replace(/:/g, '__')] = value;\n      }\n    }\n  }\n  transformedObj._debug = Object.keys(transformedObj).map(key=>key.replace('__', ':'));\n  return transformedObj;\n};\n\nexport function tpl(key: Texts, data?: any): string {\n  const str = constants.includes(key)\n    ? key in overrides ? overrides[key]! : key : `\"${key}\" not found`;\n  return (data !== undefined ? template(str, data) : str.replace(/{{\\!.+}}/g, ''));\n}\n",
+      "start": 1701229714176,
+      "end": 1701229715294,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229715294,
+      "end": 1701229715294,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import mustache from \"mustache\";\nimport { constants } from \"~/constants\";\nimport overrides from \"~/constantsOverride\";\nexport function isURI(str) {\n  try {\n    new URL(str);\n    return true;\n  } catch (ex) {\n    return false;\n  }\n}\nexport function containsUppercase(input) {\n  const regex = /[A-Z\\p{Lu}]/u;\n  return regex.test(input);\n}\nexport function containsUppercaseInWord(input) {\n  const wordWithLowercaseRegex = /\\b[a-z\\p{Ll}]+\\b/u;\n  const wordsWithLowercase = input.match(wordWithLowercaseRegex);\n  if (wordsWithLowercase) {\n    for (const word of wordsWithLowercase) {\n      if (/[A-Z\\p{Lu}]/u.test(word)) {\n        return true;\n      }\n    }\n  }\n  return false;\n}\nexport function capitalizeFirstLetterIfNoUpperCase(input) {\n  if (containsUppercaseInWord(input)) {\n    return input;\n  } else {\n    return input.charAt(0).toUpperCase() + input.slice(1);\n  }\n}\nexport function getDefaultLabelFromURIOrString(uriOrStr) {\n  return uriOrStr;\n  let name = \"\";\n  try {\n    const urlObject = new URL(uriOrStr);\n    if (urlObject.hash) {\n      name = urlObject.hash.substring(1).trim();\n    }\n    if (name == \"\") {\n      const pathSegments = urlObject.pathname.split(\"/\").filter((segment) => segment !== \"\");\n      if (pathSegments.length > 0) {\n        name = pathSegments[pathSegments.length - 1];\n      }\n    }\n    if (name == \"\") {\n      return uriOrStr;\n    }\n  } catch (ex) {\n    name = uriOrStr;\n  }\n  return capitalizeFirstLetterIfNoUpperCase(name);\n}\nexport function parseLinkHeader(headerString) {\n  const headersArray = [];\n  if (typeof headerString != \"string\") {\n    return [];\n  }\n  headerString.split(\",\").forEach((header) => {\n    const [uri, ...components] = header.split(\";\").map((item) => item.trim());\n    const headerObject = { iri: uri.replace(/[<>]/g, \"\") };\n    components.forEach((component) => {\n      const [key, value] = component.split(\"=\");\n      const trimmedKey = key.trim();\n      const trimmedValue = value.replace(/[\"<>]/g, \"\").trim();\n      headerObject[trimmedKey] = trimmedValue;\n    });\n    headersArray.push(headerObject);\n  });\n  return headersArray;\n}\n;\nexport const template = (templateString, obj) => {\n  const replacedTemplate = templateString.replace(/{{(.*?)}}/g, (match, p1) => {\n    const replaced = p1.replace(/:/g, \"__\");\n    return `{{${replaced}}}`;\n  });\n  return mustache.render(replacedTemplate, transformKeysForMustache(obj));\n};\nconst transformKeysForMustache = (obj) => {\n  const transformedObj = {};\n  for (const key in obj) {\n    if (Object.prototype.hasOwnProperty.call(obj, key)) {\n      const value = obj[key];\n      if (value !== null && typeof value === \"object\") {\n        transformedObj[key.replace(/:/g, \"__\")] = transformKeysForMustache(value);\n      } else {\n        transformedObj[key.replace(/:/g, \"__\")] = value;\n      }\n    }\n  }\n  transformedObj._debug = Object.keys(transformedObj).map((key) => key.replace(\"__\", \":\"));\n  return transformedObj;\n};\nexport function tpl(key, data) {\n  const str = constants.includes(key) ? key in overrides ? overrides[key] : key : `\"${key}\" not found`;\n  return data !== void 0 ? template(str, data) : str.replace(/{{\\!.+}}/g, \"\");\n}\n",
+      "start": 1701229715294,
+      "end": 1701229715323,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/helpers/str.ts"
+        ],
+        "sourcesContent": [
+          "import type { HeaderLink } from '~/lib/prez.d'\nimport mustache, { render } from 'mustache';\nimport { constants, type OverrideTexts, type Texts } from '~/constants'\nimport overrides from '~/constantsOverride'\n\nexport function isURI(str: string): boolean {\n  try {\n    new URL(str);\n    return true;\n  } catch (ex) {\n    return false;\n  }\n}\n\n// tests if any uppercase char exists in a string\nexport function containsUppercase(input: string): boolean {\n  const regex = /[A-Z\\p{Lu}]/u;\n  return regex.test(input);\n}\n\n// tests if an uppercase char appears in a word that has at least one lowercase char, e.g. version IRI, returns false\nexport function containsUppercaseInWord(input: string): boolean {\n  // Define a regular expression to match words with at least one lowercase letter\n  const wordWithLowercaseRegex = /\\b[a-z\\p{Ll}]+\\b/u;\n\n  // Find all words that match the regular expression\n  const wordsWithLowercase = input.match(wordWithLowercaseRegex);\n\n  if (wordsWithLowercase) {\n    // Check if any of the matched words contain an uppercase letter\n    for (const word of wordsWithLowercase) {\n      if (/[A-Z\\p{Lu}]/u.test(word)) {\n        return true; // Found an uppercase letter in a word with lowercase\n      }\n    }\n  }\n\n  return false; // No uppercase letter in a word with lowercase\n}\n\nexport function capitalizeFirstLetterIfNoUpperCase(input: string): string {\n  if (containsUppercaseInWord(input)) {\n    return input;\n  } else {\n    return input.charAt(0).toUpperCase() + input.slice(1);\n  }\n}\n\nexport function getDefaultLabelFromURIOrString(uriOrStr: string): string {\n  return uriOrStr;\n  let name = '';\n  try {\n    const urlObject = new URL(uriOrStr);\n    // Check if there is a fragment identifier\n    if (urlObject.hash) {\n      name = urlObject.hash.substring(1).trim(); // Remove the \"#\" symbol\n    }\n    if(name == '') {\n      const pathSegments = urlObject.pathname.split('/').filter(segment => segment !== '');\n      if (pathSegments.length > 0) {\n        name = pathSegments[pathSegments.length - 1];\n      }\n    }\n    if(name == '') {\n      return uriOrStr;\n    }\n  } catch (ex) {\n    name = uriOrStr;\n  }\n  return capitalizeFirstLetterIfNoUpperCase(name);\n}\n\nexport function parseLinkHeader(headerString: string): HeaderLink[] {\n  const headersArray: HeaderLink[] = [];\n\n  if(typeof(headerString) != 'string') {\n    return [];\n  }\n\n  // Split the string by commas and process each header\n  headerString.split(',').forEach(header => {\n    // Extract URI and components\n    const [uri, ...components] = header.split(';').map(item => item.trim());\n\n    // Create an object for the header and set its main key\n    const headerObject: HeaderLink = { iri: uri.replace(/[<>]/g, '') };\n\n    // Process components into key-value pairs\n    components.forEach(component => {\n      const [key, value] = component.split('=');\n      const trimmedKey = key.trim();\n      const trimmedValue = value.replace(/[\"<>]/g, '').trim();\n\n      // Check if the property exists on the object type before setting\n      headerObject[trimmedKey] = trimmedValue;\n    });\n\n    // Store the header object in the array\n    headersArray.push(headerObject);\n  });\n\n  return headersArray;\n}\n\ninterface NestedObject {\n  [key: string]: any;//NestedObject | string | number | boolean | null | Array<any>;\n};\n\nexport const template = (templateString:string, obj:NestedObject) => {\n  const replacedTemplate = templateString.replace(/{{(.*?)}}/g, (match, p1) => {\n    // Replace colons with double underscores within {{ }}\n    const replaced = p1.replace(/:/g, '__');\n    return `{{${replaced}}}`;\n  });\n  return mustache.render(replacedTemplate, transformKeysForMustache(obj));\n};\n\n\nconst transformKeysForMustache = (obj: NestedObject): NestedObject => {\n  const transformedObj: NestedObject = {};\n\n  for (const key in obj) {\n    if (Object.prototype.hasOwnProperty.call(obj, key)) {\n      const value = obj[key];\n\n      // Recursively transform nested objects\n      if (value !== null && typeof value === 'object') {\n        transformedObj[key.replace(/:/g, '__')] = transformKeysForMustache(value as NestedObject);\n      } else {\n        transformedObj[key.replace(/:/g, '__')] = value;\n      }\n    }\n  }\n  transformedObj._debug = Object.keys(transformedObj).map(key=>key.replace('__', ':'));\n  return transformedObj;\n};\n\nexport function tpl(key: Texts, data?: any): string {\n  const str = constants.includes(key)\n    ? key in overrides ? overrides[key]! : key : `\"${key}\" not found`;\n  return (data !== undefined ? template(str, data) : str.replace(/{{\\!.+}}/g, ''));\n}\n"
+        ],
+        "mappings": "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",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715323,
+      "end": 1701229715323,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715323,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715323,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229715324,
+      "end": 1701229715324,
+      "order": "normal"
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/state.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "'use strict'\n\nconst { MathFloor, NumberIsInteger } = require('../../ours/primordials')\nconst { ERR_INVALID_ARG_VALUE } = require('../../ours/errors').codes\nfunction highWaterMarkFrom(options, isDuplex, duplexKey) {\n  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null\n}\nfunction getDefaultHighWaterMark(objectMode) {\n  return objectMode ? 16 : 16 * 1024\n}\nfunction getHighWaterMark(state, options, duplexKey, isDuplex) {\n  const hwm = highWaterMarkFrom(options, isDuplex, duplexKey)\n  if (hwm != null) {\n    if (!NumberIsInteger(hwm) || hwm < 0) {\n      const name = isDuplex ? `options.${duplexKey}` : 'options.highWaterMark'\n      throw new ERR_INVALID_ARG_VALUE(name, hwm)\n    }\n    return MathFloor(hwm)\n  }\n\n  // Default value\n  return getDefaultHighWaterMark(state.objectMode)\n}\nmodule.exports = {\n  getHighWaterMark,\n  getDefaultHighWaterMark\n}\n",
+      "start": 1701229710973,
+      "end": 1701229711023,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229711023,
+      "end": 1701229711023,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\n\n'use strict'\n\nconst { MathFloor, NumberIsInteger } = require$$0\nconst { ERR_INVALID_ARG_VALUE } = require$$1.codes\nfunction highWaterMarkFrom(options, isDuplex, duplexKey) {\n  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null\n}\nfunction getDefaultHighWaterMark(objectMode) {\n  return objectMode ? 16 : 16 * 1024\n}\nfunction getHighWaterMark(state, options, duplexKey, isDuplex) {\n  const hwm = highWaterMarkFrom(options, isDuplex, duplexKey)\n  if (hwm != null) {\n    if (!NumberIsInteger(hwm) || hwm < 0) {\n      const name = isDuplex ? `options.${duplexKey}` : 'options.highWaterMark'\n      throw new ERR_INVALID_ARG_VALUE(name, hwm)\n    }\n    return MathFloor(hwm)\n  }\n\n  // Default value\n  return getDefaultHighWaterMark(state.objectMode)\n}\nvar state = {\n  getHighWaterMark,\n  getDefaultHighWaterMark\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(state);\nexport { state as __moduleExports };",
+      "start": 1701229711023,
+      "end": 1701229711024,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "file": null,
+        "sources": [
+          null
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "names": [],
+        "mappings": ";;;;AAAA,YAAY;AACZ;AACA,MAAM,EAAE,SAAS,EAAE,eAAe,EAAE,GAAG,UAAiC;AACxE,MAAM,EAAE,qBAAqB,EAAE,GAAG,UAA4B,CAAC,KAAK;AACpE,SAAS,iBAAiB,CAAC,OAAO,EAAE,QAAQ,EAAE,SAAS,EAAE;AACzD,EAAE,OAAO,OAAO,CAAC,aAAa,IAAI,IAAI,GAAG,OAAO,CAAC,aAAa,GAAG,QAAQ,GAAG,OAAO,CAAC,SAAS,CAAC,GAAG,IAAI;AACrG,CAAC;AACD,SAAS,uBAAuB,CAAC,UAAU,EAAE;AAC7C,EAAE,OAAO,UAAU,GAAG,EAAE,GAAG,EAAE,GAAG,IAAI;AACpC,CAAC;AACD,SAAS,gBAAgB,CAAC,KAAK,EAAE,OAAO,EAAE,SAAS,EAAE,QAAQ,EAAE;AAC/D,EAAE,MAAM,GAAG,GAAG,iBAAiB,CAAC,OAAO,EAAE,QAAQ,EAAE,SAAS,CAAC;AAC7D,EAAE,IAAI,GAAG,IAAI,IAAI,EAAE;AACnB,IAAI,IAAI,CAAC,eAAe,CAAC,GAAG,CAAC,IAAI,GAAG,GAAG,CAAC,EAAE;AAC1C,MAAM,MAAM,IAAI,GAAG,QAAQ,GAAG,CAAC,QAAQ,EAAE,SAAS,CAAC,CAAC,GAAG,uBAAuB;AAC9E,MAAM,MAAM,IAAI,qBAAqB,CAAC,IAAI,EAAE,GAAG,CAAC;AAChD,KAAK;AACL,IAAI,OAAO,SAAS,CAAC,GAAG,CAAC;AACzB,GAAG;AACH;AACA;AACA,EAAE,OAAO,uBAAuB,CAAC,KAAK,CAAC,UAAU,CAAC;AAClD,CAAC;IACD,KAAc,GAAG;AACjB,EAAE,gBAAgB;AAClB,EAAE,uBAAuB;AACzB"
+      }
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229711024,
+      "end": 1701229711024,
+      "order": "normal"
+    }
+  ]
+}

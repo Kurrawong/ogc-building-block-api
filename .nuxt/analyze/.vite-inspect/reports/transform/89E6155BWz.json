@@ -1,0 +1,223 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "'use strict'\n\nconst bufferModule = require('buffer')\nconst AsyncFunction = Object.getPrototypeOf(async function () {}).constructor\nconst Blob = globalThis.Blob || bufferModule.Blob\n/* eslint-disable indent */\nconst isBlob =\n  typeof Blob !== 'undefined'\n    ? function isBlob(b) {\n        // eslint-disable-next-line indent\n        return b instanceof Blob\n      }\n    : function isBlob(b) {\n        return false\n      }\n/* eslint-enable indent */\n\n// This is a simplified version of AggregateError\nclass AggregateError extends Error {\n  constructor(errors) {\n    if (!Array.isArray(errors)) {\n      throw new TypeError(`Expected input to be an Array, got ${typeof errors}`)\n    }\n    let message = ''\n    for (let i = 0; i < errors.length; i++) {\n      message += `    ${errors[i].stack}\\n`\n    }\n    super(message)\n    this.name = 'AggregateError'\n    this.errors = errors\n  }\n}\nmodule.exports = {\n  AggregateError,\n  kEmptyObject: Object.freeze({}),\n  once(callback) {\n    let called = false\n    return function (...args) {\n      if (called) {\n        return\n      }\n      called = true\n      callback.apply(this, args)\n    }\n  },\n  createDeferredPromise: function () {\n    let resolve\n    let reject\n\n    // eslint-disable-next-line promise/param-names\n    const promise = new Promise((res, rej) => {\n      resolve = res\n      reject = rej\n    })\n    return {\n      promise,\n      resolve,\n      reject\n    }\n  },\n  promisify(fn) {\n    return new Promise((resolve, reject) => {\n      fn((err, ...args) => {\n        if (err) {\n          return reject(err)\n        }\n        return resolve(...args)\n      })\n    })\n  },\n  debuglog() {\n    return function () {}\n  },\n  format(format, ...args) {\n    // Simplified version of https://nodejs.org/api/util.html#utilformatformat-args\n    return format.replace(/%([sdifj])/g, function (...[_unused, type]) {\n      const replacement = args.shift()\n      if (type === 'f') {\n        return replacement.toFixed(6)\n      } else if (type === 'j') {\n        return JSON.stringify(replacement)\n      } else if (type === 's' && typeof replacement === 'object') {\n        const ctor = replacement.constructor !== Object ? replacement.constructor.name : ''\n        return `${ctor} {}`.trim()\n      } else {\n        return replacement.toString()\n      }\n    })\n  },\n  inspect(value) {\n    // Vastly simplified version of https://nodejs.org/api/util.html#utilinspectobject-options\n    switch (typeof value) {\n      case 'string':\n        if (value.includes(\"'\")) {\n          if (!value.includes('\"')) {\n            return `\"${value}\"`\n          } else if (!value.includes('`') && !value.includes('${')) {\n            return `\\`${value}\\``\n          }\n        }\n        return `'${value}'`\n      case 'number':\n        if (isNaN(value)) {\n          return 'NaN'\n        } else if (Object.is(value, -0)) {\n          return String(value)\n        }\n        return value\n      case 'bigint':\n        return `${String(value)}n`\n      case 'boolean':\n      case 'undefined':\n        return String(value)\n      case 'object':\n        return '{}'\n    }\n  },\n  types: {\n    isAsyncFunction(fn) {\n      return fn instanceof AsyncFunction\n    },\n    isArrayBufferView(arr) {\n      return ArrayBuffer.isView(arr)\n    }\n  },\n  isBlob\n}\nmodule.exports.promisify.custom = Symbol.for('nodejs.util.promisify.custom')\n",
+      "start": 1701229710906,
+      "end": 1701229710932,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229710932,
+      "end": 1701229710932,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229710932,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229710933,
+      "end": 1701229710933,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport { __module as utilModule } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js?commonjs-module\";\nvar util = utilModule.exports;\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/buffer/index.js?commonjs-proxy\";\n\n(function (module) {\n\t'use strict'\n\n\tconst bufferModule = require$$0\n\tconst AsyncFunction = Object.getPrototypeOf(async function () {}).constructor\n\tconst Blob = globalThis.Blob || bufferModule.Blob\n\t/* eslint-disable indent */\n\tconst isBlob =\n\t  typeof Blob !== 'undefined'\n\t    ? function isBlob(b) {\n\t        // eslint-disable-next-line indent\n\t        return b instanceof Blob\n\t      }\n\t    : function isBlob(b) {\n\t        return false\n\t      }\n\t/* eslint-enable indent */\n\n\t// This is a simplified version of AggregateError\n\tclass AggregateError extends Error {\n\t  constructor(errors) {\n\t    if (!Array.isArray(errors)) {\n\t      throw new TypeError(`Expected input to be an Array, got ${typeof errors}`)\n\t    }\n\t    let message = ''\n\t    for (let i = 0; i < errors.length; i++) {\n\t      message += `    ${errors[i].stack}\\n`\n\t    }\n\t    super(message)\n\t    this.name = 'AggregateError'\n\t    this.errors = errors\n\t  }\n\t}\n\tmodule.exports = {\n\t  AggregateError,\n\t  kEmptyObject: Object.freeze({}),\n\t  once(callback) {\n\t    let called = false\n\t    return function (...args) {\n\t      if (called) {\n\t        return\n\t      }\n\t      called = true\n\t      callback.apply(this, args)\n\t    }\n\t  },\n\t  createDeferredPromise: function () {\n\t    let resolve\n\t    let reject\n\n\t    // eslint-disable-next-line promise/param-names\n\t    const promise = new Promise((res, rej) => {\n\t      resolve = res\n\t      reject = rej\n\t    })\n\t    return {\n\t      promise,\n\t      resolve,\n\t      reject\n\t    }\n\t  },\n\t  promisify(fn) {\n\t    return new Promise((resolve, reject) => {\n\t      fn((err, ...args) => {\n\t        if (err) {\n\t          return reject(err)\n\t        }\n\t        return resolve(...args)\n\t      })\n\t    })\n\t  },\n\t  debuglog() {\n\t    return function () {}\n\t  },\n\t  format(format, ...args) {\n\t    // Simplified version of https://nodejs.org/api/util.html#utilformatformat-args\n\t    return format.replace(/%([sdifj])/g, function (...[_unused, type]) {\n\t      const replacement = args.shift()\n\t      if (type === 'f') {\n\t        return replacement.toFixed(6)\n\t      } else if (type === 'j') {\n\t        return JSON.stringify(replacement)\n\t      } else if (type === 's' && typeof replacement === 'object') {\n\t        const ctor = replacement.constructor !== Object ? replacement.constructor.name : ''\n\t        return `${ctor} {}`.trim()\n\t      } else {\n\t        return replacement.toString()\n\t      }\n\t    })\n\t  },\n\t  inspect(value) {\n\t    // Vastly simplified version of https://nodejs.org/api/util.html#utilinspectobject-options\n\t    switch (typeof value) {\n\t      case 'string':\n\t        if (value.includes(\"'\")) {\n\t          if (!value.includes('\"')) {\n\t            return `\"${value}\"`\n\t          } else if (!value.includes('`') && !value.includes('${')) {\n\t            return `\\`${value}\\``\n\t          }\n\t        }\n\t        return `'${value}'`\n\t      case 'number':\n\t        if (isNaN(value)) {\n\t          return 'NaN'\n\t        } else if (Object.is(value, -0)) {\n\t          return String(value)\n\t        }\n\t        return value\n\t      case 'bigint':\n\t        return `${String(value)}n`\n\t      case 'boolean':\n\t      case 'undefined':\n\t        return String(value)\n\t      case 'object':\n\t        return '{}'\n\t    }\n\t  },\n\t  types: {\n\t    isAsyncFunction(fn) {\n\t      return fn instanceof AsyncFunction\n\t    },\n\t    isArrayBufferView(arr) {\n\t      return ArrayBuffer.isView(arr)\n\t    }\n\t  },\n\t  isBlob\n\t}\n\tmodule.exports.promisify.custom = Symbol.for('nodejs.util.promisify.custom') \n} (utilModule));\n\nvar utilExports = utilModule.exports;\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(utilExports);\nexport { utilExports as __moduleExports };",
+      "start": 1701229710933,
+      "end": 1701229711005,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "file": null,
+        "sources": [
+          null
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "names": [],
+        "mappings": "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"
+      }
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229711005,
+      "end": 1701229711005,
+      "order": "normal"
+    }
+  ]
+}

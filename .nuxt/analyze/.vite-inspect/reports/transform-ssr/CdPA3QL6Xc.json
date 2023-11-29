@@ -1,0 +1,288 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue?vue&type=style&index=0&scoped=4736a2b8&lang.css",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "\n.v-breadcrumbs {\n    font-size:14pt;\n    padding-left:0;\n}\n",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue"
+        ],
+        "names": [],
+        "mappings": ";AAgBA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE;IACX,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;IACd,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAClB",
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue",
+        "sourceRoot": "",
+        "sourcesContent": [
+          "<script setup lang=\"ts\">\ntype BreadcrumbItem = {\n    title: string,\n    href?: string,\n    to?: string,\n    disabled?: boolean\n}\nconst props = defineProps<{items: BreadcrumbItem[]}>();\n</script>\n<template>\n    <v-breadcrumbs\n        :items=\"items\"\n    >\n    </v-breadcrumbs>\n</template>\n<style scoped>\n.v-breadcrumbs {\n    font-size:14pt;\n    padding-left:0;\n}\n</style>\n"
+        ]
+      }
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229715367,
+      "end": 1701229715367,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "result": ".v-breadcrumbs{font-size:14pt;padding-left:0}",
+      "start": 1701229715367,
+      "end": 1701229715369,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue",
+        "mappings": "AACA,eACI,cAAc,CACd,cACJ",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue"
+        ],
+        "sourcesContent": [
+          "\n.v-breadcrumbs {\n    font-size:14pt;\n    padding-left:0;\n}\n"
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229715369,
+      "end": 1701229715369,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229715369,
+      "end": 1701229715369,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229715369,
+      "end": 1701229715369,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": ".v-breadcrumbs[data-v-4736a2b8]{font-size:14pt;padding-left:0}",
+      "start": 1701229715369,
+      "end": 1701229715370,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue",
+        "mappings": "AAAA,gCAAe,cAAc,CAAC,cAAc",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue"
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "result": "export default ''",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229715370,
+      "end": 1701229715370,
+      "order": "normal"
+    }
+  ]
+}

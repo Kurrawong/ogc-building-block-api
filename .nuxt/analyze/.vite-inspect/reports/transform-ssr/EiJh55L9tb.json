@@ -1,0 +1,288 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue?vue&type=style&index=0&scoped=c0694020&lang.css",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "\n.v-btn {\n    text-transform: unset !important;\n    color:white;\n}\n\n",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue"
+        ],
+        "names": [],
+        "mappings": ";AAUA,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE;IACH,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;IAChC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACf",
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue",
+        "sourceRoot": "",
+        "sourcesContent": [
+          "<script setup lang=\"ts\">\nimport type { Form } from '~/lib/prez.d';\nconst props = defineProps<{info: any, form:Form}>();\n</script>\n\n<template>\n    <v-btn :to=\"info[0].fields['prez:link']\">View Members</v-btn>\n</template>\n\n<style scoped>\n.v-btn {\n    text-transform: unset !important;\n    color:white;\n}\n\n</style>"
+        ]
+      }
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229716004,
+      "end": 1701229716004,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "result": ".v-btn{color:#fff;text-transform:unset!important}",
+      "start": 1701229716004,
+      "end": 1701229716005,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue",
+        "mappings": "AACA,OAEI,UAAW,CADX,8BAEJ",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue"
+        ],
+        "sourcesContent": [
+          "\n.v-btn {\n    text-transform: unset !important;\n    color:white;\n}\n\n"
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": ".v-btn[data-v-c0694020]{color:#fff;text-transform:unset!important}",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue",
+        "mappings": "AAAA,wBAAO,UAAU,CAAC,8BAA8B",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/prez:members.vue"
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229716005,
+      "end": 1701229716005,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "result": "export default ''",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229716006,
+      "end": 1701229716006,
+      "order": "normal"
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/index.vue?vue&type=script&setup=true&lang.ts",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveDynamicComponent as _resolveDynamicComponent, openBlock as _openBlock, createBlock as _createBlock } from \"vue\"\n\nimport type { Form } from '~/lib/prez.d';\nimport registry from './registry';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'index',\n  props: {\n    fieldName: {},\n    form: {},\n    info: {}\n  },\n  setup(__props: any) {\n\n\nconst props = __props;\n\n\nreturn (_ctx: any,_cache: any) => {\n  return (_openBlock(), _createBlock(_resolveDynamicComponent(_unref(registry)[_ctx.fieldName]), {\n    info: _ctx.info,\n    form: _ctx.form\n  }, null, 8, [\"info\", \"form\"]))\n}\n}\n\n})",
+      "start": 1701229711007,
+      "end": 1701229711007
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229711007,
+      "end": 1701229711007,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229711007,
+      "end": 1701229711007,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229711007,
+      "end": 1701229711007,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229711007,
+      "end": 1701229711007,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveDynamicComponent as _resolveDynamicComponent, openBlock as _openBlock, createBlock as _createBlock } from \"vue\";\nimport registry from \"./registry\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  props: {\n    fieldName: {},\n    form: {},\n    info: {}\n  },\n  setup(__props) {\n    const props = __props;\n    return (_ctx, _cache) => {\n      return _openBlock(), _createBlock(_resolveDynamicComponent(_unref(registry)[_ctx.fieldName]), {\n        info: _ctx.info,\n        form: _ctx.form\n      }, null, 8, [\"info\", \"form\"]);\n    };\n  }\n});\n",
+      "start": 1701229711007,
+      "end": 1701229711041,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/index.vue?vue&type=script&setup=true&lang.ts"
+        ],
+        "sourcesContent": [
+          "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveDynamicComponent as _resolveDynamicComponent, openBlock as _openBlock, createBlock as _createBlock } from \"vue\"\n\nimport type { Form } from '~/lib/prez.d';\nimport registry from './registry';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'index',\n  props: {\n    fieldName: {},\n    form: {},\n    info: {}\n  },\n  setup(__props: any) {\n\n\nconst props = __props;\n\n\nreturn (_ctx: any,_cache: any) => {\n  return (_openBlock(), _createBlock(_resolveDynamicComponent(_unref(registry)[_ctx.fieldName]), {\n    info: _ctx.info,\n    form: _ctx.form\n  }, null, 8, [\"info\", \"form\"]))\n}\n}\n\n})"
+        ],
+        "mappings": "AAAA,SAAS,mBAAmB,wBAAwB;AACpD,SAAS,SAAS,QAAQ,2BAA2B,0BAA0B,aAAa,YAAY,eAAe,oBAAoB;AAG3I,OAAO,cAAc;AAErB,eAA4B,iCAAiB;AAAA,EAC3C,QAAQ;AAAA,EACR,OAAO;AAAA,IACL,WAAW,CAAC;AAAA,IACZ,MAAM,CAAC;AAAA,IACP,MAAM,CAAC;AAAA,EACT;AAAA,EACA,MAAM,SAAc;AAGtB,UAAM,QAAQ;AAGd,WAAO,CAAC,MAAU,WAAgB;AAChC,aAAQ,WAAW,GAAG,aAAa,yBAAyB,OAAO,QAAQ,EAAE,KAAK,SAAS,CAAC,GAAG;AAAA,QAC7F,MAAM,KAAK;AAAA,QACX,MAAM,KAAK;AAAA,MACb,GAAG,MAAM,GAAG,CAAC,QAAQ,MAAM,CAAC;AAAA,IAC9B;AAAA,EACA;AAEA,CAAC;",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229711041,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "normal"
+    }
+  ]
+}

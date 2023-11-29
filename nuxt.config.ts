@@ -1,5 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    baseURL: '/',
+    buildAssetsDir: '/nuxt/',
+  },  
   plugins: [
     { src: '~/plugins/ol.js', ssr: false }
   ],

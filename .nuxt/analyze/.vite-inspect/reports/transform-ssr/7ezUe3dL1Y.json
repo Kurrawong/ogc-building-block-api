@@ -1,0 +1,288 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue?vue&type=style&index=0&scoped=cb993a98&lang.css?inline&used",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "\n.v-toolbar {\n  border-bottom:2px solid #eee !important;\n}\n",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue"
+        ],
+        "names": [],
+        "mappings": ";AAgCA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE;EACT,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACzC",
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue",
+        "sourceRoot": "",
+        "sourcesContent": [
+          "<script setup>\nimport { ref, watch } from 'vue';\n\nconst route = useRoute();\n\nconst path = ref(route.path);\nwatch(()=> path.value = route.path, ()=>{});\n\n</script>\n\n\n<template>\n  <v-app>\n\n    <v-toolbar color=\"white\" dark fixed app>\n      <v-app-bar-nav-icon></v-app-bar-nav-icon>\n\n      <v-toolbar-title><img style=\"width:160px;\" src=\"https://kurrawong.ai/KurrawongAI_350.png\" /></v-toolbar-title>\n\n      <v-spacer></v-spacer>\n\n      <CommonNavigation />\n\n    </v-toolbar>\n    \n    <v-container fluid=\"\">\n      <slot></slot>\n    </v-container>\n  </v-app>\n</template>\n\n<style scoped>\n.v-toolbar {\n  border-bottom:2px solid #eee !important;\n}\n</style>\n"
+        ]
+      }
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229715954,
+      "end": 1701229715954,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "result": ".v-toolbar{border-bottom:2px solid #eee!important}",
+      "start": 1701229715954,
+      "end": 1701229715955,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue",
+        "mappings": "AACA,WACE,sCACF",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue"
+        ],
+        "sourcesContent": [
+          "\n.v-toolbar {\n  border-bottom:2px solid #eee !important;\n}\n"
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229715955,
+      "end": 1701229715955,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229715955,
+      "end": 1701229715955,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": ".v-toolbar[data-v-cb993a98]{border-bottom:2px solid #eee!important}",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue",
+        "mappings": "AAAA,4BAAW,sCAAsC",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue"
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "result": "export default \".v-toolbar[data-v-cb993a98]{border-bottom:2px solid #eee!important}\"",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229715956,
+      "end": 1701229715956,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229715957,
+      "end": 1701229715957,
+      "order": "normal"
+    }
+  ]
+}

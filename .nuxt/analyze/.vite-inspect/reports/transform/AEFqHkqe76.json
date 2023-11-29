@@ -1,0 +1,222 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/lib/prez2.d.ts",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "export type PrezHeaderLink = {\n    iri: string;\n    rel?: string;\n    title?: string;\n    token?: string;\n    anchor?: string;\n    [key: string]: string | undefined;\n}\n  \nexport type PrezTerm = {\n    dataType?: PrezTerm;\n    termType: 'Literal' | 'NamedNode' | 'BlankNode';\n}\n\nexport type PrezLiteral = PrezTerm & {\n    termType: 'Literal';\n    text: string;\n}\n\nexport type PrezNamedNode = PrezTerm & {\n    termType: 'NamedNode';\n    label?: PrezTerm;\n    description?: PrezTerm;\n    uri: string;\n    curie?: string;\n}\n\nexport type PrezBlankNode = PrezTerm & {\n    termType: 'BlankNode';\n    form: PrezForm;\n}\n\nexport type PrezForm = {\n    config: PrezConfig;\n    class: PrezTerm;\n    title: PrezTerm;\n    description?: PrezTerm;\n    properties: PrezProperties;\n}\n\nexport type PrezConfig = {\n    classPredicates: string[];\n    labelPredicates: string[];\n    descriptionPredicates: string[];\n}\n\nexport type PrezList = {\n    class: PrezTerm;\n    headers: PrezListHeaders;\n    rows: PrezListRows;\n}\n\nexport type PrezListHeaders = Record<string, PrezNamedNode>;\nexport type PrezListRows = Record<string, PrezNamedNode[]>;\n\nexport type PrezProperty = {\n    name: PrezNamedNode;\n    value: PrezTerm|PrezTerm[];\n}\n\nexport type PrezProperties = Record<string, PrezProperty>;\n\nexport const PrezDataFactory = {\n    prezNamedNode(iri: string, label?: PrezTerm, description?: PrezTerm, uri?: string, curie?: string): PrezNamedNode {\n      return {\n        termType: 'NamedNode',\n        uri: uri || iri,\n        label,\n        description,\n        curie,\n      };\n    },\n  \n    prezLiteral(text: string): PrezLiteral {\n      return {\n        termType: 'Literal',\n        text,\n      };\n    },\n  \n    prezBlankNode(form: PrezForm): PrezBlankNode {\n      return {\n        termType: 'BlankNode',\n        form,\n      };\n    },\n  \n    // Add more factory functions for other types as needed\n  };",
+      "start": 1701229710960,
+      "end": 1701229710986,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229710986,
+      "end": 1701229710986,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229710986,
+      "end": 1701229710986,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229710986,
+      "end": 1701229710986,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229710986,
+      "end": 1701229710986,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "export const PrezDataFactory = {\n  prezNamedNode(iri, label, description, uri, curie) {\n    return {\n      termType: \"NamedNode\",\n      uri: uri || iri,\n      label,\n      description,\n      curie\n    };\n  },\n  prezLiteral(text) {\n    return {\n      termType: \"Literal\",\n      text\n    };\n  },\n  prezBlankNode(form) {\n    return {\n      termType: \"BlankNode\",\n      form\n    };\n  }\n  // Add more factory functions for other types as needed\n};\n",
+      "start": 1701229710986,
+      "end": 1701229711041,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/lib/prez2.d.ts"
+        ],
+        "sourcesContent": [
+          "export type PrezHeaderLink = {\n    iri: string;\n    rel?: string;\n    title?: string;\n    token?: string;\n    anchor?: string;\n    [key: string]: string | undefined;\n}\n  \nexport type PrezTerm = {\n    dataType?: PrezTerm;\n    termType: 'Literal' | 'NamedNode' | 'BlankNode';\n}\n\nexport type PrezLiteral = PrezTerm & {\n    termType: 'Literal';\n    text: string;\n}\n\nexport type PrezNamedNode = PrezTerm & {\n    termType: 'NamedNode';\n    label?: PrezTerm;\n    description?: PrezTerm;\n    uri: string;\n    curie?: string;\n}\n\nexport type PrezBlankNode = PrezTerm & {\n    termType: 'BlankNode';\n    form: PrezForm;\n}\n\nexport type PrezForm = {\n    config: PrezConfig;\n    class: PrezTerm;\n    title: PrezTerm;\n    description?: PrezTerm;\n    properties: PrezProperties;\n}\n\nexport type PrezConfig = {\n    classPredicates: string[];\n    labelPredicates: string[];\n    descriptionPredicates: string[];\n}\n\nexport type PrezList = {\n    class: PrezTerm;\n    headers: PrezListHeaders;\n    rows: PrezListRows;\n}\n\nexport type PrezListHeaders = Record<string, PrezNamedNode>;\nexport type PrezListRows = Record<string, PrezNamedNode[]>;\n\nexport type PrezProperty = {\n    name: PrezNamedNode;\n    value: PrezTerm|PrezTerm[];\n}\n\nexport type PrezProperties = Record<string, PrezProperty>;\n\nexport const PrezDataFactory = {\n    prezNamedNode(iri: string, label?: PrezTerm, description?: PrezTerm, uri?: string, curie?: string): PrezNamedNode {\n      return {\n        termType: 'NamedNode',\n        uri: uri || iri,\n        label,\n        description,\n        curie,\n      };\n    },\n  \n    prezLiteral(text: string): PrezLiteral {\n      return {\n        termType: 'Literal',\n        text,\n      };\n    },\n  \n    prezBlankNode(form: PrezForm): PrezBlankNode {\n      return {\n        termType: 'BlankNode',\n        form,\n      };\n    },\n  \n    // Add more factory functions for other types as needed\n  };"
+        ],
+        "mappings": "AA8DO,aAAM,kBAAkB;AAAA,EAC3B,cAAc,KAAa,OAAkB,aAAwB,KAAc,OAA+B;AAChH,WAAO;AAAA,MACL,UAAU;AAAA,MACV,KAAK,OAAO;AAAA,MACZ;AAAA,MACA;AAAA,MACA;AAAA,IACF;AAAA,EACF;AAAA,EAEA,YAAY,MAA2B;AACrC,WAAO;AAAA,MACL,UAAU;AAAA,MACV;AAAA,IACF;AAAA,EACF;AAAA,EAEA,cAAc,MAA+B;AAC3C,WAAO;AAAA,MACL,UAAU;AAAA,MACV;AAAA,IACF;AAAA,EACF;AAAA;AAGF;",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229711041,
+      "end": 1701229711041,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229711041,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229711042,
+      "end": 1701229711042,
+      "order": "normal"
+    }
+  ]
+}

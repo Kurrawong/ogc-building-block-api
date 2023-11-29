@@ -1,0 +1,288 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue?vue&type=style&index=0&scoped=d1121f0b&lang.css",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "\n\n.v-tab {\n  border-bottom:0 !important;\n  color:#333 !important;\n}\n\nul.menu,\nul.menu ul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n/* Main menu styles */\nul.menu > li {\n  display: inline-block;\n  position: relative;\n  margin-right: 20px;\n}\n\nul.menu > li > a {\n  text-decoration: none;\n}\n\n/* Submenu styles */\nul.menu ul {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  display: none;\n}\n\nul.menu li:hover > ul {\n  display: block;\n}\n\nul.menu ul li {\n  display: block;\n  width: 200px;\n  background-color: #f0f0f0;\n}\n\nul.menu ul a {\n  padding: 10px;\n  display: block;\n  color: #333;\n  text-decoration: none;\n}\n\nul.menu ul a:hover {\n  background-color: #ccc;\n}\n",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue"
+        ],
+        "names": [],
+        "mappings": ";;AA+BA,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE;EACL,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;EAC1B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACvB;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACP,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,EAAE;EACT,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;EAChB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC;EACV,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC;AACX;;AAEA,CAAC,EAAE,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC;AACrB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,EAAE,CAAC,EAAE;EACX,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;EACrB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;EAClB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACpB;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,EAAE,CAAC,EAAE,EAAE,EAAE;EACf,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACvB;;AAEA,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC;AACnB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,EAAE;EACT,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;EAClB,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;EACT,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC;EACP,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACf;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,EAAE,CAAC,EAAE;EACpB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC;AAChB;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;EACZ,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC;EACd,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC;EACZ,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC3B;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,EAAE,EAAE;EACX,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;EACb,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC;EACd,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;EACX,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACvB;;AAEA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE;EACjB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,CAAC,CAAC;AACxB",
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue",
+        "sourceRoot": "",
+        "sourcesContent": [
+          "<template>\n  <v-tabs\n    v-model=\"tab\"\n    align-tabs=\"title\"\n  >\n  <nuxt-link to=\"/\"><v-tab>Home</v-tab></nuxt-link>\n  <nuxt-link to=\"/catalogs\"><v-tab>Catalogs</v-tab></nuxt-link>\n  <nuxt-link to=\"/sparql\"><v-tab>SPARQL</v-tab></nuxt-link>\n  <nuxt-link to=\"/about\"><v-tab>About</v-tab></nuxt-link>\n  </v-tabs>\n  <!-- <nav>\n    <ul class=\"menu\">\n      <li><nuxt-link to=\"/\">Home</nuxt-link></li>\n      <li>\n        <nuxt-link to=\"/catalogs\">Catalogs</nuxt-link>\n      </li>\n      <li><nuxt-link to=\"/sparql\">SPARQL</nuxt-link></li>\n      <li><nuxt-link to=\"/debug\">DEBUG</nuxt-link></li>\n      <li><nuxt-link to=\"/about\">About</nuxt-link></li>\n    </ul>\n  </nav> -->\n</template>\n\n<script setup>\nimport { RouterLink } from 'vue-router'; // Import RouterLink from Vue Router\n\n// Export the component for use\n</script>\n\n<style scoped>\n\n.v-tab {\n  border-bottom:0 !important;\n  color:#333 !important;\n}\n\nul.menu,\nul.menu ul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n/* Main menu styles */\nul.menu > li {\n  display: inline-block;\n  position: relative;\n  margin-right: 20px;\n}\n\nul.menu > li > a {\n  text-decoration: none;\n}\n\n/* Submenu styles */\nul.menu ul {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  display: none;\n}\n\nul.menu li:hover > ul {\n  display: block;\n}\n\nul.menu ul li {\n  display: block;\n  width: 200px;\n  background-color: #f0f0f0;\n}\n\nul.menu ul a {\n  padding: 10px;\n  display: block;\n  color: #333;\n  text-decoration: none;\n}\n\nul.menu ul a:hover {\n  background-color: #ccc;\n}\n</style>"
+        ]
+      }
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229715988,
+      "end": 1701229715988,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "result": ".v-tab{border-bottom:0!important;color:#333!important}ul.menu,ul.menu ul{list-style:none;margin:0;padding:0}ul.menu>li{display:inline-block;margin-right:20px;position:relative}ul.menu>li>a{text-decoration:none}ul.menu ul{display:none;left:0;position:absolute;top:100%}ul.menu li:hover>ul{display:block}ul.menu ul li{background-color:#f0f0f0;display:block;width:200px}ul.menu ul a{color:#333;display:block;padding:10px;text-decoration:none}ul.menu ul a:hover{background-color:#ccc}",
+      "start": 1701229715988,
+      "end": 1701229715989,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue",
+        "mappings": "AAEA,OACE,yBAA0B,CAC1B,oBACF,CAEA,mBAEE,eAAgB,CAEhB,QAAS,CADT,SAEF,CAGA,WACE,oBAAqB,CAErB,iBAAkB,CADlB,iBAEF,CAEA,aACE,oBACF,CAGA,WAIE,YAAa,CADb,MAAO,CAFP,iBAAkB,CAClB,QAGF,CAEA,oBACE,aACF,CAEA,cAGE,wBAAyB,CAFzB,aAAc,CACd,WAEF,CAEA,aAGE,UAAW,CADX,aAAc,CADd,YAAa,CAGb,oBACF,CAEA,mBACE,qBACF",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue"
+        ],
+        "sourcesContent": [
+          "\n\n.v-tab {\n  border-bottom:0 !important;\n  color:#333 !important;\n}\n\nul.menu,\nul.menu ul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n/* Main menu styles */\nul.menu > li {\n  display: inline-block;\n  position: relative;\n  margin-right: 20px;\n}\n\nul.menu > li > a {\n  text-decoration: none;\n}\n\n/* Submenu styles */\nul.menu ul {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  display: none;\n}\n\nul.menu li:hover > ul {\n  display: block;\n}\n\nul.menu ul li {\n  display: block;\n  width: 200px;\n  background-color: #f0f0f0;\n}\n\nul.menu ul a {\n  padding: 10px;\n  display: block;\n  color: #333;\n  text-decoration: none;\n}\n\nul.menu ul a:hover {\n  background-color: #ccc;\n}\n"
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": ".v-tab[data-v-d1121f0b]{border-bottom:0!important;color:#333!important}ul.menu[data-v-d1121f0b],ul.menu ul[data-v-d1121f0b]{list-style:none;margin:0;padding:0}ul.menu>li[data-v-d1121f0b]{display:inline-block;margin-right:20px;position:relative}ul.menu>li>a[data-v-d1121f0b]{text-decoration:none}ul.menu ul[data-v-d1121f0b]{display:none;left:0;position:absolute;top:100%}ul.menu li:hover>ul[data-v-d1121f0b]{display:block}ul.menu ul li[data-v-d1121f0b]{background-color:#f0f0f0;display:block;width:200px}ul.menu ul a[data-v-d1121f0b]{color:#333;display:block;padding:10px;text-decoration:none}ul.menu ul a[data-v-d1121f0b]:hover{background-color:#ccc}",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal",
+      "sourcemaps": {
+        "file": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue",
+        "mappings": "AAAA,wBAAO,yBAAyB,CAAC,oBAAoB,CAAC,qDAAmB,eAAe,CAAC,QAAQ,CAAC,SAAS,CAAC,4BAAW,oBAAoB,CAAC,iBAAiB,CAAC,iBAAiB,CAAC,8BAAa,oBAAoB,CAAC,4BAAW,YAAY,CAAC,MAAM,CAAC,iBAAiB,CAAC,QAAQ,CAAC,qCAAoB,aAAa,CAAC,+BAAc,wBAAwB,CAAC,aAAa,CAAC,WAAW,CAAC,8BAAa,UAAU,CAAC,aAAa,CAAC,YAAY,CAAC,oBAAoB,CAAC,oCAAmB,qBAAqB",
+        "names": [],
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue"
+        ],
+        "sourcesContent": [
+          null
+        ],
+        "version": 3
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "result": "export default ''",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229715989,
+      "end": 1701229715989,
+      "order": "normal"
+    }
+  ]
+}

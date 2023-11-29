@@ -1,0 +1,250 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "<script setup lang=\"ts\">\nimport { useRDFStore } from \"@/stores/rdf2\";\nimport { storeToRefs } from \"pinia\";\nimport { emit } from \"process\";\nimport config from \"~/config\";\nimport type { PrezForm } from \"~/lib/prez2.d\";\n\nconst rdfStore = useRDFStore();\nconst { loading, success, error, prez } = storeToRefs(rdfStore)\n\nconst page = ref(1);\nconst form = ref<PrezForm|undefined>(undefined);\nconst parseError = ref<string|null>(null);\n\nonMounted(async ()=> {\n    await rdfStore.load(config.API_BASE_URL + '/' + config.CATALOG_LIST_URL + '/bblck-ctlg:bblocks',\n        { params: { page: page.value } });\n\n    form.value = prez.value?.form({\n        classPredicates: ['rdf:type'],\n        labelPredicates: ['skos:prefLabel', 'dcterms:title', 'rdfs:label', 'schema:name'],\n        descriptionPredicates: ['skos:definition', 'dcterms:description', 'schema:description']\n    })\n})\n//['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']\n</script>\n<template>\n    OUTPUT:\n<pre>{{ form }}</pre>\n</template>",
+      "start": 1701229713214,
+      "end": 1701229714176,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229714176,
+      "end": 1701229714176,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": "import _sfc_main from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue?vue&type=script&setup=true&lang.ts\";\nexport * from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue?vue&type=script&setup=true&lang.ts\";\nimport { useSSRContext as __vite_useSSRContext } from \"vue\";\nconst _sfc_setup = _sfc_main.setup;\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext();\n  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add(\"pages/test.vue\");\n  return _sfc_setup ? _sfc_setup(props, ctx) : void 0;\n};\nexport default _sfc_main;\n",
+      "start": 1701229714176,
+      "end": 1701229714732,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229714732,
+      "end": 1701229714732,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229714732,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229714732,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229714733,
+      "end": 1701229714733,
+      "order": "normal"
+    }
+  ]
+}

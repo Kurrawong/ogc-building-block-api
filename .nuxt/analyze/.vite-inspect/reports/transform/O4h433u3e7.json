@@ -1,0 +1,222 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/stores/rdf2.ts",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { acceptHMRUpdate, defineStore } from 'pinia'\n\nimport { type AxiosRequestConfig } from 'axios';\nimport { DataFactory } from \"n3\";\nconst { namedNode } = DataFactory;\nimport { Prez } from '~/lib/prez2';\n\nexport const useRDFStore = defineStore('rdf', {\n  // other options...\n\n  state: ()=>({\n    cache: {} as Record<string, Prez>,\n    loading: false,\n    error: <string|null>'',\n    success: false,\n    prez: <Prez|null>null\n  }),\n\n  actions: {\n    \n    clearCache() {\n      this.cache = {};\n    },\n\n    async load(apiUrl:string, apiConfig?: AxiosRequestConfig) {\n      try {\n        // initialise the state\n        this.loading = true;\n        this.success = false;\n\n\n//        console.log(response.headers.link);\n//        await this.prez.load(response.data);\n\n        const hash = apiUrl + JSON.stringify(apiConfig);\n        if(hash in this.cache) {\n          this.prez = this.cache[hash];\n        } else {\n          this.prez = new Prez();\n          await this.prez.fetch(apiUrl, apiConfig);\n          this.cache[hash] = this.prez as Prez;\n        }\n        // successfully processed\n        this.success = true\n        this.error = null\n\n      } catch (error:any) {\n\n        // set the error status\n        this.error = error.message\n        this.success = false\n\n      } finally {\n        // always set loading to complete\n        this.loading = false\n      }\n    }    \n  },\n\n})\n",
+      "start": 1701229710495,
+      "end": 1701229710540,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229710540,
+      "end": 1701229710540,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229710540,
+      "end": 1701229710540,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229710540,
+      "end": 1701229710540,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229710540,
+      "end": 1701229710540,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import { defineStore } from \"pinia\";\nimport { DataFactory } from \"n3\";\nconst { namedNode } = DataFactory;\nimport { Prez } from \"~/lib/prez2\";\nexport const useRDFStore = defineStore(\"rdf\", {\n  // other options...\n  state: () => ({\n    cache: {},\n    loading: false,\n    error: \"\",\n    success: false,\n    prez: null\n  }),\n  actions: {\n    clearCache() {\n      this.cache = {};\n    },\n    async load(apiUrl, apiConfig) {\n      try {\n        this.loading = true;\n        this.success = false;\n        const hash = apiUrl + JSON.stringify(apiConfig);\n        if (hash in this.cache) {\n          this.prez = this.cache[hash];\n        } else {\n          this.prez = new Prez();\n          await this.prez.fetch(apiUrl, apiConfig);\n          this.cache[hash] = this.prez;\n        }\n        this.success = true;\n        this.error = null;\n      } catch (error) {\n        this.error = error.message;\n        this.success = false;\n      } finally {\n        this.loading = false;\n      }\n    }\n  }\n});\n",
+      "start": 1701229710540,
+      "end": 1701229710544,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/stores/rdf2.ts"
+        ],
+        "sourcesContent": [
+          "import { acceptHMRUpdate, defineStore } from 'pinia'\n\nimport { type AxiosRequestConfig } from 'axios';\nimport { DataFactory } from \"n3\";\nconst { namedNode } = DataFactory;\nimport { Prez } from '~/lib/prez2';\n\nexport const useRDFStore = defineStore('rdf', {\n  // other options...\n\n  state: ()=>({\n    cache: {} as Record<string, Prez>,\n    loading: false,\n    error: <string|null>'',\n    success: false,\n    prez: <Prez|null>null\n  }),\n\n  actions: {\n    \n    clearCache() {\n      this.cache = {};\n    },\n\n    async load(apiUrl:string, apiConfig?: AxiosRequestConfig) {\n      try {\n        // initialise the state\n        this.loading = true;\n        this.success = false;\n\n\n//        console.log(response.headers.link);\n//        await this.prez.load(response.data);\n\n        const hash = apiUrl + JSON.stringify(apiConfig);\n        if(hash in this.cache) {\n          this.prez = this.cache[hash];\n        } else {\n          this.prez = new Prez();\n          await this.prez.fetch(apiUrl, apiConfig);\n          this.cache[hash] = this.prez as Prez;\n        }\n        // successfully processed\n        this.success = true\n        this.error = null\n\n      } catch (error:any) {\n\n        // set the error status\n        this.error = error.message\n        this.success = false\n\n      } finally {\n        // always set loading to complete\n        this.loading = false\n      }\n    }    \n  },\n\n})\n"
+        ],
+        "mappings": "AAAA,SAA0B,mBAAmB;AAG7C,SAAS,mBAAmB;AAC5B,MAAM,EAAE,UAAU,IAAI;AACtB,SAAS,YAAY;AAEd,aAAM,cAAc,YAAY,OAAO;AAAA;AAAA,EAG5C,OAAO,OAAK;AAAA,IACV,OAAO,CAAC;AAAA,IACR,SAAS;AAAA,IACT,OAAoB;AAAA,IACpB,SAAS;AAAA,IACT,MAAiB;AAAA,EACnB;AAAA,EAEA,SAAS;AAAA,IAEP,aAAa;AACX,WAAK,QAAQ,CAAC;AAAA,IAChB;AAAA,IAEA,MAAM,KAAK,QAAe,WAAgC;AACxD,UAAI;AAEF,aAAK,UAAU;AACf,aAAK,UAAU;AAMf,cAAM,OAAO,SAAS,KAAK,UAAU,SAAS;AAC9C,YAAG,QAAQ,KAAK,OAAO;AACrB,eAAK,OAAO,KAAK,MAAM,IAAI;AAAA,QAC7B,OAAO;AACL,eAAK,OAAO,IAAI,KAAK;AACrB,gBAAM,KAAK,KAAK,MAAM,QAAQ,SAAS;AACvC,eAAK,MAAM,IAAI,IAAI,KAAK;AAAA,QAC1B;AAEA,aAAK,UAAU;AACf,aAAK,QAAQ;AAAA,MAEf,SAAS,OAAW;AAGlB,aAAK,QAAQ,MAAM;AACnB,aAAK,UAAU;AAAA,MAEjB,UAAE;AAEA,aAAK,UAAU;AAAA,MACjB;AAAA,IACF;AAAA,EACF;AAEF,CAAC;",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229710544,
+      "end": 1701229710544,
+      "order": "normal"
+    }
+  ]
+}

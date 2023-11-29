@@ -1,0 +1,258 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/lib/prez.ts",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import { Util, Store, Parser, DataFactory, Quad, NamedNode, type Prefixes, Literal, type Quad_Subject, type OTerm, BlankNode } from \"n3\";\nconst { namedNode } = DataFactory;\nimport axios, { type AxiosRequestConfig } from 'axios';\nimport type { ListItem, List, HeaderLink, Form, Header } from './prez.d'\nimport { getDefaultLabelFromURIOrString, parseLinkHeader } from \"@/helpers/str\";\n\nconst filterRDFType = namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');\nconst filterRDFSLabel = namedNode('http://www.w3.org/2000/01/rdf-schema#label');\n\nexport class Prez {\n  public store: Store;\n  private data: Quad[];\n  private parser: Parser;\n  public prefixes: Prefixes;\n  public headerLinks: HeaderLink[];\n\n  constructor() {\n    this.store = new Store();\n    this.parser = new Parser();\n    this.data = [];\n    this.prefixes = {};\n    this.headerLinks = [];\n  }\n\n  async fetch(url:string, options?: AxiosRequestConfig) {\n    try {\n      \n      const response = await axios(url, options);\n      if (response.status != 200) {\n        throw new Error(`Request failed with status ${response.status}`);\n      }\n      this.headerLinks = parseLinkHeader(response.headers['link']!);\n      await this.load(await response.data);\n\n    } catch (error) {\n      if (error instanceof Error) {\n        throw new Error(`Error: ${error.message}`);\n      } else {\n        throw new Error(`An unknown error occurred.`);\n      }\n    }\n  }\n\n  async load(rdf: string) {\n    // process the response through the N3 parser\n    await this.parser.parse(rdf, (error, quad, prefixes)=>{\n      if(prefixes) {\n        this.prefixes = prefixes;\n      }\n      if(quad) {\n        this.data.push(quad);\n      }\n    });\n    this.store = new Store(this.data);    \n  }\n\n  expandAll(iri: string[]): string[] {\n    return iri.map(item=>this.expand(item));\n  }\n\n  expand(iri: string): string {\n    // Split the IRI into parts using ':' as the separator\n    const parts = iri.split(':');\n  \n    // Check if the first part (before the first ':') is a valid prefix\n    if (parts.length >= 2 && parts[0] in this.prefixes) {\n      // Replace the prefix with its corresponding IRI\n      parts[0] = this.prefixes[parts[0]].toString();\n  \n      // Join the modified parts back together to form the updated IRI\n      return parts[0] + parts.slice(1).join(':');\n    }\n  \n    return iri;\n  };\n\n  firstQuad(subject: OTerm, predicate: OTerm, object: OTerm | OTerm[], graph: OTerm):Quad|null {\n    const quads = this.store.getQuads(subject, predicate, object, graph);\n    if(quads && quads.length > 0) {\n      return quads[0];\n    } else {\n      return null;\n    }\n  }\n\n  list(labelPredicates: string[]=[], descriptionPredicates: string[]=[]): List {\n    let mainSubject = '';\n    let subjects: Quad_Subject[] = [];\n    let count = 0;\n\n    const countQuad = this.firstQuad(null, this.expand('prez:count'), null, null);\n    if(countQuad !== null) {\n      count = parseInt(countQuad.object.value);\n      mainSubject = countQuad.subject.value;\n      const predicateFilter = filterRDFType;\n      subjects = this.store.getSubjects(predicateFilter, mainSubject, null);\n    } else {\n      throw new Error('prez:count predicate not found');\n    }\n\n    const mainHeaderMatches = this.store.getQuads(mainSubject, filterRDFSLabel, null, null);\n    const mainShortName:string = this.compact(mainSubject);\n    const result:List = {\n      listHeaders: {},\n      header: {\n        label: mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      list: [],\n      iri: mainShortName\n    };\n\n    // expand out predicate labels to full IRI\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n\n    // loop through each item's subject in this list\n    for (const si in subjects) {\n      const subject = subjects[si].value;\n      const item = this.getSubjectData(subject, expandedPredicateLabels, expandedPredicateDescriptions);\n      Object.keys(item).filter(field=>field != '_meta').forEach(field=>{\n        if(!(field in result.listHeaders)) {//} && !(mainSubject.match(/^_:/) && field == 'iri')) {\n          result.listHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      })\n  \n      result.list.push(item);\n    }\n    return result;\n  }\n\n  form(labelPredicates: string[]=[], descriptionPredicates: string[]=[],  subform?: string): Form {\n\n    console.log(\"FORM\")\n    let count = 0;\n    let mainSubject = subform ? subform : '';\n    let mainObject = '';\n\n    if(mainSubject == '') {\n      const typeQuad = this.firstQuad(null, filterRDFType, null, null);\n      if(typeQuad !== null) {\n        mainSubject = typeQuad.subject.value;\n        mainObject = typeQuad.object.value;\n      } else {\n        throw new Error('rdf:type predicate not found');\n      }\n    }\n\n    const result:Form = {\n      formHeaders: {},\n      header: {\n        label: this.compact(mainObject),//mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      fields: {},\n      iri: this.compact(mainSubject)\n    };\n\n    // expand out predicate labels to full IRI\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n\n    let s = '';\n\n    const item = this.getSubjectData(mainSubject, expandedPredicateLabels, expandedPredicateDescriptions);\n\n    Object.keys(item).filter(field=>field != '_meta').forEach(field=>{\n      if(!(field in result.formHeaders)) {\n        // ignore internal\n        if(mainSubject[0] != '_' || field != 'iri') {\n          result.formHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      }\n    })\n    result.count = Object.keys(result.formHeaders).length;\n\n    result.fields = item;\n  \n    return result;\n  }\n\n  getSubjectData(subject: string, expandedPredicateLabels:string[], expandedPredicateDescriptions:string[]) {\n\n    const item:ListItem = {\n      iri: subject,\n      _meta: {\n      }\n    };\n\n    const matches = this.store.getQuads(subject, null, null, null);\n\n    for(const mi in matches) {\n      const match = matches[mi];\n      const shortName:string = this.compact(match.predicate.value);\n\n      const meta:any = this.getMeta(match, expandedPredicateLabels, expandedPredicateDescriptions);\n      console.log(mi, ' = ' + match.object.value);\n\n//      if(mi == '1') {\n        console.log(\"XX\")\n  //    }\n\n      // recrusive form\n      if(match.object instanceof BlankNode) {\n        \n        // initialise the item, ready for many sub items\n        if(!(shortName in item)) {\n          item[shortName] = [];\n        }\n\n        // recursive lookup...\n        item[shortName].push(this.form(expandedPredicateLabels, expandedPredicateDescriptions, '_:' + match.object.value));\n      } else {\n        const valueQuads = this.store.getQuads(subject, match.predicate.value, null, null);\n\n        let value:string|string[]|undefined = undefined;//match.predicate.value;\n        valueQuads.map(valueQuad=>{\n          const { label, description } = this.getAnnotations(valueQuad.object.value, expandedPredicateLabels, expandedPredicateDescriptions);\n          const useValue = (label !== undefined ? label : valueQuad.object.value);\n          if(value !== undefined) {\n            if(!Array.isArray(value)) {\n              value = [value];\n            }\n            value.push(useValue);\n          } else {\n            value = useValue;\n          }          \n        })\n        meta.value = (value === undefined ? match.predicate.value : value);\n        item[shortName] = meta.value;\n      }\n      item._meta![shortName] = meta;\n\n    }\n  \n    return item;\n  }\n\n  getMeta(quad:Quad, predicateLabels:string[], predicateDescriptions:string[]) {\n    const { label, description } = this.getAnnotations(quad.predicate.value, predicateLabels, predicateDescriptions);\n    // lookup data type, if available\n    let type = undefined;\n    let typeIRI = undefined;\n\n    if((quad.object as any).datatype) {\n      console.log(\"DATA TYPE = \", quad.object)\n      typeIRI = (quad.object as any).datatype.value;\n      const typeQuad = this.firstQuad(typeIRI, filterRDFSLabel, null, null);\n      type = getDefaultLabelFromURIOrString(\n        typeQuad !== null && typeQuad.object.value \n          ? typeQuad.object.value.toString()\n          : typeIRI);\n    }\n\n    const meta = {\n      iri: quad.predicate.value,\n      label: label,\n      description,\n      typeIRI,\n      type\n    };\n    return meta;\n\n  }\n\n  getHeader(subject:string, itemField:any):Header {\n    const headerQuad = this.firstQuad(subject, filterRDFSLabel, null, null);\n    const head:Header = {\n      iri: subject,\n      link: filterRDFSLabel.value,\n      label: getDefaultLabelFromURIOrString(\n        headerQuad !== null && headerQuad.object.value \n          ? headerQuad.object.value \n          : subject),\n      description: ''\n    }\n    console.log('HEAD=', head, 'ITEM=', itemField)\n    return head;\n\n  }\n\n  getAnnotations(subject: string, predicateLabels:string[], predicateDescriptions:string[]) {\n\n    let label:string|undefined = undefined;\n    let description:string|undefined = undefined;\n\n    predicateLabels.map(predicate=>{\n      if(label === undefined) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if(quad) {\n          label = quad.object.value;\n        }\n      }\n    });\n\n    predicateDescriptions.map(predicate=>{\n      if(description === undefined) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if(quad) {\n          description = quad.object.value;\n        }\n      }\n    });\n\n    return {\n      label,\n      description \n    }\n  }\n  \n  compact(iri: string): string {\n    for (const prefix in this.prefixes) {\n      if (iri.startsWith(this.prefixes[prefix].toString())) {\n        return `${prefix}:${iri.substring(this.prefixes[prefix].toString().length)}`;\n      }\n    }\n    // to handle standard \"a\" processing\n    if(iri == filterRDFType.value) {\n      return 'rdf:type';\n    }\n    // If no prefix matches, return the original IRI\n    return iri;\n  }\n  \n\n};\n\n// helper functions\n\n",
+      "start": 1701229715441,
+      "end": 1701229715470,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229715470,
+      "end": 1701229715470,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import { Store, Parser, DataFactory, BlankNode } from \"n3\";\nconst { namedNode } = DataFactory;\nimport axios from \"axios\";\nimport { getDefaultLabelFromURIOrString, parseLinkHeader } from \"@/helpers/str\";\nconst filterRDFType = namedNode(\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\");\nconst filterRDFSLabel = namedNode(\"http://www.w3.org/2000/01/rdf-schema#label\");\nexport class Prez {\n  store;\n  data;\n  parser;\n  prefixes;\n  headerLinks;\n  constructor() {\n    this.store = new Store();\n    this.parser = new Parser();\n    this.data = [];\n    this.prefixes = {};\n    this.headerLinks = [];\n  }\n  async fetch(url, options) {\n    try {\n      const response = await axios(url, options);\n      if (response.status != 200) {\n        throw new Error(`Request failed with status ${response.status}`);\n      }\n      this.headerLinks = parseLinkHeader(response.headers[\"link\"]);\n      await this.load(await response.data);\n    } catch (error) {\n      if (error instanceof Error) {\n        throw new Error(`Error: ${error.message}`);\n      } else {\n        throw new Error(`An unknown error occurred.`);\n      }\n    }\n  }\n  async load(rdf) {\n    await this.parser.parse(rdf, (error, quad, prefixes) => {\n      if (prefixes) {\n        this.prefixes = prefixes;\n      }\n      if (quad) {\n        this.data.push(quad);\n      }\n    });\n    this.store = new Store(this.data);\n  }\n  expandAll(iri) {\n    return iri.map((item) => this.expand(item));\n  }\n  expand(iri) {\n    const parts = iri.split(\":\");\n    if (parts.length >= 2 && parts[0] in this.prefixes) {\n      parts[0] = this.prefixes[parts[0]].toString();\n      return parts[0] + parts.slice(1).join(\":\");\n    }\n    return iri;\n  }\n  firstQuad(subject, predicate, object, graph) {\n    const quads = this.store.getQuads(subject, predicate, object, graph);\n    if (quads && quads.length > 0) {\n      return quads[0];\n    } else {\n      return null;\n    }\n  }\n  list(labelPredicates = [], descriptionPredicates = []) {\n    let mainSubject = \"\";\n    let subjects = [];\n    let count = 0;\n    const countQuad = this.firstQuad(null, this.expand(\"prez:count\"), null, null);\n    if (countQuad !== null) {\n      count = parseInt(countQuad.object.value);\n      mainSubject = countQuad.subject.value;\n      const predicateFilter = filterRDFType;\n      subjects = this.store.getSubjects(predicateFilter, mainSubject, null);\n    } else {\n      throw new Error(\"prez:count predicate not found\");\n    }\n    const mainHeaderMatches = this.store.getQuads(mainSubject, filterRDFSLabel, null, null);\n    const mainShortName = this.compact(mainSubject);\n    const result = {\n      listHeaders: {},\n      header: {\n        label: mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      list: [],\n      iri: mainShortName\n    };\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n    for (const si in subjects) {\n      const subject = subjects[si].value;\n      const item = this.getSubjectData(subject, expandedPredicateLabels, expandedPredicateDescriptions);\n      Object.keys(item).filter((field) => field != \"_meta\").forEach((field) => {\n        if (!(field in result.listHeaders)) {\n          result.listHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      });\n      result.list.push(item);\n    }\n    return result;\n  }\n  form(labelPredicates = [], descriptionPredicates = [], subform) {\n    console.log(\"FORM\");\n    let count = 0;\n    let mainSubject = subform ? subform : \"\";\n    let mainObject = \"\";\n    if (mainSubject == \"\") {\n      const typeQuad = this.firstQuad(null, filterRDFType, null, null);\n      if (typeQuad !== null) {\n        mainSubject = typeQuad.subject.value;\n        mainObject = typeQuad.object.value;\n      } else {\n        throw new Error(\"rdf:type predicate not found\");\n      }\n    }\n    const result = {\n      formHeaders: {},\n      header: {\n        label: this.compact(mainObject),\n        //mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      fields: {},\n      iri: this.compact(mainSubject)\n    };\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n    let s = \"\";\n    const item = this.getSubjectData(mainSubject, expandedPredicateLabels, expandedPredicateDescriptions);\n    Object.keys(item).filter((field) => field != \"_meta\").forEach((field) => {\n      if (!(field in result.formHeaders)) {\n        if (mainSubject[0] != \"_\" || field != \"iri\") {\n          result.formHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      }\n    });\n    result.count = Object.keys(result.formHeaders).length;\n    result.fields = item;\n    return result;\n  }\n  getSubjectData(subject, expandedPredicateLabels, expandedPredicateDescriptions) {\n    const item = {\n      iri: subject,\n      _meta: {}\n    };\n    const matches = this.store.getQuads(subject, null, null, null);\n    for (const mi in matches) {\n      const match = matches[mi];\n      const shortName = this.compact(match.predicate.value);\n      const meta = this.getMeta(match, expandedPredicateLabels, expandedPredicateDescriptions);\n      console.log(mi, \" = \" + match.object.value);\n      console.log(\"XX\");\n      if (match.object instanceof BlankNode) {\n        if (!(shortName in item)) {\n          item[shortName] = [];\n        }\n        item[shortName].push(this.form(expandedPredicateLabels, expandedPredicateDescriptions, \"_:\" + match.object.value));\n      } else {\n        const valueQuads = this.store.getQuads(subject, match.predicate.value, null, null);\n        let value = void 0;\n        valueQuads.map((valueQuad) => {\n          const { label, description } = this.getAnnotations(valueQuad.object.value, expandedPredicateLabels, expandedPredicateDescriptions);\n          const useValue = label !== void 0 ? label : valueQuad.object.value;\n          if (value !== void 0) {\n            if (!Array.isArray(value)) {\n              value = [value];\n            }\n            value.push(useValue);\n          } else {\n            value = useValue;\n          }\n        });\n        meta.value = value === void 0 ? match.predicate.value : value;\n        item[shortName] = meta.value;\n      }\n      item._meta[shortName] = meta;\n    }\n    return item;\n  }\n  getMeta(quad, predicateLabels, predicateDescriptions) {\n    const { label, description } = this.getAnnotations(quad.predicate.value, predicateLabels, predicateDescriptions);\n    let type = void 0;\n    let typeIRI = void 0;\n    if (quad.object.datatype) {\n      console.log(\"DATA TYPE = \", quad.object);\n      typeIRI = quad.object.datatype.value;\n      const typeQuad = this.firstQuad(typeIRI, filterRDFSLabel, null, null);\n      type = getDefaultLabelFromURIOrString(\n        typeQuad !== null && typeQuad.object.value ? typeQuad.object.value.toString() : typeIRI\n      );\n    }\n    const meta = {\n      iri: quad.predicate.value,\n      label,\n      description,\n      typeIRI,\n      type\n    };\n    return meta;\n  }\n  getHeader(subject, itemField) {\n    const headerQuad = this.firstQuad(subject, filterRDFSLabel, null, null);\n    const head = {\n      iri: subject,\n      link: filterRDFSLabel.value,\n      label: getDefaultLabelFromURIOrString(\n        headerQuad !== null && headerQuad.object.value ? headerQuad.object.value : subject\n      ),\n      description: \"\"\n    };\n    console.log(\"HEAD=\", head, \"ITEM=\", itemField);\n    return head;\n  }\n  getAnnotations(subject, predicateLabels, predicateDescriptions) {\n    let label = void 0;\n    let description = void 0;\n    predicateLabels.map((predicate) => {\n      if (label === void 0) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if (quad) {\n          label = quad.object.value;\n        }\n      }\n    });\n    predicateDescriptions.map((predicate) => {\n      if (description === void 0) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if (quad) {\n          description = quad.object.value;\n        }\n      }\n    });\n    return {\n      label,\n      description\n    };\n  }\n  compact(iri) {\n    for (const prefix in this.prefixes) {\n      if (iri.startsWith(this.prefixes[prefix].toString())) {\n        return `${prefix}:${iri.substring(this.prefixes[prefix].toString().length)}`;\n      }\n    }\n    if (iri == filterRDFType.value) {\n      return \"rdf:type\";\n    }\n    return iri;\n  }\n}\n;\n",
+      "start": 1701229715470,
+      "end": 1701229715515,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/lib/prez.ts"
+        ],
+        "sourcesContent": [
+          "import { Util, Store, Parser, DataFactory, Quad, NamedNode, type Prefixes, Literal, type Quad_Subject, type OTerm, BlankNode } from \"n3\";\nconst { namedNode } = DataFactory;\nimport axios, { type AxiosRequestConfig } from 'axios';\nimport type { ListItem, List, HeaderLink, Form, Header } from './prez.d'\nimport { getDefaultLabelFromURIOrString, parseLinkHeader } from \"@/helpers/str\";\n\nconst filterRDFType = namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');\nconst filterRDFSLabel = namedNode('http://www.w3.org/2000/01/rdf-schema#label');\n\nexport class Prez {\n  public store: Store;\n  private data: Quad[];\n  private parser: Parser;\n  public prefixes: Prefixes;\n  public headerLinks: HeaderLink[];\n\n  constructor() {\n    this.store = new Store();\n    this.parser = new Parser();\n    this.data = [];\n    this.prefixes = {};\n    this.headerLinks = [];\n  }\n\n  async fetch(url:string, options?: AxiosRequestConfig) {\n    try {\n      \n      const response = await axios(url, options);\n      if (response.status != 200) {\n        throw new Error(`Request failed with status ${response.status}`);\n      }\n      this.headerLinks = parseLinkHeader(response.headers['link']!);\n      await this.load(await response.data);\n\n    } catch (error) {\n      if (error instanceof Error) {\n        throw new Error(`Error: ${error.message}`);\n      } else {\n        throw new Error(`An unknown error occurred.`);\n      }\n    }\n  }\n\n  async load(rdf: string) {\n    // process the response through the N3 parser\n    await this.parser.parse(rdf, (error, quad, prefixes)=>{\n      if(prefixes) {\n        this.prefixes = prefixes;\n      }\n      if(quad) {\n        this.data.push(quad);\n      }\n    });\n    this.store = new Store(this.data);    \n  }\n\n  expandAll(iri: string[]): string[] {\n    return iri.map(item=>this.expand(item));\n  }\n\n  expand(iri: string): string {\n    // Split the IRI into parts using ':' as the separator\n    const parts = iri.split(':');\n  \n    // Check if the first part (before the first ':') is a valid prefix\n    if (parts.length >= 2 && parts[0] in this.prefixes) {\n      // Replace the prefix with its corresponding IRI\n      parts[0] = this.prefixes[parts[0]].toString();\n  \n      // Join the modified parts back together to form the updated IRI\n      return parts[0] + parts.slice(1).join(':');\n    }\n  \n    return iri;\n  };\n\n  firstQuad(subject: OTerm, predicate: OTerm, object: OTerm | OTerm[], graph: OTerm):Quad|null {\n    const quads = this.store.getQuads(subject, predicate, object, graph);\n    if(quads && quads.length > 0) {\n      return quads[0];\n    } else {\n      return null;\n    }\n  }\n\n  list(labelPredicates: string[]=[], descriptionPredicates: string[]=[]): List {\n    let mainSubject = '';\n    let subjects: Quad_Subject[] = [];\n    let count = 0;\n\n    const countQuad = this.firstQuad(null, this.expand('prez:count'), null, null);\n    if(countQuad !== null) {\n      count = parseInt(countQuad.object.value);\n      mainSubject = countQuad.subject.value;\n      const predicateFilter = filterRDFType;\n      subjects = this.store.getSubjects(predicateFilter, mainSubject, null);\n    } else {\n      throw new Error('prez:count predicate not found');\n    }\n\n    const mainHeaderMatches = this.store.getQuads(mainSubject, filterRDFSLabel, null, null);\n    const mainShortName:string = this.compact(mainSubject);\n    const result:List = {\n      listHeaders: {},\n      header: {\n        label: mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      list: [],\n      iri: mainShortName\n    };\n\n    // expand out predicate labels to full IRI\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n\n    // loop through each item's subject in this list\n    for (const si in subjects) {\n      const subject = subjects[si].value;\n      const item = this.getSubjectData(subject, expandedPredicateLabels, expandedPredicateDescriptions);\n      Object.keys(item).filter(field=>field != '_meta').forEach(field=>{\n        if(!(field in result.listHeaders)) {//} && !(mainSubject.match(/^_:/) && field == 'iri')) {\n          result.listHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      })\n  \n      result.list.push(item);\n    }\n    return result;\n  }\n\n  form(labelPredicates: string[]=[], descriptionPredicates: string[]=[],  subform?: string): Form {\n\n    console.log(\"FORM\")\n    let count = 0;\n    let mainSubject = subform ? subform : '';\n    let mainObject = '';\n\n    if(mainSubject == '') {\n      const typeQuad = this.firstQuad(null, filterRDFType, null, null);\n      if(typeQuad !== null) {\n        mainSubject = typeQuad.subject.value;\n        mainObject = typeQuad.object.value;\n      } else {\n        throw new Error('rdf:type predicate not found');\n      }\n    }\n\n    const result:Form = {\n      formHeaders: {},\n      header: {\n        label: this.compact(mainObject),//mainHeaderMatches.length > 0 ? mainHeaderMatches[0].object.value : mainShortName,\n        iri: mainSubject,\n        link: mainSubject\n      },\n      count,\n      fields: {},\n      iri: this.compact(mainSubject)\n    };\n\n    // expand out predicate labels to full IRI\n    const expandedPredicateLabels = this.expandAll(labelPredicates);\n    const expandedPredicateDescriptions = this.expandAll(descriptionPredicates);\n\n    let s = '';\n\n    const item = this.getSubjectData(mainSubject, expandedPredicateLabels, expandedPredicateDescriptions);\n\n    Object.keys(item).filter(field=>field != '_meta').forEach(field=>{\n      if(!(field in result.formHeaders)) {\n        // ignore internal\n        if(mainSubject[0] != '_' || field != 'iri') {\n          result.formHeaders[field] = this.getHeader(this.expand(field), item[field]);\n        }\n      }\n    })\n    result.count = Object.keys(result.formHeaders).length;\n\n    result.fields = item;\n  \n    return result;\n  }\n\n  getSubjectData(subject: string, expandedPredicateLabels:string[], expandedPredicateDescriptions:string[]) {\n\n    const item:ListItem = {\n      iri: subject,\n      _meta: {\n      }\n    };\n\n    const matches = this.store.getQuads(subject, null, null, null);\n\n    for(const mi in matches) {\n      const match = matches[mi];\n      const shortName:string = this.compact(match.predicate.value);\n\n      const meta:any = this.getMeta(match, expandedPredicateLabels, expandedPredicateDescriptions);\n      console.log(mi, ' = ' + match.object.value);\n\n//      if(mi == '1') {\n        console.log(\"XX\")\n  //    }\n\n      // recrusive form\n      if(match.object instanceof BlankNode) {\n        \n        // initialise the item, ready for many sub items\n        if(!(shortName in item)) {\n          item[shortName] = [];\n        }\n\n        // recursive lookup...\n        item[shortName].push(this.form(expandedPredicateLabels, expandedPredicateDescriptions, '_:' + match.object.value));\n      } else {\n        const valueQuads = this.store.getQuads(subject, match.predicate.value, null, null);\n\n        let value:string|string[]|undefined = undefined;//match.predicate.value;\n        valueQuads.map(valueQuad=>{\n          const { label, description } = this.getAnnotations(valueQuad.object.value, expandedPredicateLabels, expandedPredicateDescriptions);\n          const useValue = (label !== undefined ? label : valueQuad.object.value);\n          if(value !== undefined) {\n            if(!Array.isArray(value)) {\n              value = [value];\n            }\n            value.push(useValue);\n          } else {\n            value = useValue;\n          }          \n        })\n        meta.value = (value === undefined ? match.predicate.value : value);\n        item[shortName] = meta.value;\n      }\n      item._meta![shortName] = meta;\n\n    }\n  \n    return item;\n  }\n\n  getMeta(quad:Quad, predicateLabels:string[], predicateDescriptions:string[]) {\n    const { label, description } = this.getAnnotations(quad.predicate.value, predicateLabels, predicateDescriptions);\n    // lookup data type, if available\n    let type = undefined;\n    let typeIRI = undefined;\n\n    if((quad.object as any).datatype) {\n      console.log(\"DATA TYPE = \", quad.object)\n      typeIRI = (quad.object as any).datatype.value;\n      const typeQuad = this.firstQuad(typeIRI, filterRDFSLabel, null, null);\n      type = getDefaultLabelFromURIOrString(\n        typeQuad !== null && typeQuad.object.value \n          ? typeQuad.object.value.toString()\n          : typeIRI);\n    }\n\n    const meta = {\n      iri: quad.predicate.value,\n      label: label,\n      description,\n      typeIRI,\n      type\n    };\n    return meta;\n\n  }\n\n  getHeader(subject:string, itemField:any):Header {\n    const headerQuad = this.firstQuad(subject, filterRDFSLabel, null, null);\n    const head:Header = {\n      iri: subject,\n      link: filterRDFSLabel.value,\n      label: getDefaultLabelFromURIOrString(\n        headerQuad !== null && headerQuad.object.value \n          ? headerQuad.object.value \n          : subject),\n      description: ''\n    }\n    console.log('HEAD=', head, 'ITEM=', itemField)\n    return head;\n\n  }\n\n  getAnnotations(subject: string, predicateLabels:string[], predicateDescriptions:string[]) {\n\n    let label:string|undefined = undefined;\n    let description:string|undefined = undefined;\n\n    predicateLabels.map(predicate=>{\n      if(label === undefined) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if(quad) {\n          label = quad.object.value;\n        }\n      }\n    });\n\n    predicateDescriptions.map(predicate=>{\n      if(description === undefined) {\n        const quad = this.firstQuad(subject, predicate, null, null);\n        if(quad) {\n          description = quad.object.value;\n        }\n      }\n    });\n\n    return {\n      label,\n      description \n    }\n  }\n  \n  compact(iri: string): string {\n    for (const prefix in this.prefixes) {\n      if (iri.startsWith(this.prefixes[prefix].toString())) {\n        return `${prefix}:${iri.substring(this.prefixes[prefix].toString().length)}`;\n      }\n    }\n    // to handle standard \"a\" processing\n    if(iri == filterRDFType.value) {\n      return 'rdf:type';\n    }\n    // If no prefix matches, return the original IRI\n    return iri;\n  }\n  \n\n};\n\n// helper functions\n\n"
+        ],
+        "mappings": "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",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229715515,
+      "end": 1701229715515,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715515,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229715515,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-template",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229715516,
+      "end": 1701229715516,
+      "order": "normal"
+    }
+  ]
+}

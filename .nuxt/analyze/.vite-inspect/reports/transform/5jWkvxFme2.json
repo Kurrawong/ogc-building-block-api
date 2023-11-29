@@ -1,0 +1,214 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "<script setup lang=\"ts\">\nimport { useRDFStore } from \"@/stores/rdf2\";\nimport { storeToRefs } from \"pinia\";\nimport { emit } from \"process\";\nimport config from \"~/config\";\nimport type { PrezForm } from \"~/lib/prez2.d\";\n\nconst rdfStore = useRDFStore();\nconst { loading, success, error, prez } = storeToRefs(rdfStore)\n\nconst page = ref(1);\nconst form = ref<PrezForm|undefined>(undefined);\nconst parseError = ref<string|null>(null);\n\nonMounted(async ()=> {\n    await rdfStore.load(config.API_BASE_URL + '/' + config.CATALOG_LIST_URL + '/bblck-ctlg:bblocks',\n        { params: { page: page.value } });\n\n    form.value = prez.value?.form({\n        classPredicates: ['rdf:type'],\n        labelPredicates: ['skos:prefLabel', 'dcterms:title', 'rdfs:label', 'schema:name'],\n        descriptionPredicates: ['skos:definition', 'dcterms:description', 'schema:description']\n    })\n})\n//['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']\n</script>\n<template>\n    OUTPUT:\n<pre>{{ form }}</pre>\n</template>",
+      "start": 1701229709021,
+      "end": 1701229709067,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229709067,
+      "end": 1701229709067,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "result": "import _sfc_main from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue?vue&type=script&setup=true&lang.ts\";\nexport * from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/test.vue?vue&type=script&setup=true&lang.ts\";\nexport default _sfc_main;\n",
+      "start": 1701229709067,
+      "end": 1701229709589,
+      "order": "normal",
+      "sourcemaps": {
+        "mappings": ""
+      }
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229709590,
+      "end": 1701229709590,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229709591,
+      "end": 1701229709591,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229709592,
+      "end": 1701229709592,
+      "order": "normal"
+    }
+  ]
+}

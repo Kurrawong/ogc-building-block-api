@@ -1,0 +1,231 @@
+{
+  "resolvedId": "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/catalogs/index.vue?vue&type=script&setup=true&lang.ts",
+  "transforms": [
+    {
+      "name": "vite:vue",
+      "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'index',\n  setup(__props) {\n\nconst route = useRoute();\n\nreturn (_ctx: any,_cache: any) => {\n  const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\")!\n  const _component_ContainersList = _resolveComponent(\"ContainersList\")!\n\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createVNode(_component_CommonBreadcrumbs, {\n      items: [{title: _unref(tpl)('{{!bc}}Home'), to: '/'}, {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs', disabled: true}]\n    }, null, 8, [\"items\"]),\n    _createVNode(_component_ContainersList, {\n      \"header-title\": _unref(tpl)('{{ header.label }} collection'),\n      \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n      fields: ['dcterms:title', 'dcterms:identifier', 'iri']\n    }, null, 8, [\"header-title\", \"data-url\"])\n  ], 64))\n}\n}\n\n})",
+      "start": 1701229710206,
+      "end": 1701229710206
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1701229710206,
+      "end": 1701229710206,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1701229710206,
+      "end": 1701229710206,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1701229710206,
+      "end": 1701229710206,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1701229710206,
+      "end": 1701229710206,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _cache) => {\n      const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\");\n      const _component_ContainersList = _resolveComponent(\"ContainersList\");\n      return _openBlock(), _createElementBlock(_Fragment, null, [\n        _createVNode(_component_CommonBreadcrumbs, {\n          items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n        }, null, 8, [\"items\"]),\n        _createVNode(_component_ContainersList, {\n          \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n          \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n          fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n        }, null, 8, [\"header-title\", \"data-url\"])\n      ], 64);\n    };\n  }\n});\n",
+      "start": 1701229710206,
+      "end": 1701229710242,
+      "order": "normal",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          "/Users/hjohns/workspace/kurrawong/ogc-building-block-api/pages/catalogs/index.vue?vue&type=script&setup=true&lang.ts"
+        ],
+        "sourcesContent": [
+          "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'index',\n  setup(__props) {\n\nconst route = useRoute();\n\nreturn (_ctx: any,_cache: any) => {\n  const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\")!\n  const _component_ContainersList = _resolveComponent(\"ContainersList\")!\n\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createVNode(_component_CommonBreadcrumbs, {\n      items: [{title: _unref(tpl)('{{!bc}}Home'), to: '/'}, {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs', disabled: true}]\n    }, null, 8, [\"items\"]),\n    _createVNode(_component_ContainersList, {\n      \"header-title\": _unref(tpl)('{{ header.label }} collection'),\n      \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n      fields: ['dcterms:title', 'dcterms:identifier', 'iri']\n    }, null, 8, [\"header-title\", \"data-url\"])\n  ], 64))\n}\n}\n\n})"
+        ],
+        "mappings": "AAAA,SAAS,mBAAmB,wBAAwB;AACpD,SAAS,SAAS,QAAQ,oBAAoB,mBAAmB,eAAe,cAAc,YAAY,WAAW,aAAa,YAAY,sBAAsB,2BAA2B;AAE/L,OAAO,YAAY;AACnB,SAAS,WAAW;AAEpB,eAA4B,iCAAiB;AAAA,EAC3C,QAAQ;AAAA,EACR,MAAM,SAAS;AAEjB,UAAM,QAAQ,SAAS;AAEvB,WAAO,CAAC,MAAU,WAAgB;AAChC,YAAM,+BAA+B,kBAAkB,mBAAmB;AAC1E,YAAM,4BAA4B,kBAAkB,gBAAgB;AAEpE,aAAQ,WAAW,GAAG,oBAAoB,WAAW,MAAM;AAAA,QACzD,aAAa,8BAA8B;AAAA,UACzC,OAAO,CAAC,EAAC,OAAO,OAAO,GAAG,EAAE,aAAa,GAAG,IAAI,IAAG,GAAG,EAAC,OAAO,OAAO,GAAG,EAAE,iBAAiB,GAAG,IAAI,aAAa,UAAU,KAAI,CAAC;AAAA,QAChI,GAAG,MAAM,GAAG,CAAC,OAAO,CAAC;AAAA,QACrB,aAAa,2BAA2B;AAAA,UACtC,gBAAgB,OAAO,GAAG,EAAE,+BAA+B;AAAA,UAC3D,YAAY,OAAO,MAAM,EAAE,eAAe,OAAO,KAAK,EAAE;AAAA,UACxD,QAAQ,CAAC,iBAAiB,sBAAsB,KAAK;AAAA,QACvD,GAAG,MAAM,GAAG,CAAC,gBAAgB,UAAU,CAAC;AAAA,MAC1C,GAAG,EAAE;AAAA,IACP;AAAA,EACA;AAEA,CAAC;",
+        "names": []
+      }
+    },
+    {
+      "name": "vite:json",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1701229710242,
+      "end": 1701229710242,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "result": "import { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _cache) => {\n      const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\");\n      const _component_ContainersList = _resolveComponent(\"ContainersList\");\n      return _openBlock(), _createElementBlock(_Fragment, null, [\n        _createVNode(_component_CommonBreadcrumbs, {\n          items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n        }, null, 8, [\"items\"]),\n        _createVNode(_component_ContainersList, {\n          \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n          \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n          fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n        }, null, 8, [\"header-title\", \"data-url\"])\n      ], 64);\n    };\n  }\n});\n",
+      "start": 1701229710242,
+      "end": 1701229710243,
+      "order": "post",
+      "sourcemaps": {
+        "version": 3,
+        "sources": [
+          ""
+        ],
+        "names": [],
+        "mappings": ";AAAA,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC1D,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACrM,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC9B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACpC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACjD,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAClB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAClB,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC7B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC9B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAClF,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC5E,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACjE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACpD,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC7I,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAC/B,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACjD,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACvE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACvE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AAChE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACjD,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACb,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;AACN,CAAC,CAAC,CAAC;AACH,CAAC,CAAC,CAAC;"
+      }
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/containers/List.vue\";\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _cache) => {\n      const _component_CommonBreadcrumbs = __nuxt_component_0;\n      const _component_ContainersList = __nuxt_component_1;\n      return _openBlock(), _createElementBlock(_Fragment, null, [\n        _createVNode(_component_CommonBreadcrumbs, {\n          items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n        }, null, 8, [\"items\"]),\n        _createVNode(_component_ContainersList, {\n          \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n          \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n          fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n        }, null, 8, [\"header-title\", \"data-url\"])\n      ], 64);\n    };\n  }\n});\n",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1701229710243,
+      "end": 1701229710243,
+      "order": "normal"
+    }
+  ]
+}
