@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   app: {
     baseURL: '/',
-    buildAssetsDir: '/nuxt/',
+    buildAssetsDir: 'nuxt/',
   },  
   plugins: [
     { src: '~/plugins/ol.js', ssr: false }
