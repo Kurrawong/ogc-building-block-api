@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup lang=\"ts\">\nimport type { Form, HeaderLink } from '~/lib/prez.d';\nimport { template } from '~/helpers/str';\nimport registry from './widgets/registry';\n\nconst props = defineProps<{form: Form, formTitle?:string, headerTitle?:string, excludeFields?: string[], fields?: string[], info?: boolean, links?: HeaderLink[]}>();\nconst excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n\nconst customWidgets:Record<string, boolean>= {};\nconst fields = (props.fields ? props.fields : Object.keys(props.form.formHeaders))\n  .filter(field=>{\n    // check the field to output is available\n    if(!(field in props.form.formHeaders) || !(field in props.form.fields)) {\n      console.warn(`${field} not found in form\\n(${Object.keys(props.form.formHeaders)})`)\n      return false;\n    }\n    // if this field is in the registry, then only exclude if we have an exact match\n    if(field in registry) {\n      if((excludeFields as string[]).indexOf(field) >= 0) {\n        return false;\n      } else {\n        return true;\n      }\n    } else {\n      // check it doesn't match one of the exclude fields\n      for(const idx in excludeFields) {\n        if(field.match(excludeFields[idx])) {\n          return false;\n        }\n      }\n      return true;\n    }\n  });\n\nconst isSubForm = (field:string) => {\n  return Array.isArray(props.form.fields[field]) && typeof(props.form.fields[field][0]) == 'object'\n}\n\nconst isStringArray = (field:string) => {\n  return Array.isArray(props.form.fields[field]) && typeof(props.form.fields[field][0]) == 'string'\n}\n\nconst route = useRouter();\n\n</script>\n<template>\n  <div class=\"form\" style=\"position:relative\" v-if=\"form && form.count > 0\">\n    <div v-if=\"headerTitle && form\" class=\"text-h3 mb-5 mt-2\">{{ template(headerTitle, form) }}</div>\n    <v-chip v-if=\"form.header.label\" variant=\"flat\" style=\"position: absolute; right: 0;top:0;\">{{ form.header.label }}</v-chip>\n    <v-table theme=\"dark\" v-if=\"form\">\n      <thead v-if=\"formTitle\">\n        <tr><th colspan=\"2\">{{ template(formTitle, form) }}</th></tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"field in fields\">\n          <th style=\"white-space: nowrap;\">\n            {{ form.formHeaders[field].label }}\n            &nbsp;<a :href=\"form.formHeaders[field].iri\" :title=\"field\"><v-icon icon=\"mdi-link\"></v-icon></a>\n            <div v-if=\"info\">{{ field }}</div>\n          </th>\n          <td v-if=\"!(field in registry)\" :class=\"isSubForm(field) ? 'td-nest' : undefined\">\n            <v-chip size=\"x-small\" v-if=\"form.fields._meta?.[field]?.type\">{{ form.fields._meta[field].type }}</v-chip>\n\n            <div :title=\"field in form.fields._meta! && form.fields[field] != form.fields._meta![field].value ? form.fields._meta![field].value : null\" >\n              <nuxt-link v-if=\"field == 'prez:link'\" :to=\"form.fields[field]\">{{ form.fields[field] }}</nuxt-link>\n              {{ (typeof(form.fields[field]) != 'object' && field != 'prez:link' ? form.fields[field] : '') }}\n              {{isStringArray(field) ? form.fields[field].join(', ') : '' }}\n              <CommonForm\n                v-for=\"f in form.fields[field]\" \n                v-if=\"isSubForm(field)\"\n                :form=\"f\"\n                :exclude-fields=\"excludeFields\"\n              />\n            </div>\n          </td>\n          <td v-else>\n            <CommonWidgets v-if=\"field in registry\" :form=\"form\" :info=\"form.fields[field]\" :field-name=\"field as keyof typeof registry\" />\n          </td>\n        </tr>\n      </tbody>\n    </v-table>\n    <v-chip-group v-if=\"links\">\n      <v-chip v-for=\"link in links.filter(link=>link.title)\">\n        {{ link.title }}\n      </v-chip>\n    </v-chip-group>\n  </div>\n</template>\n\n<style scoped>\n.td-max {\n  overflow: hidden;\n   text-overflow: ellipsis;\n   display: -webkit-box;\n   -webkit-line-clamp: 2; /* number of lines to show */\n           line-clamp: 2;\n           text-overflow: ellipsis; \n   -webkit-box-orient: vertical;\n}\n/* tbody tr:hover, tbody tr:hover table:hover * {\n  background-color: #555 !important;\n} */\nth {\n  width: 1%;\n}\ntd {\n  width: 100%;\n}\ntd a {\n  color:#333;\n}\ntd.td-nest {\n  padding-right:0 !important;\n}\n\ntable .td-nest table td, table .td-nest table th  {\n  background-color: #eee;\n}\n\ntable .td-nest .v-table {\n  border-left:3px solid #ccc;\n}\n\ntd .v-chip {\n  float:right;\n}\n.v-table thead {\n  background-color: #19198c;\n}\n.v-table thead th {\n  color:white !important;\n}\n.v-table tbody {\n  background-color: #eee;\n  color:#333;\n}\n.v-table tbody tr td, .v-table tbody tr th {\n  border-right:1px solid #bbb;\n  border-bottom:1px solid #bbb !important;\n}\n.v-table tbody tr td:last-child {\n  border-right:0;\n}\n.v-table tbody tr:last-child td, .v-table tbody tr:last-child th {\n  border-bottom:0 !important;\n}\n.v-table tbody tr:hover td, .v-table tbody tr:hover th {\n  background-color: #ddd !important;\n}\n\ntd.td-nest div.form .v-table {\n  margin-bottom:5px;\n  border-bottom:2px solid #ddd;\n}\ntd.td-nest div.form .v-table {\n  margin-top:5px;\n  border-top:1px solid #ddd;\n}\n\n</style>",
-      "start": 1701230037201,
-      "end": 1701230037227,
+      "start": 1701230370587,
+      "end": 1701230370613,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037227,
-      "end": 1701230037227,
+      "start": 1701230370613,
+      "end": 1701230370613,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import _sfc_main from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue?vue&type=script&setup=true&lang.ts\";\nexport * from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue?vue&type=script&setup=true&lang.ts\";\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue?vue&type=style&index=0&scoped=6ce81e14&lang.css\";\nimport _export_sfc from \"\\0plugin-vue:export-helper\";\nexport default /* @__PURE__ */ _export_sfc(_sfc_main, [[\"__scopeId\", \"data-v-6ce81e14\"]]);\n",
-      "start": 1701230037227,
-      "end": 1701230037240,
+      "start": 1701230370613,
+      "end": 1701230370626,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,152 +62,152 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370626,
+      "end": 1701230370626,
       "order": "normal"
     }
   ]

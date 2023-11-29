@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// **N3Lexer** tokenizes N3 documents.\nimport namespaces from './IRIs';\nimport queueMicrotask from 'queue-microtask';\n\nconst { xsd } = namespaces;\n\n// Regular expression and replacement string to escape N3 strings\nconst escapeSequence = /\\\\u([a-fA-F0-9]{4})|\\\\U([a-fA-F0-9]{8})|\\\\([^])/g;\nconst escapeReplacements = {\n  '\\\\': '\\\\', \"'\": \"'\", '\"': '\"',\n  'n': '\\n', 'r': '\\r', 't': '\\t', 'f': '\\f', 'b': '\\b',\n  '_': '_', '~': '~', '.': '.', '-': '-', '!': '!', '$': '$', '&': '&',\n  '(': '(', ')': ')', '*': '*', '+': '+', ',': ',', ';': ';', '=': '=',\n  '/': '/', '?': '?', '#': '#', '@': '@', '%': '%',\n};\nconst illegalIriChars = /[\\x00-\\x20<>\\\\\"\\{\\}\\|\\^\\`]/;\n\nconst lineModeRegExps = {\n  _iri: true,\n  _unescapedIri: true,\n  _simpleQuotedString: true,\n  _langcode: true,\n  _blank: true,\n  _newline: true,\n  _comment: true,\n  _whitespace: true,\n  _endOfFile: true,\n};\nconst invalidRegExp = /$0^/;\n\n// ## Constructor\nexport default class N3Lexer {\n  constructor(options) {\n    // ## Regular expressions\n    // It's slightly faster to have these as properties than as in-scope variables\n    this._iri = /^<((?:[^ <>{}\\\\]|\\\\[uU])+)>[ \\t]*/; // IRI with escape sequences; needs sanity check after unescaping\n    this._unescapedIri = /^<([^\\x00-\\x20<>\\\\\"\\{\\}\\|\\^\\`]*)>[ \\t]*/; // IRI without escape sequences; no unescaping\n    this._simpleQuotedString = /^\"([^\"\\\\\\r\\n]*)\"(?=[^\"])/; // string without escape sequences\n    this._simpleApostropheString = /^'([^'\\\\\\r\\n]*)'(?=[^'])/;\n    this._langcode = /^@([a-z]+(?:-[a-z0-9]+)*)(?=[^a-z0-9\\-])/i;\n    this._prefix = /^((?:[A-Za-z\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])(?:\\.?[\\-0-9A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])*)?:(?=[#\\s<])/;\n    this._prefixed = /^((?:[A-Za-z\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])(?:\\.?[\\-0-9A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])*)?:((?:(?:[0-:A-Z_a-z\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff]|%[0-9a-fA-F]{2}|\\\\[!#-\\/;=?\\-@_~])(?:(?:[\\.\\-0-:A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff]|%[0-9a-fA-F]{2}|\\\\[!#-\\/;=?\\-@_~])*(?:[\\-0-:A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff]|%[0-9a-fA-F]{2}|\\\\[!#-\\/;=?\\-@_~]))?)?)(?:[ \\t]+|(?=\\.?[,;!\\^\\s#()\\[\\]\\{\\}\"'<>]))/;\n    this._variable = /^\\?(?:(?:[A-Z_a-z\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])(?:[\\-0-:A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])*)(?=[.,;!\\^\\s#()\\[\\]\\{\\}\"'<>])/;\n    this._blank = /^_:((?:[0-9A-Z_a-z\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])(?:\\.?[\\-0-9A-Z_a-z\\xb7\\xc0-\\xd6\\xd8-\\xf6\\xf8-\\u037d\\u037f-\\u1fff\\u200c\\u200d\\u203f\\u2040\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd]|[\\ud800-\\udb7f][\\udc00-\\udfff])*)(?:[ \\t]+|(?=\\.?[,;:\\s#()\\[\\]\\{\\}\"'<>]))/;\n    this._number = /^[\\-+]?(?:(\\d+\\.\\d*|\\.?\\d+)[eE][\\-+]?|\\d*(\\.)?)\\d+(?=\\.?[,;:\\s#()\\[\\]\\{\\}\"'<>])/;\n    this._boolean = /^(?:true|false)(?=[.,;\\s#()\\[\\]\\{\\}\"'<>])/;\n    this._keyword = /^@[a-z]+(?=[\\s#<:])/i;\n    this._sparqlKeyword = /^(?:PREFIX|BASE|GRAPH)(?=[\\s#<])/i;\n    this._shortPredicates = /^a(?=[\\s#()\\[\\]\\{\\}\"'<>])/;\n    this._newline = /^[ \\t]*(?:#[^\\n\\r]*)?(?:\\r\\n|\\n|\\r)[ \\t]*/;\n    this._comment = /#([^\\n\\r]*)/;\n    this._whitespace = /^[ \\t]+/;\n    this._endOfFile = /^(?:#[^\\n\\r]*)?$/;\n    options = options || {};\n\n    // In line mode (N-Triples or N-Quads), only simple features may be parsed\n    if (this._lineMode = !!options.lineMode) {\n      this._n3Mode = false;\n      // Don't tokenize special literals\n      for (const key in this) {\n        if (!(key in lineModeRegExps) && this[key] instanceof RegExp)\n          this[key] = invalidRegExp;\n      }\n    }\n    // When not in line mode, enable N3 functionality by default\n    else {\n      this._n3Mode = options.n3 !== false;\n    }\n    // Don't output comment tokens by default\n    this._comments = !!options.comments;\n    // Cache the last tested closing position of long literals\n    this._literalClosingPos = 0;\n  }\n\n  // ## Private methods\n\n  // ### `_tokenizeToEnd` tokenizes as for as possible, emitting tokens through the callback\n  _tokenizeToEnd(callback, inputFinished) {\n    // Continue parsing as far as possible; the loop will return eventually\n    let input = this._input;\n    let currentLineLength = input.length;\n    while (true) {\n      // Count and skip whitespace lines\n      let whiteSpaceMatch, comment;\n      while (whiteSpaceMatch = this._newline.exec(input)) {\n        // Try to find a comment\n        if (this._comments && (comment = this._comment.exec(whiteSpaceMatch[0])))\n          emitToken('comment', comment[1], '', this._line, whiteSpaceMatch[0].length);\n        // Advance the input\n        input = input.substr(whiteSpaceMatch[0].length, input.length);\n        currentLineLength = input.length;\n        this._line++;\n      }\n      // Skip whitespace on current line\n      if (!whiteSpaceMatch && (whiteSpaceMatch = this._whitespace.exec(input)))\n        input = input.substr(whiteSpaceMatch[0].length, input.length);\n\n      // Stop for now if we're at the end\n      if (this._endOfFile.test(input)) {\n        // If the input is finished, emit EOF\n        if (inputFinished) {\n          // Try to find a final comment\n          if (this._comments && (comment = this._comment.exec(input)))\n            emitToken('comment', comment[1], '', this._line, input.length);\n          input = null;\n          emitToken('eof', '', '', this._line, 0);\n        }\n        return this._input = input;\n      }\n\n      // Look for specific token types based on the first character\n      const line = this._line, firstChar = input[0];\n      let type = '', value = '', prefix = '',\n          match = null, matchLength = 0, inconclusive = false;\n      switch (firstChar) {\n      case '^':\n        // We need at least 3 tokens lookahead to distinguish ^^<IRI> and ^^pre:fixed\n        if (input.length < 3)\n          break;\n        // Try to match a type\n        else if (input[1] === '^') {\n          this._previousMarker = '^^';\n          // Move to type IRI or prefixed name\n          input = input.substr(2);\n          if (input[0] !== '<') {\n            inconclusive = true;\n            break;\n          }\n        }\n        // If no type, it must be a path expression\n        else {\n          if (this._n3Mode) {\n            matchLength = 1;\n            type = '^';\n          }\n          break;\n        }\n        // Fall through in case the type is an IRI\n      case '<':\n        // Try to find a full IRI without escape sequences\n        if (match = this._unescapedIri.exec(input))\n          type = 'IRI', value = match[1];\n        // Try to find a full IRI with escape sequences\n        else if (match = this._iri.exec(input)) {\n          value = this._unescape(match[1]);\n          if (value === null || illegalIriChars.test(value))\n            return reportSyntaxError(this);\n          type = 'IRI';\n        }\n        // Try to find a nested triple\n        else if (input.length > 1 && input[1] === '<')\n          type = '<<', matchLength = 2;\n        // Try to find a backwards implication arrow\n        else if (this._n3Mode && input.length > 1 && input[1] === '=')\n          type = 'inverse', matchLength = 2, value = '>';\n        break;\n\n      case '>':\n        if (input.length > 1 && input[1] === '>')\n          type = '>>', matchLength = 2;\n        break;\n\n      case '_':\n        // Try to find a blank node. Since it can contain (but not end with) a dot,\n        // we always need a non-dot character before deciding it is a blank node.\n        // Therefore, try inserting a space if we're at the end of the input.\n        if ((match = this._blank.exec(input)) ||\n            inputFinished && (match = this._blank.exec(`${input} `)))\n          type = 'blank', prefix = '_', value = match[1];\n        break;\n\n      case '\"':\n        // Try to find a literal without escape sequences\n        if (match = this._simpleQuotedString.exec(input))\n          value = match[1];\n        // Try to find a literal wrapped in three pairs of quotes\n        else {\n          ({ value, matchLength } = this._parseLiteral(input));\n          if (value === null)\n            return reportSyntaxError(this);\n        }\n        if (match !== null || matchLength !== 0) {\n          type = 'literal';\n          this._literalClosingPos = 0;\n        }\n        break;\n\n      case \"'\":\n        if (!this._lineMode) {\n          // Try to find a literal without escape sequences\n          if (match = this._simpleApostropheString.exec(input))\n            value = match[1];\n          // Try to find a literal wrapped in three pairs of quotes\n          else {\n            ({ value, matchLength } = this._parseLiteral(input));\n            if (value === null)\n              return reportSyntaxError(this);\n          }\n          if (match !== null || matchLength !== 0) {\n            type = 'literal';\n            this._literalClosingPos = 0;\n          }\n        }\n        break;\n\n      case '?':\n        // Try to find a variable\n        if (this._n3Mode && (match = this._variable.exec(input)))\n          type = 'var', value = match[0];\n        break;\n\n      case '@':\n        // Try to find a language code\n        if (this._previousMarker === 'literal' && (match = this._langcode.exec(input)))\n          type = 'langcode', value = match[1];\n        // Try to find a keyword\n        else if (match = this._keyword.exec(input))\n          type = match[0];\n        break;\n\n      case '.':\n        // Try to find a dot as punctuation\n        if (input.length === 1 ? inputFinished : (input[1] < '0' || input[1] > '9')) {\n          type = '.';\n          matchLength = 1;\n          break;\n        }\n        // Fall through to numerical case (could be a decimal dot)\n\n      case '0':\n      case '1':\n      case '2':\n      case '3':\n      case '4':\n      case '5':\n      case '6':\n      case '7':\n      case '8':\n      case '9':\n      case '+':\n      case '-':\n        // Try to find a number. Since it can contain (but not end with) a dot,\n        // we always need a non-dot character before deciding it is a number.\n        // Therefore, try inserting a space if we're at the end of the input.\n        if (match = this._number.exec(input) ||\n            inputFinished && (match = this._number.exec(`${input} `))) {\n          type = 'literal', value = match[0];\n          prefix = (typeof match[1] === 'string' ? xsd.double :\n                    (typeof match[2] === 'string' ? xsd.decimal : xsd.integer));\n        }\n        break;\n\n      case 'B':\n      case 'b':\n      case 'p':\n      case 'P':\n      case 'G':\n      case 'g':\n        // Try to find a SPARQL-style keyword\n        if (match = this._sparqlKeyword.exec(input))\n          type = match[0].toUpperCase();\n        else\n          inconclusive = true;\n        break;\n\n      case 'f':\n      case 't':\n        // Try to match a boolean\n        if (match = this._boolean.exec(input))\n          type = 'literal', value = match[0], prefix = xsd.boolean;\n        else\n          inconclusive = true;\n        break;\n\n      case 'a':\n        // Try to find an abbreviated predicate\n        if (match = this._shortPredicates.exec(input))\n          type = 'abbreviation', value = 'a';\n        else\n          inconclusive = true;\n        break;\n\n      case '=':\n        // Try to find an implication arrow or equals sign\n        if (this._n3Mode && input.length > 1) {\n          type = 'abbreviation';\n          if (input[1] !== '>')\n            matchLength = 1, value = '=';\n          else\n            matchLength = 2, value = '>';\n        }\n        break;\n\n      case '!':\n        if (!this._n3Mode)\n          break;\n      case ',':\n      case ';':\n      case '[':\n      case ']':\n      case '(':\n      case ')':\n      case '}':\n        if (!this._lineMode) {\n          matchLength = 1;\n          type = firstChar;\n        }\n        break;\n      case '{':\n        // We need at least 2 tokens lookahead to distinguish \"{|\" and \"{ \"\n        if (!this._lineMode && input.length >= 2) {\n          // Try to find a quoted triple annotation start\n          if (input[1] === '|')\n            type = '{|', matchLength = 2;\n          else\n            type = firstChar, matchLength = 1;\n        }\n        break;\n      case '|':\n        // We need 2 tokens lookahead to parse \"|}\"\n        // Try to find a quoted triple annotation end\n        if (input.length >= 2 && input[1] === '}')\n          type = '|}', matchLength = 2;\n        break;\n\n      default:\n        inconclusive = true;\n      }\n\n      // Some first characters do not allow an immediate decision, so inspect more\n      if (inconclusive) {\n        // Try to find a prefix\n        if ((this._previousMarker === '@prefix' || this._previousMarker === 'PREFIX') &&\n            (match = this._prefix.exec(input)))\n          type = 'prefix', value = match[1] || '';\n        // Try to find a prefixed name. Since it can contain (but not end with) a dot,\n        // we always need a non-dot character before deciding it is a prefixed name.\n        // Therefore, try inserting a space if we're at the end of the input.\n        else if ((match = this._prefixed.exec(input)) ||\n                 inputFinished && (match = this._prefixed.exec(`${input} `)))\n          type = 'prefixed', prefix = match[1] || '', value = this._unescape(match[2]);\n      }\n\n      // A type token is special: it can only be emitted after an IRI or prefixed name is read\n      if (this._previousMarker === '^^') {\n        switch (type) {\n        case 'prefixed': type = 'type';    break;\n        case 'IRI':      type = 'typeIRI'; break;\n        default:         type = '';\n        }\n      }\n\n      // What if nothing of the above was found?\n      if (!type) {\n        // We could be in streaming mode, and then we just wait for more input to arrive.\n        // Otherwise, a syntax error has occurred in the input.\n        // One exception: error on an unaccounted linebreak (= not inside a triple-quoted literal).\n        if (inputFinished || (!/^'''|^\"\"\"/.test(input) && /\\n|\\r/.test(input)))\n          return reportSyntaxError(this);\n        else\n          return this._input = input;\n      }\n\n      // Emit the parsed token\n      const length = matchLength || match[0].length;\n      const token = emitToken(type, value, prefix, line, length);\n      this.previousToken = token;\n      this._previousMarker = type;\n\n      // Advance to next part to tokenize\n      input = input.substr(length, input.length);\n    }\n\n    // Emits the token through the callback\n    function emitToken(type, value, prefix, line, length) {\n      const start = input ? currentLineLength - input.length : currentLineLength;\n      const end = start + length;\n      const token = { type, value, prefix, line, start, end };\n      callback(null, token);\n      return token;\n    }\n    // Signals the syntax error through the callback\n    function reportSyntaxError(self) { callback(self._syntaxError(/^\\S*/.exec(input)[0])); }\n  }\n\n  // ### `_unescape` replaces N3 escape codes by their corresponding characters\n  _unescape(item) {\n    let invalid = false;\n    const replaced = item.replace(escapeSequence, (sequence, unicode4, unicode8, escapedChar) => {\n      // 4-digit unicode character\n      if (typeof unicode4 === 'string')\n        return String.fromCharCode(Number.parseInt(unicode4, 16));\n      // 8-digit unicode character\n      if (typeof unicode8 === 'string') {\n        let charCode = Number.parseInt(unicode8, 16);\n        return charCode <= 0xFFFF ? String.fromCharCode(Number.parseInt(unicode8, 16)) :\n          String.fromCharCode(0xD800 + ((charCode -= 0x10000) >> 10), 0xDC00 + (charCode & 0x3FF));\n      }\n      // fixed escape sequence\n      if (escapedChar in escapeReplacements)\n        return escapeReplacements[escapedChar];\n      // invalid escape sequence\n      invalid = true;\n      return '';\n    });\n    return invalid ? null : replaced;\n  }\n\n  // ### `_parseLiteral` parses a literal into an unescaped value\n  _parseLiteral(input) {\n    // Ensure we have enough lookahead to identify triple-quoted strings\n    if (input.length >= 3) {\n      // Identify the opening quote(s)\n      const opening = input.match(/^(?:\"\"\"|\"|'''|'|)/)[0];\n      const openingLength = opening.length;\n\n      // Find the next candidate closing quotes\n      let closingPos = Math.max(this._literalClosingPos, openingLength);\n      while ((closingPos = input.indexOf(opening, closingPos)) > 0) {\n        // Count backslashes right before the closing quotes\n        let backslashCount = 0;\n        while (input[closingPos - backslashCount - 1] === '\\\\')\n          backslashCount++;\n\n        // An even number of backslashes (in particular 0)\n        // means these are actual, non-escaped closing quotes\n        if (backslashCount % 2 === 0) {\n          // Extract and unescape the value\n          const raw = input.substring(openingLength, closingPos);\n          const lines = raw.split(/\\r\\n|\\r|\\n/).length - 1;\n          const matchLength = closingPos + openingLength;\n          // Only triple-quoted strings can be multi-line\n          if (openingLength === 1 && lines !== 0 ||\n              openingLength === 3 && this._lineMode)\n            break;\n          this._line += lines;\n          return { value: this._unescape(raw), matchLength };\n        }\n        closingPos++;\n      }\n      this._literalClosingPos = input.length - openingLength + 1;\n    }\n    return { value: '', matchLength: 0 };\n  }\n\n  // ### `_syntaxError` creates a syntax error for the given issue\n  _syntaxError(issue) {\n    this._input = null;\n    const err = new Error(`Unexpected \"${issue}\" on line ${this._line}.`);\n    err.context = {\n      token: undefined,\n      line: this._line,\n      previousToken: this.previousToken,\n    };\n    return err;\n  }\n\n  // ### Strips off any starting UTF BOM mark.\n  _readStartingBom(input) {\n    return input.startsWith('\\ufeff') ? input.substr(1) : input;\n  }\n\n  // ## Public methods\n\n  // ### `tokenize` starts the transformation of an N3 document into an array of tokens.\n  // The input can be a string or a stream.\n  tokenize(input, callback) {\n    this._line = 1;\n\n    // If the input is a string, continuously emit tokens through the callback until the end\n    if (typeof input === 'string') {\n      this._input = this._readStartingBom(input);\n      // If a callback was passed, asynchronously call it\n      if (typeof callback === 'function')\n        queueMicrotask(() => this._tokenizeToEnd(callback, true));\n      // If no callback was passed, tokenize synchronously and return\n      else {\n        const tokens = [];\n        let error;\n        this._tokenizeToEnd((e, t) => e ? (error = e) : tokens.push(t), true);\n        if (error) throw error;\n        return tokens;\n      }\n    }\n    // Otherwise, the input must be a stream\n    else {\n      this._pendingBuffer = null;\n      if (typeof input.setEncoding === 'function')\n        input.setEncoding('utf8');\n      // Adds the data chunk to the buffer and parses as far as possible\n      input.on('data', data => {\n        if (this._input !== null && data.length !== 0) {\n          // Prepend any previous pending writes\n          if (this._pendingBuffer) {\n            data = Buffer.concat([this._pendingBuffer, data]);\n            this._pendingBuffer = null;\n          }\n          // Hold if the buffer ends in an incomplete unicode sequence\n          if (data[data.length - 1] & 0x80) {\n            this._pendingBuffer = data;\n          }\n          // Otherwise, tokenize as far as possible\n          else {\n            // Only read a BOM at the start\n            if (typeof this._input === 'undefined')\n              this._input = this._readStartingBom(typeof data === 'string' ? data : data.toString());\n            else\n              this._input += data;\n            this._tokenizeToEnd(callback, false);\n          }\n        }\n      });\n      // Parses until the end\n      input.on('end', () => {\n        if (typeof this._input === 'string')\n          this._tokenizeToEnd(callback, true);\n      });\n      input.on('error', callback);\n    }\n  }\n}\n",
-      "start": 1701230037217,
-      "end": 1701230037240,
+      "start": 1701230370637,
+      "end": 1701230370657,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370657,
+      "end": 1701230370657,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037240,
-      "end": 1701230037240,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037240,
-      "end": 1701230037241,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037241,
-      "end": 1701230037241,
+      "start": 1701230370658,
+      "end": 1701230370658,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230037241,
-      "end": 1701230037242,
+      "start": 1701230370658,
+      "end": 1701230370659,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037242,
-      "end": 1701230037242,
+      "start": 1701230370659,
+      "end": 1701230370659,
       "order": "normal"
     }
   ]

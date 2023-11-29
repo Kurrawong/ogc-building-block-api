@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst { MathFloor, NumberIsInteger } = require('../../ours/primordials')\nconst { ERR_INVALID_ARG_VALUE } = require('../../ours/errors').codes\nfunction highWaterMarkFrom(options, isDuplex, duplexKey) {\n  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null\n}\nfunction getDefaultHighWaterMark(objectMode) {\n  return objectMode ? 16 : 16 * 1024\n}\nfunction getHighWaterMark(state, options, duplexKey, isDuplex) {\n  const hwm = highWaterMarkFrom(options, isDuplex, duplexKey)\n  if (hwm != null) {\n    if (!NumberIsInteger(hwm) || hwm < 0) {\n      const name = isDuplex ? `options.${duplexKey}` : 'options.highWaterMark'\n      throw new ERR_INVALID_ARG_VALUE(name, hwm)\n    }\n    return MathFloor(hwm)\n  }\n\n  // Default value\n  return getDefaultHighWaterMark(state.objectMode)\n}\nmodule.exports = {\n  getHighWaterMark,\n  getDefaultHighWaterMark\n}\n",
-      "start": 1701230037681,
-      "end": 1701230037729,
+      "start": 1701230371104,
+      "end": 1701230371156,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\n\n'use strict'\n\nconst { MathFloor, NumberIsInteger } = require$$0\nconst { ERR_INVALID_ARG_VALUE } = require$$1.codes\nfunction highWaterMarkFrom(options, isDuplex, duplexKey) {\n  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null\n}\nfunction getDefaultHighWaterMark(objectMode) {\n  return objectMode ? 16 : 16 * 1024\n}\nfunction getHighWaterMark(state, options, duplexKey, isDuplex) {\n  const hwm = highWaterMarkFrom(options, isDuplex, duplexKey)\n  if (hwm != null) {\n    if (!NumberIsInteger(hwm) || hwm < 0) {\n      const name = isDuplex ? `options.${duplexKey}` : 'options.highWaterMark'\n      throw new ERR_INVALID_ARG_VALUE(name, hwm)\n    }\n    return MathFloor(hwm)\n  }\n\n  // Default value\n  return getDefaultHighWaterMark(state.objectMode)\n}\nvar state = {\n  getHighWaterMark,\n  getDefaultHighWaterMark\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(state);\nexport { state as __moduleExports };",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371156,
+      "end": 1701230371157,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037730,
-      "end": 1701230037730,
+      "start": 1701230371157,
+      "end": 1701230371157,
       "order": "normal"
     }
   ]

@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst { ArrayPrototypePop, Promise } = require('../ours/primordials')\nconst { isIterable, isNodeStream, isWebStream } = require('../internal/streams/utils')\nconst { pipelineImpl: pl } = require('../internal/streams/pipeline')\nconst { finished } = require('../internal/streams/end-of-stream')\nrequire('../../lib/stream.js')\nfunction pipeline(...streams) {\n  return new Promise((resolve, reject) => {\n    let signal\n    let end\n    const lastArg = streams[streams.length - 1]\n    if (\n      lastArg &&\n      typeof lastArg === 'object' &&\n      !isNodeStream(lastArg) &&\n      !isIterable(lastArg) &&\n      !isWebStream(lastArg)\n    ) {\n      const options = ArrayPrototypePop(streams)\n      signal = options.signal\n      end = options.end\n    }\n    pl(\n      streams,\n      (err, value) => {\n        if (err) {\n          reject(err)\n        } else {\n          resolve(value)\n        }\n      },\n      {\n        signal,\n        end\n      }\n    )\n  })\n}\nmodule.exports = {\n  finished,\n  pipeline\n}\n",
-      "start": 1701230037587,
-      "end": 1701230037618,
+      "start": 1701230370994,
+      "end": 1701230371027,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037618,
-      "end": 1701230037618,
+      "start": 1701230371027,
+      "end": 1701230371027,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/pipeline.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/end-of-stream.js?commonjs-proxy\";\nimport { __require as require$$4 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/stream.js?commonjs-wrapped\";\n\nvar promises;\nvar hasRequiredPromises;\n\nfunction requirePromises () {\n\tif (hasRequiredPromises) return promises;\n\thasRequiredPromises = 1;\n\t'use strict'\n\n\tconst { ArrayPrototypePop, Promise } = require$$0\n\tconst { isIterable, isNodeStream, isWebStream } = require$$1\n\tconst { pipelineImpl: pl } = require$$2\n\tconst { finished } = require$$3\n\trequire$$4()\n\tfunction pipeline(...streams) {\n\t  return new Promise((resolve, reject) => {\n\t    let signal\n\t    let end\n\t    const lastArg = streams[streams.length - 1]\n\t    if (\n\t      lastArg &&\n\t      typeof lastArg === 'object' &&\n\t      !isNodeStream(lastArg) &&\n\t      !isIterable(lastArg) &&\n\t      !isWebStream(lastArg)\n\t    ) {\n\t      const options = ArrayPrototypePop(streams)\n\t      signal = options.signal\n\t      end = options.end\n\t    }\n\t    pl(\n\t      streams,\n\t      (err, value) => {\n\t        if (err) {\n\t          reject(err)\n\t        } else {\n\t          resolve(value)\n\t        }\n\t      },\n\t      {\n\t        signal,\n\t        end\n\t      }\n\t    )\n\t  })\n\t}\n\tpromises = {\n\t  finished,\n\t  pipeline\n\t}\n\treturn promises;\n}\n\nexport { requirePromises as __require };",
-      "start": 1701230037618,
-      "end": 1701230037763,
+      "start": 1701230371027,
+      "end": 1701230371195,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037763,
-      "end": 1701230037763,
+      "start": 1701230371195,
+      "end": 1701230371195,
       "order": "normal"
     }
   ]

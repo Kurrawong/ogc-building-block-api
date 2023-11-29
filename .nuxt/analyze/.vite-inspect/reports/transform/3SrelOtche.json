@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "/* replacement start */\n\nconst process = require('process/')\n\n/* replacement end */\n// Ported from https://github.com/mafintosh/pump with\n// permission from the author, Mathias Buus (@mafintosh).\n\n;('use strict')\nconst { ArrayIsArray, Promise, SymbolAsyncIterator } = require('../../ours/primordials')\nconst eos = require('./end-of-stream')\nconst { once } = require('../../ours/util')\nconst destroyImpl = require('./destroy')\nconst Duplex = require('./duplex')\nconst {\n  aggregateTwoErrors,\n  codes: {\n    ERR_INVALID_ARG_TYPE,\n    ERR_INVALID_RETURN_VALUE,\n    ERR_MISSING_ARGS,\n    ERR_STREAM_DESTROYED,\n    ERR_STREAM_PREMATURE_CLOSE\n  },\n  AbortError\n} = require('../../ours/errors')\nconst { validateFunction, validateAbortSignal } = require('../validators')\nconst {\n  isIterable,\n  isReadable,\n  isReadableNodeStream,\n  isNodeStream,\n  isTransformStream,\n  isWebStream,\n  isReadableStream,\n  isReadableEnded\n} = require('./utils')\nconst AbortController = globalThis.AbortController || require('abort-controller').AbortController\nlet PassThrough\nlet Readable\nfunction destroyer(stream, reading, writing) {\n  let finished = false\n  stream.on('close', () => {\n    finished = true\n  })\n  const cleanup = eos(\n    stream,\n    {\n      readable: reading,\n      writable: writing\n    },\n    (err) => {\n      finished = !err\n    }\n  )\n  return {\n    destroy: (err) => {\n      if (finished) return\n      finished = true\n      destroyImpl.destroyer(stream, err || new ERR_STREAM_DESTROYED('pipe'))\n    },\n    cleanup\n  }\n}\nfunction popCallback(streams) {\n  // Streams should never be an empty array. It should always contain at least\n  // a single stream. Therefore optimize for the average case instead of\n  // checking for length === 0 as well.\n  validateFunction(streams[streams.length - 1], 'streams[stream.length - 1]')\n  return streams.pop()\n}\nfunction makeAsyncIterable(val) {\n  if (isIterable(val)) {\n    return val\n  } else if (isReadableNodeStream(val)) {\n    // Legacy streams are not Iterable.\n    return fromReadable(val)\n  }\n  throw new ERR_INVALID_ARG_TYPE('val', ['Readable', 'Iterable', 'AsyncIterable'], val)\n}\nasync function* fromReadable(val) {\n  if (!Readable) {\n    Readable = require('./readable')\n  }\n  yield* Readable.prototype[SymbolAsyncIterator].call(val)\n}\nasync function pumpToNode(iterable, writable, finish, { end }) {\n  let error\n  let onresolve = null\n  const resume = (err) => {\n    if (err) {\n      error = err\n    }\n    if (onresolve) {\n      const callback = onresolve\n      onresolve = null\n      callback()\n    }\n  }\n  const wait = () =>\n    new Promise((resolve, reject) => {\n      if (error) {\n        reject(error)\n      } else {\n        onresolve = () => {\n          if (error) {\n            reject(error)\n          } else {\n            resolve()\n          }\n        }\n      }\n    })\n  writable.on('drain', resume)\n  const cleanup = eos(\n    writable,\n    {\n      readable: false\n    },\n    resume\n  )\n  try {\n    if (writable.writableNeedDrain) {\n      await wait()\n    }\n    for await (const chunk of iterable) {\n      if (!writable.write(chunk)) {\n        await wait()\n      }\n    }\n    if (end) {\n      writable.end()\n    }\n    await wait()\n    finish()\n  } catch (err) {\n    finish(error !== err ? aggregateTwoErrors(error, err) : err)\n  } finally {\n    cleanup()\n    writable.off('drain', resume)\n  }\n}\nasync function pumpToWeb(readable, writable, finish, { end }) {\n  if (isTransformStream(writable)) {\n    writable = writable.writable\n  }\n  // https://streams.spec.whatwg.org/#example-manual-write-with-backpressure\n  const writer = writable.getWriter()\n  try {\n    for await (const chunk of readable) {\n      await writer.ready\n      writer.write(chunk).catch(() => {})\n    }\n    await writer.ready\n    if (end) {\n      await writer.close()\n    }\n    finish()\n  } catch (err) {\n    try {\n      await writer.abort(err)\n      finish(err)\n    } catch (err) {\n      finish(err)\n    }\n  }\n}\nfunction pipeline(...streams) {\n  return pipelineImpl(streams, once(popCallback(streams)))\n}\nfunction pipelineImpl(streams, callback, opts) {\n  if (streams.length === 1 && ArrayIsArray(streams[0])) {\n    streams = streams[0]\n  }\n  if (streams.length < 2) {\n    throw new ERR_MISSING_ARGS('streams')\n  }\n  const ac = new AbortController()\n  const signal = ac.signal\n  const outerSignal = opts === null || opts === undefined ? undefined : opts.signal\n\n  // Need to cleanup event listeners if last stream is readable\n  // https://github.com/nodejs/node/issues/35452\n  const lastStreamCleanup = []\n  validateAbortSignal(outerSignal, 'options.signal')\n  function abort() {\n    finishImpl(new AbortError())\n  }\n  outerSignal === null || outerSignal === undefined ? undefined : outerSignal.addEventListener('abort', abort)\n  let error\n  let value\n  const destroys = []\n  let finishCount = 0\n  function finish(err) {\n    finishImpl(err, --finishCount === 0)\n  }\n  function finishImpl(err, final) {\n    if (err && (!error || error.code === 'ERR_STREAM_PREMATURE_CLOSE')) {\n      error = err\n    }\n    if (!error && !final) {\n      return\n    }\n    while (destroys.length) {\n      destroys.shift()(error)\n    }\n    outerSignal === null || outerSignal === undefined ? undefined : outerSignal.removeEventListener('abort', abort)\n    ac.abort()\n    if (final) {\n      if (!error) {\n        lastStreamCleanup.forEach((fn) => fn())\n      }\n      process.nextTick(callback, error, value)\n    }\n  }\n  let ret\n  for (let i = 0; i < streams.length; i++) {\n    const stream = streams[i]\n    const reading = i < streams.length - 1\n    const writing = i > 0\n    const end = reading || (opts === null || opts === undefined ? undefined : opts.end) !== false\n    const isLastStream = i === streams.length - 1\n    if (isNodeStream(stream)) {\n      if (end) {\n        const { destroy, cleanup } = destroyer(stream, reading, writing)\n        destroys.push(destroy)\n        if (isReadable(stream) && isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      }\n\n      // Catch stream errors that occur after pipe/pump has completed.\n      function onError(err) {\n        if (err && err.name !== 'AbortError' && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {\n          finish(err)\n        }\n      }\n      stream.on('error', onError)\n      if (isReadable(stream) && isLastStream) {\n        lastStreamCleanup.push(() => {\n          stream.removeListener('error', onError)\n        })\n      }\n    }\n    if (i === 0) {\n      if (typeof stream === 'function') {\n        ret = stream({\n          signal\n        })\n        if (!isIterable(ret)) {\n          throw new ERR_INVALID_RETURN_VALUE('Iterable, AsyncIterable or Stream', 'source', ret)\n        }\n      } else if (isIterable(stream) || isReadableNodeStream(stream) || isTransformStream(stream)) {\n        ret = stream\n      } else {\n        ret = Duplex.from(stream)\n      }\n    } else if (typeof stream === 'function') {\n      if (isTransformStream(ret)) {\n        var _ret\n        ret = makeAsyncIterable((_ret = ret) === null || _ret === undefined ? undefined : _ret.readable)\n      } else {\n        ret = makeAsyncIterable(ret)\n      }\n      ret = stream(ret, {\n        signal\n      })\n      if (reading) {\n        if (!isIterable(ret, true)) {\n          throw new ERR_INVALID_RETURN_VALUE('AsyncIterable', `transform[${i - 1}]`, ret)\n        }\n      } else {\n        var _ret2\n        if (!PassThrough) {\n          PassThrough = require('./passthrough')\n        }\n\n        // If the last argument to pipeline is not a stream\n        // we must create a proxy stream so that pipeline(...)\n        // always returns a stream which can be further\n        // composed through `.pipe(stream)`.\n\n        const pt = new PassThrough({\n          objectMode: true\n        })\n\n        // Handle Promises/A+ spec, `then` could be a getter that throws on\n        // second use.\n        const then = (_ret2 = ret) === null || _ret2 === undefined ? undefined : _ret2.then\n        if (typeof then === 'function') {\n          finishCount++\n          then.call(\n            ret,\n            (val) => {\n              value = val\n              if (val != null) {\n                pt.write(val)\n              }\n              if (end) {\n                pt.end()\n              }\n              process.nextTick(finish)\n            },\n            (err) => {\n              pt.destroy(err)\n              process.nextTick(finish, err)\n            }\n          )\n        } else if (isIterable(ret, true)) {\n          finishCount++\n          pumpToNode(ret, pt, finish, {\n            end\n          })\n        } else if (isReadableStream(ret) || isTransformStream(ret)) {\n          const toRead = ret.readable || ret\n          finishCount++\n          pumpToNode(toRead, pt, finish, {\n            end\n          })\n        } else {\n          throw new ERR_INVALID_RETURN_VALUE('AsyncIterable or Promise', 'destination', ret)\n        }\n        ret = pt\n        const { destroy, cleanup } = destroyer(ret, false, true)\n        destroys.push(destroy)\n        if (isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      }\n    } else if (isNodeStream(stream)) {\n      if (isReadableNodeStream(ret)) {\n        finishCount += 2\n        const cleanup = pipe(ret, stream, finish, {\n          end\n        })\n        if (isReadable(stream) && isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      } else if (isTransformStream(ret) || isReadableStream(ret)) {\n        const toRead = ret.readable || ret\n        finishCount++\n        pumpToNode(toRead, stream, finish, {\n          end\n        })\n      } else if (isIterable(ret)) {\n        finishCount++\n        pumpToNode(ret, stream, finish, {\n          end\n        })\n      } else {\n        throw new ERR_INVALID_ARG_TYPE(\n          'val',\n          ['Readable', 'Iterable', 'AsyncIterable', 'ReadableStream', 'TransformStream'],\n          ret\n        )\n      }\n      ret = stream\n    } else if (isWebStream(stream)) {\n      if (isReadableNodeStream(ret)) {\n        finishCount++\n        pumpToWeb(makeAsyncIterable(ret), stream, finish, {\n          end\n        })\n      } else if (isReadableStream(ret) || isIterable(ret)) {\n        finishCount++\n        pumpToWeb(ret, stream, finish, {\n          end\n        })\n      } else if (isTransformStream(ret)) {\n        finishCount++\n        pumpToWeb(ret.readable, stream, finish, {\n          end\n        })\n      } else {\n        throw new ERR_INVALID_ARG_TYPE(\n          'val',\n          ['Readable', 'Iterable', 'AsyncIterable', 'ReadableStream', 'TransformStream'],\n          ret\n        )\n      }\n      ret = stream\n    } else {\n      ret = Duplex.from(stream)\n    }\n  }\n  if (\n    (signal !== null && signal !== undefined && signal.aborted) ||\n    (outerSignal !== null && outerSignal !== undefined && outerSignal.aborted)\n  ) {\n    process.nextTick(abort)\n  }\n  return ret\n}\nfunction pipe(src, dst, finish, { end }) {\n  let ended = false\n  dst.on('close', () => {\n    if (!ended) {\n      // Finish if the destination closes before the source has completed.\n      finish(new ERR_STREAM_PREMATURE_CLOSE())\n    }\n  })\n  src.pipe(dst, {\n    end: false\n  }) // If end is true we already will have a listener to end dst.\n\n  if (end) {\n    // Compat. Before node v10.12.0 stdio used to throw an error so\n    // pipe() did/does not end() stdio destinations.\n    // Now they allow it but \"secretly\" don't close the underlying fd.\n\n    function endFn() {\n      ended = true\n      dst.end()\n    }\n    if (isReadableEnded(src)) {\n      // End the destination if the source has already ended.\n      process.nextTick(endFn)\n    } else {\n      src.once('end', endFn)\n    }\n  } else {\n    finish()\n  }\n  eos(\n    src,\n    {\n      readable: true,\n      writable: false\n    },\n    (err) => {\n      const rState = src._readableState\n      if (\n        err &&\n        err.code === 'ERR_STREAM_PREMATURE_CLOSE' &&\n        rState &&\n        rState.ended &&\n        !rState.errored &&\n        !rState.errorEmitted\n      ) {\n        // Some readable streams will emit 'close' before 'end'. However, since\n        // this is on the readable side 'end' should still be emitted if the\n        // stream has been ended and no error emitted. This should be allowed in\n        // favor of backwards compatibility. Since the stream is piped to a\n        // destination this should not result in any observable difference.\n        // We don't need to check if this is a writable premature close since\n        // eos will only fail with premature close on the reading side for\n        // duplex streams.\n        src.once('end', finish).once('error', finish)\n      } else {\n        finish(err)\n      }\n    }\n  )\n  return eos(\n    dst,\n    {\n      readable: false,\n      writable: true\n    },\n    finish\n  )\n}\nmodule.exports = {\n  pipelineImpl,\n  pipeline\n}\n",
-      "start": 1701230037624,
-      "end": 1701230037653,
+      "start": 1701230371038,
+      "end": 1701230371060,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037653,
-      "end": 1701230037653,
+      "start": 1701230371060,
+      "end": 1701230371060,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "/* replacement start */\nimport * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/process/browser.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/end-of-stream.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js?commonjs-proxy\";\nimport require$$4 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/destroy.js?commonjs-proxy\";\nimport { __require as require$$5 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/duplex.js?commonjs-wrapped\";\nimport require$$6 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\nimport require$$7 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/validators.js?commonjs-proxy\";\nimport require$$8 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\nimport { __require as require$$9 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/unenv/runtime/mock/empty.cjs?commonjs-wrapped\";\nimport { __require as require$$10 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/readable.js?commonjs-wrapped\";\nimport require$$11 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/passthrough.js?commonjs-proxy\";\n\nconst process = require$$0\n\n/* replacement end */\n// Ported from https://github.com/mafintosh/pump with\n// permission from the author, Mathias Buus (@mafintosh).\n\n;('use strict')\nconst { ArrayIsArray, Promise, SymbolAsyncIterator } = require$$1\nconst eos = require$$2\nconst { once } = require$$3\nconst destroyImpl = require$$4\nconst Duplex = require$$5()\nconst {\n  aggregateTwoErrors,\n  codes: {\n    ERR_INVALID_ARG_TYPE,\n    ERR_INVALID_RETURN_VALUE,\n    ERR_MISSING_ARGS,\n    ERR_STREAM_DESTROYED,\n    ERR_STREAM_PREMATURE_CLOSE\n  },\n  AbortError\n} = require$$6\nconst { validateFunction, validateAbortSignal } = require$$7\nconst {\n  isIterable,\n  isReadable,\n  isReadableNodeStream,\n  isNodeStream,\n  isTransformStream,\n  isWebStream,\n  isReadableStream,\n  isReadableEnded\n} = require$$8\nconst AbortController = globalThis.AbortController || require$$9().AbortController\nlet PassThrough\nlet Readable\nfunction destroyer(stream, reading, writing) {\n  let finished = false\n  stream.on('close', () => {\n    finished = true\n  })\n  const cleanup = eos(\n    stream,\n    {\n      readable: reading,\n      writable: writing\n    },\n    (err) => {\n      finished = !err\n    }\n  )\n  return {\n    destroy: (err) => {\n      if (finished) return\n      finished = true\n      destroyImpl.destroyer(stream, err || new ERR_STREAM_DESTROYED('pipe'))\n    },\n    cleanup\n  }\n}\nfunction popCallback(streams) {\n  // Streams should never be an empty array. It should always contain at least\n  // a single stream. Therefore optimize for the average case instead of\n  // checking for length === 0 as well.\n  validateFunction(streams[streams.length - 1], 'streams[stream.length - 1]')\n  return streams.pop()\n}\nfunction makeAsyncIterable(val) {\n  if (isIterable(val)) {\n    return val\n  } else if (isReadableNodeStream(val)) {\n    // Legacy streams are not Iterable.\n    return fromReadable(val)\n  }\n  throw new ERR_INVALID_ARG_TYPE('val', ['Readable', 'Iterable', 'AsyncIterable'], val)\n}\nasync function* fromReadable(val) {\n  if (!Readable) {\n    Readable = require$$10()\n  }\n  yield* Readable.prototype[SymbolAsyncIterator].call(val)\n}\nasync function pumpToNode(iterable, writable, finish, { end }) {\n  let error\n  let onresolve = null\n  const resume = (err) => {\n    if (err) {\n      error = err\n    }\n    if (onresolve) {\n      const callback = onresolve\n      onresolve = null\n      callback()\n    }\n  }\n  const wait = () =>\n    new Promise((resolve, reject) => {\n      if (error) {\n        reject(error)\n      } else {\n        onresolve = () => {\n          if (error) {\n            reject(error)\n          } else {\n            resolve()\n          }\n        }\n      }\n    })\n  writable.on('drain', resume)\n  const cleanup = eos(\n    writable,\n    {\n      readable: false\n    },\n    resume\n  )\n  try {\n    if (writable.writableNeedDrain) {\n      await wait()\n    }\n    for await (const chunk of iterable) {\n      if (!writable.write(chunk)) {\n        await wait()\n      }\n    }\n    if (end) {\n      writable.end()\n    }\n    await wait()\n    finish()\n  } catch (err) {\n    finish(error !== err ? aggregateTwoErrors(error, err) : err)\n  } finally {\n    cleanup()\n    writable.off('drain', resume)\n  }\n}\nasync function pumpToWeb(readable, writable, finish, { end }) {\n  if (isTransformStream(writable)) {\n    writable = writable.writable\n  }\n  // https://streams.spec.whatwg.org/#example-manual-write-with-backpressure\n  const writer = writable.getWriter()\n  try {\n    for await (const chunk of readable) {\n      await writer.ready\n      writer.write(chunk).catch(() => {})\n    }\n    await writer.ready\n    if (end) {\n      await writer.close()\n    }\n    finish()\n  } catch (err) {\n    try {\n      await writer.abort(err)\n      finish(err)\n    } catch (err) {\n      finish(err)\n    }\n  }\n}\nfunction pipeline(...streams) {\n  return pipelineImpl(streams, once(popCallback(streams)))\n}\nfunction pipelineImpl(streams, callback, opts) {\n  if (streams.length === 1 && ArrayIsArray(streams[0])) {\n    streams = streams[0]\n  }\n  if (streams.length < 2) {\n    throw new ERR_MISSING_ARGS('streams')\n  }\n  const ac = new AbortController()\n  const signal = ac.signal\n  const outerSignal = opts === null || opts === undefined ? undefined : opts.signal\n\n  // Need to cleanup event listeners if last stream is readable\n  // https://github.com/nodejs/node/issues/35452\n  const lastStreamCleanup = []\n  validateAbortSignal(outerSignal, 'options.signal')\n  function abort() {\n    finishImpl(new AbortError())\n  }\n  outerSignal === null || outerSignal === undefined ? undefined : outerSignal.addEventListener('abort', abort)\n  let error\n  let value\n  const destroys = []\n  let finishCount = 0\n  function finish(err) {\n    finishImpl(err, --finishCount === 0)\n  }\n  function finishImpl(err, final) {\n    if (err && (!error || error.code === 'ERR_STREAM_PREMATURE_CLOSE')) {\n      error = err\n    }\n    if (!error && !final) {\n      return\n    }\n    while (destroys.length) {\n      destroys.shift()(error)\n    }\n    outerSignal === null || outerSignal === undefined ? undefined : outerSignal.removeEventListener('abort', abort)\n    ac.abort()\n    if (final) {\n      if (!error) {\n        lastStreamCleanup.forEach((fn) => fn())\n      }\n      process.nextTick(callback, error, value)\n    }\n  }\n  let ret\n  for (let i = 0; i < streams.length; i++) {\n    const stream = streams[i]\n    const reading = i < streams.length - 1\n    const writing = i > 0\n    const end = reading || (opts === null || opts === undefined ? undefined : opts.end) !== false\n    const isLastStream = i === streams.length - 1\n    if (isNodeStream(stream)) {\n      if (end) {\n        const { destroy, cleanup } = destroyer(stream, reading, writing)\n        destroys.push(destroy)\n        if (isReadable(stream) && isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      }\n\n      // Catch stream errors that occur after pipe/pump has completed.\n      function onError(err) {\n        if (err && err.name !== 'AbortError' && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {\n          finish(err)\n        }\n      }\n      stream.on('error', onError)\n      if (isReadable(stream) && isLastStream) {\n        lastStreamCleanup.push(() => {\n          stream.removeListener('error', onError)\n        })\n      }\n    }\n    if (i === 0) {\n      if (typeof stream === 'function') {\n        ret = stream({\n          signal\n        })\n        if (!isIterable(ret)) {\n          throw new ERR_INVALID_RETURN_VALUE('Iterable, AsyncIterable or Stream', 'source', ret)\n        }\n      } else if (isIterable(stream) || isReadableNodeStream(stream) || isTransformStream(stream)) {\n        ret = stream\n      } else {\n        ret = Duplex.from(stream)\n      }\n    } else if (typeof stream === 'function') {\n      if (isTransformStream(ret)) {\n        var _ret\n        ret = makeAsyncIterable((_ret = ret) === null || _ret === undefined ? undefined : _ret.readable)\n      } else {\n        ret = makeAsyncIterable(ret)\n      }\n      ret = stream(ret, {\n        signal\n      })\n      if (reading) {\n        if (!isIterable(ret, true)) {\n          throw new ERR_INVALID_RETURN_VALUE('AsyncIterable', `transform[${i - 1}]`, ret)\n        }\n      } else {\n        var _ret2\n        if (!PassThrough) {\n          PassThrough = require$$11\n        }\n\n        // If the last argument to pipeline is not a stream\n        // we must create a proxy stream so that pipeline(...)\n        // always returns a stream which can be further\n        // composed through `.pipe(stream)`.\n\n        const pt = new PassThrough({\n          objectMode: true\n        })\n\n        // Handle Promises/A+ spec, `then` could be a getter that throws on\n        // second use.\n        const then = (_ret2 = ret) === null || _ret2 === undefined ? undefined : _ret2.then\n        if (typeof then === 'function') {\n          finishCount++\n          then.call(\n            ret,\n            (val) => {\n              value = val\n              if (val != null) {\n                pt.write(val)\n              }\n              if (end) {\n                pt.end()\n              }\n              process.nextTick(finish)\n            },\n            (err) => {\n              pt.destroy(err)\n              process.nextTick(finish, err)\n            }\n          )\n        } else if (isIterable(ret, true)) {\n          finishCount++\n          pumpToNode(ret, pt, finish, {\n            end\n          })\n        } else if (isReadableStream(ret) || isTransformStream(ret)) {\n          const toRead = ret.readable || ret\n          finishCount++\n          pumpToNode(toRead, pt, finish, {\n            end\n          })\n        } else {\n          throw new ERR_INVALID_RETURN_VALUE('AsyncIterable or Promise', 'destination', ret)\n        }\n        ret = pt\n        const { destroy, cleanup } = destroyer(ret, false, true)\n        destroys.push(destroy)\n        if (isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      }\n    } else if (isNodeStream(stream)) {\n      if (isReadableNodeStream(ret)) {\n        finishCount += 2\n        const cleanup = pipe(ret, stream, finish, {\n          end\n        })\n        if (isReadable(stream) && isLastStream) {\n          lastStreamCleanup.push(cleanup)\n        }\n      } else if (isTransformStream(ret) || isReadableStream(ret)) {\n        const toRead = ret.readable || ret\n        finishCount++\n        pumpToNode(toRead, stream, finish, {\n          end\n        })\n      } else if (isIterable(ret)) {\n        finishCount++\n        pumpToNode(ret, stream, finish, {\n          end\n        })\n      } else {\n        throw new ERR_INVALID_ARG_TYPE(\n          'val',\n          ['Readable', 'Iterable', 'AsyncIterable', 'ReadableStream', 'TransformStream'],\n          ret\n        )\n      }\n      ret = stream\n    } else if (isWebStream(stream)) {\n      if (isReadableNodeStream(ret)) {\n        finishCount++\n        pumpToWeb(makeAsyncIterable(ret), stream, finish, {\n          end\n        })\n      } else if (isReadableStream(ret) || isIterable(ret)) {\n        finishCount++\n        pumpToWeb(ret, stream, finish, {\n          end\n        })\n      } else if (isTransformStream(ret)) {\n        finishCount++\n        pumpToWeb(ret.readable, stream, finish, {\n          end\n        })\n      } else {\n        throw new ERR_INVALID_ARG_TYPE(\n          'val',\n          ['Readable', 'Iterable', 'AsyncIterable', 'ReadableStream', 'TransformStream'],\n          ret\n        )\n      }\n      ret = stream\n    } else {\n      ret = Duplex.from(stream)\n    }\n  }\n  if (\n    (signal !== null && signal !== undefined && signal.aborted) ||\n    (outerSignal !== null && outerSignal !== undefined && outerSignal.aborted)\n  ) {\n    process.nextTick(abort)\n  }\n  return ret\n}\nfunction pipe(src, dst, finish, { end }) {\n  let ended = false\n  dst.on('close', () => {\n    if (!ended) {\n      // Finish if the destination closes before the source has completed.\n      finish(new ERR_STREAM_PREMATURE_CLOSE())\n    }\n  })\n  src.pipe(dst, {\n    end: false\n  }) // If end is true we already will have a listener to end dst.\n\n  if (end) {\n    // Compat. Before node v10.12.0 stdio used to throw an error so\n    // pipe() did/does not end() stdio destinations.\n    // Now they allow it but \"secretly\" don't close the underlying fd.\n\n    function endFn() {\n      ended = true\n      dst.end()\n    }\n    if (isReadableEnded(src)) {\n      // End the destination if the source has already ended.\n      process.nextTick(endFn)\n    } else {\n      src.once('end', endFn)\n    }\n  } else {\n    finish()\n  }\n  eos(\n    src,\n    {\n      readable: true,\n      writable: false\n    },\n    (err) => {\n      const rState = src._readableState\n      if (\n        err &&\n        err.code === 'ERR_STREAM_PREMATURE_CLOSE' &&\n        rState &&\n        rState.ended &&\n        !rState.errored &&\n        !rState.errorEmitted\n      ) {\n        // Some readable streams will emit 'close' before 'end'. However, since\n        // this is on the readable side 'end' should still be emitted if the\n        // stream has been ended and no error emitted. This should be allowed in\n        // favor of backwards compatibility. Since the stream is piped to a\n        // destination this should not result in any observable difference.\n        // We don't need to check if this is a writable premature close since\n        // eos will only fail with premature close on the reading side for\n        // duplex streams.\n        src.once('end', finish).once('error', finish)\n      } else {\n        finish(err)\n      }\n    }\n  )\n  return eos(\n    dst,\n    {\n      readable: false,\n      writable: true\n    },\n    finish\n  )\n}\nvar pipeline_1 = {\n  pipelineImpl,\n  pipeline\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(pipeline_1);\nexport { pipeline_1 as __moduleExports };",
-      "start": 1701230037653,
-      "end": 1701230037761,
+      "start": 1701230371060,
+      "end": 1701230371188,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037761,
-      "end": 1701230037761,
+      "start": 1701230371188,
+      "end": 1701230371188,
       "order": "normal"
     }
   ]

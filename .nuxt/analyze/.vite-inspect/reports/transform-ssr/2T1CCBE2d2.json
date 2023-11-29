@@ -4,8 +4,8 @@
     {
       "name": "vite:vue",
       "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\"\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\"\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport type { Form } from '~/lib/prez.d';\nimport { storeToRefs } from \"pinia\";\nimport type { Prez } from \"~/lib/prez\";\nimport { emit } from \"process\";\n\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'Form',\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props: any) {\n\nconst props = __props;\n\nconst rdfStore = useRDFStore();\nconst { loading, success, error, prez } = storeToRefs(rdfStore)\n\nconst page = ref(1);\nconst form = ref<Form|undefined>(undefined);\nconst parseError = ref<string|null>(null);\n\nonMounted(async ()=> {\n  await initData();\n})\n\nconst route = useRoute();\nconst query = ref(route.query);\nwatch(()=> query.value = route.query, ()=>{});\n\nasync function initData() {\n  await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n\n  if(success.value) {\n    try {\n      parseError.value = null;\n      form.value = prez.value!.form(\n        ['skos:prefLabel', 'dcterms:title', 'rdfs:label', 'schema:name'],\n        ['skos:definition', 'dcterms:description', 'schema:description']\n      );\n        //['skos:prefLabel', 'rdfs:label']);\n    } catch(ex) {\n      parseError.value = (ex as Error).message;\n    }\n  }\n\n  //emitPrezUpdate(prez.value);\n}\n\n// Emit an event with the updated title\nfunction emitPrezUpdate(newPrez:Prez) {\n  // Example event name: 'updateBreadcrumbTitle'\n  // Emit the event with the new title information\n  //emit('updatePrez', newPrez);\n}\n\n\nreturn (_ctx: any,_push: any,_parent: any,_attrs: any) => {\n  const _component_CommonForm = _resolveComponent(\"CommonForm\")!\n  const _component_CommonLoading = _resolveComponent(\"CommonLoading\")!\n\n  _push(`<!--[-->`)\n  if (_unref(form)) {\n    _push(_ssrRenderComponent(_component_CommonForm, {\n      \"header-title\": _ctx.headerTitle,\n      \"form-title\": _ctx.formTitle,\n      form: _unref(form),\n      fields: _ctx.fields,\n      \"exclude-fields\": _ctx.excludeFields,\n      info: _ctx.info,\n      links: _unref(prez)!.headerLinks\n    }, null, _parent))\n  } else {\n    _push(`<!---->`)\n  }\n  _push(_ssrRenderComponent(_component_CommonLoading, {\n    loading: _unref(loading),\n    error: _unref(error)\n  }, null, _parent))\n  _push(`<!--]-->`)\n}\n}\n\n})",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375519,
+      "end": 1701230375519,
       "sourcemaps": {
         "version": 3,
         "sources": [
@@ -20,45 +20,45 @@
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230041973,
-      "end": 1701230041973,
+      "start": 1701230375520,
+      "end": 1701230375520,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
       "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props) {\n    const props = __props;\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await initData();\n    });\n    const route = useRoute();\n    const query = ref(route.query);\n    watch(() => query.value = route.query, () => {\n    });\n    async function initData() {\n      await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n      if (success.value) {\n        try {\n          parseError.value = null;\n          form.value = prez.value.form(\n            [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n            [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n          );\n        } catch (ex) {\n          parseError.value = ex.message;\n        }\n      }\n    }\n    function emitPrezUpdate(newPrez) {\n    }\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonForm = _resolveComponent(\"CommonForm\");\n      const _component_CommonLoading = _resolveComponent(\"CommonLoading\");\n      _push(`<!--[-->`);\n      if (_unref(form)) {\n        _push(_ssrRenderComponent(_component_CommonForm, {\n          \"header-title\": _ctx.headerTitle,\n          \"form-title\": _ctx.formTitle,\n          form: _unref(form),\n          fields: _ctx.fields,\n          \"exclude-fields\": _ctx.excludeFields,\n          info: _ctx.info,\n          links: _unref(prez).headerLinks\n        }, null, _parent));\n      } else {\n        _push(`<!---->`);\n      }\n      _push(_ssrRenderComponent(_component_CommonLoading, {\n        loading: _unref(loading),\n        error: _unref(error)\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701230041973,
-      "end": 1701230042014,
+      "start": 1701230375520,
+      "end": 1701230375554,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -74,135 +74,135 @@
     },
     {
       "name": "vite:json",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230042014,
-      "end": 1701230042014,
+      "start": 1701230375554,
+      "end": 1701230375554,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted, watch } from 'vue';\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props) {\n    const props = __props;\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await initData();\n    });\n    const route = useRoute();\n    const query = ref(route.query);\n    watch(() => query.value = route.query, () => {\n    });\n    async function initData() {\n      await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n      if (success.value) {\n        try {\n          parseError.value = null;\n          form.value = prez.value.form(\n            [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n            [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n          );\n        } catch (ex) {\n          parseError.value = ex.message;\n        }\n      }\n    }\n    function emitPrezUpdate(newPrez) {\n    }\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonForm = _resolveComponent(\"CommonForm\");\n      const _component_CommonLoading = _resolveComponent(\"CommonLoading\");\n      _push(`<!--[-->`);\n      if (_unref(form)) {\n        _push(_ssrRenderComponent(_component_CommonForm, {\n          \"header-title\": _ctx.headerTitle,\n          \"form-title\": _ctx.formTitle,\n          form: _unref(form),\n          fields: _ctx.fields,\n          \"exclude-fields\": _ctx.excludeFields,\n          info: _ctx.info,\n          links: _unref(prez).headerLinks\n        }, null, _parent));\n      } else {\n        _push(`<!---->`);\n      }\n      _push(_ssrRenderComponent(_component_CommonLoading, {\n        loading: _unref(loading),\n        error: _unref(error)\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701230042014,
-      "end": 1701230042015,
+      "start": 1701230375554,
+      "end": 1701230375555,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -216,8 +216,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted, watch } from 'vue';\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props) {\n    const props = __props;\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await initData();\n    });\n    const route = useRoute();\n    const query = ref(route.query);\n    watch(() => query.value = route.query, () => {\n    });\n    async function initData() {\n      await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n      if (success.value) {\n        try {\n          parseError.value = null;\n          form.value = prez.value.form(\n            [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n            [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n          );\n        } catch (ex) {\n          parseError.value = ex.message;\n        }\n      }\n    }\n    function emitPrezUpdate(newPrez) {\n    }\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonForm = _resolveComponent(\"CommonForm\");\n      const _component_CommonLoading = _resolveComponent(\"CommonLoading\");\n      _push(`<!--[-->`);\n      if (_unref(form)) {\n        _push(_ssrRenderComponent(_component_CommonForm, {\n          \"header-title\": _ctx.headerTitle,\n          \"form-title\": _ctx.formTitle,\n          form: _unref(form),\n          fields: _ctx.fields,\n          \"exclude-fields\": _ctx.excludeFields,\n          info: _ctx.info,\n          links: _unref(prez).headerLinks\n        }, null, _parent));\n      } else {\n        _push(`<!---->`);\n      }\n      _push(_ssrRenderComponent(_component_CommonLoading, {\n        loading: _unref(loading),\n        error: _unref(error)\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701230042014,
-      "end": 1701230042015,
+      "start": 1701230375554,
+      "end": 1701230375555,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -230,39 +230,39 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Loading.vue\";\nimport { ref, onMounted, watch } from 'vue';\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props) {\n    const props = __props;\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await initData();\n    });\n    const route = useRoute();\n    const query = ref(route.query);\n    watch(() => query.value = route.query, () => {\n    });\n    async function initData() {\n      await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n      if (success.value) {\n        try {\n          parseError.value = null;\n          form.value = prez.value.form(\n            [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n            [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n          );\n        } catch (ex) {\n          parseError.value = ex.message;\n        }\n      }\n    }\n    function emitPrezUpdate(newPrez) {\n    }\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonForm = __nuxt_component_0;\n      const _component_CommonLoading = __nuxt_component_1;\n      _push(`<!--[-->`);\n      if (_unref(form)) {\n        _push(_ssrRenderComponent(_component_CommonForm, {\n          \"header-title\": _ctx.headerTitle,\n          \"form-title\": _ctx.formTitle,\n          form: _unref(form),\n          fields: _ctx.fields,\n          \"exclude-fields\": _ctx.excludeFields,\n          info: _ctx.info,\n          links: _unref(prez).headerLinks\n        }, null, _parent));\n      } else {\n        _push(`<!---->`);\n      }\n      _push(_ssrRenderComponent(_component_CommonLoading, {\n        loading: _unref(loading),\n        error: _unref(error)\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375555,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -276,8 +276,8 @@
     {
       "name": "nuxt:tree-shake-composables:transform",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Loading.vue\";\nimport { ref, onMounted, watch } from 'vue';\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  __ssrInlineRender: true,\n  props: {\n    dataUrl: {},\n    formTitle: {},\n    excludeFields: {},\n    headerTitle: {},\n    fields: {},\n    info: { type: Boolean }\n  },\n  setup(__props) {\n    const props = __props;\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n     /*#__PURE__*/ false && onMounted(async () => {\n      await initData();\n    });\n    const route = useRoute();\n    const query = ref(route.query);\n    watch(() => query.value = route.query, () => {\n    });\n    async function initData() {\n      await rdfStore.load(props.dataUrl, { params: { page: page.value } });\n      if (success.value) {\n        try {\n          parseError.value = null;\n          form.value = prez.value.form(\n            [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n            [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n          );\n        } catch (ex) {\n          parseError.value = ex.message;\n        }\n      }\n    }\n    function emitPrezUpdate(newPrez) {\n    }\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonForm = __nuxt_component_0;\n      const _component_CommonLoading = __nuxt_component_1;\n      _push(`<!--[-->`);\n      if (_unref(form)) {\n        _push(_ssrRenderComponent(_component_CommonForm, {\n          \"header-title\": _ctx.headerTitle,\n          \"form-title\": _ctx.formTitle,\n          form: _unref(form),\n          fields: _ctx.fields,\n          \"exclude-fields\": _ctx.excludeFields,\n          info: _ctx.info,\n          links: _unref(prez).headerLinks\n        }, null, _parent));\n      } else {\n        _push(`<!---->`);\n      }\n      _push(_ssrRenderComponent(_component_CommonLoading, {\n        loading: _unref(loading),\n        error: _unref(error)\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375555,
+      "end": 1701230375557,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -290,14 +290,14 @@
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375557,
+      "end": 1701230375557,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230042015,
-      "end": 1701230042015,
+      "start": 1701230375557,
+      "end": 1701230375557,
       "order": "normal"
     }
   ]

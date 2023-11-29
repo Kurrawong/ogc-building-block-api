@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\nimport { ref } from 'vue';\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\nconst route = useRoute();\nconst id = ref(route.params.id);\nconst collectionId = ref(route.params.collectionId);\nconst itemId = ref(route.params.itemId);\n</script>\n\n<template>\n  <CommonBreadcrumbs :items=\"[\n    {title: tpl('{{!bc}}Home'), to: '/'},\n    {title: tpl('{{!bc}}Catalogs'), to: '/catalogs'},\n    {title: `${id}`, to: `/catalogs/${id}`},\n    {title: tpl('{{!bc}}Collections'), to: `/catalogs/${id}/collections`},\n    {title: `${collectionId}`, to: `/catalogs/${id}/collections/${collectionId}`},\n    {title: tpl('{{!bc}}Items'), to: `/catalogs/${id}/collections/${collectionId}/items`},\n    {title: `${itemId}`, to: route.path, disabled: true}\n  ]\" />\n\n  <ContainersForm\n    :header-title=\"tpl('{{ header.label }} resource')\"\n    form-title=\"{{ fields.rdfs:label }}\"\n    :data-url=\"config.API_BASE_URL + route.path\"\n  />\n</template>\n",
-      "start": 1701230035764,
-      "end": 1701230035843,
+      "start": 1701230369166,
+      "end": 1701230369237,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230035843,
-      "end": 1701230035843,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport { ref } from 'vue';\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nconst _sfc_main = {\n  __name: 'index',\n  setup(__props) {\n\nconst route = useRoute();\nconst id = ref(route.params.id);\nconst collectionId = ref(route.params.collectionId);\nconst itemId = ref(route.params.itemId);\n\nreturn (_ctx, _cache) => {\n  const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\")\n  const _component_ContainersForm = _resolveComponent(\"ContainersForm\")\n\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createVNode(_component_CommonBreadcrumbs, {\n      items: [\n    {title: _unref(tpl)('{{!bc}}Home'), to: '/'},\n    {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs'},\n    {title: `${id.value}`, to: `/catalogs/${id.value}`},\n    {title: _unref(tpl)('{{!bc}}Collections'), to: `/catalogs/${id.value}/collections`},\n    {title: `${collectionId.value}`, to: `/catalogs/${id.value}/collections/${collectionId.value}`},\n    {title: _unref(tpl)('{{!bc}}Items'), to: `/catalogs/${id.value}/collections/${collectionId.value}/items`},\n    {title: `${itemId.value}`, to: _unref(route).path, disabled: true}\n  ]\n    }, null, 8, [\"items\"]),\n    _createVNode(_component_ContainersForm, {\n      \"header-title\": _unref(tpl)('{{ header.label }} resource'),\n      \"form-title\": \"{{ fields.rdfs:label }}\",\n      \"data-url\": _unref(config).API_BASE_URL + _unref(route).path\n    }, null, 8, [\"header-title\", \"data-url\"])\n  ], 64))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,105 +62,105 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRoute } from '#app/composables/router';\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport { ref } from 'vue';\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nconst _sfc_main = {\n  __name: 'index',\n  setup(__props) {\n\nconst route = useRoute();\nconst id = ref(route.params.id);\nconst collectionId = ref(route.params.collectionId);\nconst itemId = ref(route.params.itemId);\n\nreturn (_ctx, _cache) => {\n  const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\")\n  const _component_ContainersForm = _resolveComponent(\"ContainersForm\")\n\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createVNode(_component_CommonBreadcrumbs, {\n      items: [\n    {title: _unref(tpl)('{{!bc}}Home'), to: '/'},\n    {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs'},\n    {title: `${id.value}`, to: `/catalogs/${id.value}`},\n    {title: _unref(tpl)('{{!bc}}Collections'), to: `/catalogs/${id.value}/collections`},\n    {title: `${collectionId.value}`, to: `/catalogs/${id.value}/collections/${collectionId.value}`},\n    {title: _unref(tpl)('{{!bc}}Items'), to: `/catalogs/${id.value}/collections/${collectionId.value}/items`},\n    {title: `${itemId.value}`, to: _unref(route).path, disabled: true}\n  ]\n    }, null, 8, [\"items\"]),\n    _createVNode(_component_ContainersForm, {\n      \"header-title\": _unref(tpl)('{{ header.label }} resource'),\n      \"form-title\": \"{{ fields.rdfs:label }}\",\n      \"data-url\": _unref(config).API_BASE_URL + _unref(route).path\n    }, null, 8, [\"header-title\", \"data-url\"])\n  ], 64))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -173,51 +173,51 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/containers/Form.vue\";\nimport { useRoute } from '#app/composables/router';\nimport { unref as _unref, resolveComponent as _resolveComponent, createVNode as _createVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport { ref } from 'vue';\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nconst _sfc_main = {\n  __name: 'index',\n  setup(__props) {\n\nconst route = useRoute();\nconst id = ref(route.params.id);\nconst collectionId = ref(route.params.collectionId);\nconst itemId = ref(route.params.itemId);\n\nreturn (_ctx, _cache) => {\n  const _component_CommonBreadcrumbs = __nuxt_component_0\n  const _component_ContainersForm = __nuxt_component_1\n\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createVNode(_component_CommonBreadcrumbs, {\n      items: [\n    {title: _unref(tpl)('{{!bc}}Home'), to: '/'},\n    {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs'},\n    {title: `${id.value}`, to: `/catalogs/${id.value}`},\n    {title: _unref(tpl)('{{!bc}}Collections'), to: `/catalogs/${id.value}/collections`},\n    {title: `${collectionId.value}`, to: `/catalogs/${id.value}/collections/${collectionId.value}`},\n    {title: _unref(tpl)('{{!bc}}Items'), to: `/catalogs/${id.value}/collections/${collectionId.value}/items`},\n    {title: `${itemId.value}`, to: _unref(route).path, disabled: true}\n  ]\n    }, null, 8, [\"items\"]),\n    _createVNode(_component_ContainersForm, {\n      \"header-title\": _unref(tpl)('{{ header.label }} resource'),\n      \"form-title\": \"{{ fields.rdfs:label }}\",\n      \"data-url\": _unref(config).API_BASE_URL + _unref(route).path\n    }, null, 8, [\"header-title\", \"data-url\"])\n  ], 64))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230035844,
-      "end": 1701230035844,
+      "start": 1701230369237,
+      "end": 1701230369237,
       "order": "normal"
     }
   ]

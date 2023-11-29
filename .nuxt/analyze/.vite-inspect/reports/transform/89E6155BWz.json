@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst bufferModule = require('buffer')\nconst AsyncFunction = Object.getPrototypeOf(async function () {}).constructor\nconst Blob = globalThis.Blob || bufferModule.Blob\n/* eslint-disable indent */\nconst isBlob =\n  typeof Blob !== 'undefined'\n    ? function isBlob(b) {\n        // eslint-disable-next-line indent\n        return b instanceof Blob\n      }\n    : function isBlob(b) {\n        return false\n      }\n/* eslint-enable indent */\n\n// This is a simplified version of AggregateError\nclass AggregateError extends Error {\n  constructor(errors) {\n    if (!Array.isArray(errors)) {\n      throw new TypeError(`Expected input to be an Array, got ${typeof errors}`)\n    }\n    let message = ''\n    for (let i = 0; i < errors.length; i++) {\n      message += `    ${errors[i].stack}\\n`\n    }\n    super(message)\n    this.name = 'AggregateError'\n    this.errors = errors\n  }\n}\nmodule.exports = {\n  AggregateError,\n  kEmptyObject: Object.freeze({}),\n  once(callback) {\n    let called = false\n    return function (...args) {\n      if (called) {\n        return\n      }\n      called = true\n      callback.apply(this, args)\n    }\n  },\n  createDeferredPromise: function () {\n    let resolve\n    let reject\n\n    // eslint-disable-next-line promise/param-names\n    const promise = new Promise((res, rej) => {\n      resolve = res\n      reject = rej\n    })\n    return {\n      promise,\n      resolve,\n      reject\n    }\n  },\n  promisify(fn) {\n    return new Promise((resolve, reject) => {\n      fn((err, ...args) => {\n        if (err) {\n          return reject(err)\n        }\n        return resolve(...args)\n      })\n    })\n  },\n  debuglog() {\n    return function () {}\n  },\n  format(format, ...args) {\n    // Simplified version of https://nodejs.org/api/util.html#utilformatformat-args\n    return format.replace(/%([sdifj])/g, function (...[_unused, type]) {\n      const replacement = args.shift()\n      if (type === 'f') {\n        return replacement.toFixed(6)\n      } else if (type === 'j') {\n        return JSON.stringify(replacement)\n      } else if (type === 's' && typeof replacement === 'object') {\n        const ctor = replacement.constructor !== Object ? replacement.constructor.name : ''\n        return `${ctor} {}`.trim()\n      } else {\n        return replacement.toString()\n      }\n    })\n  },\n  inspect(value) {\n    // Vastly simplified version of https://nodejs.org/api/util.html#utilinspectobject-options\n    switch (typeof value) {\n      case 'string':\n        if (value.includes(\"'\")) {\n          if (!value.includes('\"')) {\n            return `\"${value}\"`\n          } else if (!value.includes('`') && !value.includes('${')) {\n            return `\\`${value}\\``\n          }\n        }\n        return `'${value}'`\n      case 'number':\n        if (isNaN(value)) {\n          return 'NaN'\n        } else if (Object.is(value, -0)) {\n          return String(value)\n        }\n        return value\n      case 'bigint':\n        return `${String(value)}n`\n      case 'boolean':\n      case 'undefined':\n        return String(value)\n      case 'object':\n        return '{}'\n    }\n  },\n  types: {\n    isAsyncFunction(fn) {\n      return fn instanceof AsyncFunction\n    },\n    isArrayBufferView(arr) {\n      return ArrayBuffer.isView(arr)\n    }\n  },\n  isBlob\n}\nmodule.exports.promisify.custom = Symbol.for('nodejs.util.promisify.custom')\n",
-      "start": 1701230037618,
-      "end": 1701230037647,
+      "start": 1701230371049,
+      "end": 1701230371085,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371085,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371085,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037647,
-      "end": 1701230037647,
+      "start": 1701230371086,
+      "end": 1701230371086,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport { __module as utilModule } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js?commonjs-module\";\nvar util = utilModule.exports;\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/buffer/index.js?commonjs-proxy\";\n\n(function (module) {\n\t'use strict'\n\n\tconst bufferModule = require$$0\n\tconst AsyncFunction = Object.getPrototypeOf(async function () {}).constructor\n\tconst Blob = globalThis.Blob || bufferModule.Blob\n\t/* eslint-disable indent */\n\tconst isBlob =\n\t  typeof Blob !== 'undefined'\n\t    ? function isBlob(b) {\n\t        // eslint-disable-next-line indent\n\t        return b instanceof Blob\n\t      }\n\t    : function isBlob(b) {\n\t        return false\n\t      }\n\t/* eslint-enable indent */\n\n\t// This is a simplified version of AggregateError\n\tclass AggregateError extends Error {\n\t  constructor(errors) {\n\t    if (!Array.isArray(errors)) {\n\t      throw new TypeError(`Expected input to be an Array, got ${typeof errors}`)\n\t    }\n\t    let message = ''\n\t    for (let i = 0; i < errors.length; i++) {\n\t      message += `    ${errors[i].stack}\\n`\n\t    }\n\t    super(message)\n\t    this.name = 'AggregateError'\n\t    this.errors = errors\n\t  }\n\t}\n\tmodule.exports = {\n\t  AggregateError,\n\t  kEmptyObject: Object.freeze({}),\n\t  once(callback) {\n\t    let called = false\n\t    return function (...args) {\n\t      if (called) {\n\t        return\n\t      }\n\t      called = true\n\t      callback.apply(this, args)\n\t    }\n\t  },\n\t  createDeferredPromise: function () {\n\t    let resolve\n\t    let reject\n\n\t    // eslint-disable-next-line promise/param-names\n\t    const promise = new Promise((res, rej) => {\n\t      resolve = res\n\t      reject = rej\n\t    })\n\t    return {\n\t      promise,\n\t      resolve,\n\t      reject\n\t    }\n\t  },\n\t  promisify(fn) {\n\t    return new Promise((resolve, reject) => {\n\t      fn((err, ...args) => {\n\t        if (err) {\n\t          return reject(err)\n\t        }\n\t        return resolve(...args)\n\t      })\n\t    })\n\t  },\n\t  debuglog() {\n\t    return function () {}\n\t  },\n\t  format(format, ...args) {\n\t    // Simplified version of https://nodejs.org/api/util.html#utilformatformat-args\n\t    return format.replace(/%([sdifj])/g, function (...[_unused, type]) {\n\t      const replacement = args.shift()\n\t      if (type === 'f') {\n\t        return replacement.toFixed(6)\n\t      } else if (type === 'j') {\n\t        return JSON.stringify(replacement)\n\t      } else if (type === 's' && typeof replacement === 'object') {\n\t        const ctor = replacement.constructor !== Object ? replacement.constructor.name : ''\n\t        return `${ctor} {}`.trim()\n\t      } else {\n\t        return replacement.toString()\n\t      }\n\t    })\n\t  },\n\t  inspect(value) {\n\t    // Vastly simplified version of https://nodejs.org/api/util.html#utilinspectobject-options\n\t    switch (typeof value) {\n\t      case 'string':\n\t        if (value.includes(\"'\")) {\n\t          if (!value.includes('\"')) {\n\t            return `\"${value}\"`\n\t          } else if (!value.includes('`') && !value.includes('${')) {\n\t            return `\\`${value}\\``\n\t          }\n\t        }\n\t        return `'${value}'`\n\t      case 'number':\n\t        if (isNaN(value)) {\n\t          return 'NaN'\n\t        } else if (Object.is(value, -0)) {\n\t          return String(value)\n\t        }\n\t        return value\n\t      case 'bigint':\n\t        return `${String(value)}n`\n\t      case 'boolean':\n\t      case 'undefined':\n\t        return String(value)\n\t      case 'object':\n\t        return '{}'\n\t    }\n\t  },\n\t  types: {\n\t    isAsyncFunction(fn) {\n\t      return fn instanceof AsyncFunction\n\t    },\n\t    isArrayBufferView(arr) {\n\t      return ArrayBuffer.isView(arr)\n\t    }\n\t  },\n\t  isBlob\n\t}\n\tmodule.exports.promisify.custom = Symbol.for('nodejs.util.promisify.custom') \n} (utilModule));\n\nvar utilExports = utilModule.exports;\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(utilExports);\nexport { utilExports as __moduleExports };",
-      "start": 1701230037647,
-      "end": 1701230037711,
+      "start": 1701230371086,
+      "end": 1701230371140,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037711,
-      "end": 1701230037711,
+      "start": 1701230371140,
+      "end": 1701230371140,
       "order": "normal"
     }
   ]

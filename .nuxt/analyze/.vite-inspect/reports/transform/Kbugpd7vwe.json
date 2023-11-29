@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// **N3Store** objects store N3 quads by graph in memory.\nimport { default as N3DataFactory, termToId, termFromId } from './N3DataFactory';\nimport { Readable } from 'readable-stream';\nimport namespaces from './IRIs';\nimport { isDefaultGraph } from './N3Util';\n\n// ## Constructor\nexport default class N3Store {\n  constructor(quads, options) {\n    // The number of quads is initially zero\n    this._size = 0;\n    // `_graphs` contains subject, predicate, and object indexes per graph\n    this._graphs = Object.create(null);\n    // `_ids` maps entities such as `http://xmlns.com/foaf/0.1/name` to numbers,\n    // saving memory by using only numbers as keys in `_graphs`\n    this._id = 0;\n    this._ids = Object.create(null);\n    this._entities = Object.create(null); // inverse of `_ids`\n    // `_blankNodeIndex` is the index of the last automatically named blank node\n    this._blankNodeIndex = 0;\n\n    // Shift parameters if `quads` is not given\n    if (!options && quads && !quads[0])\n      options = quads, quads = null;\n    options = options || {};\n    this._factory = options.factory || N3DataFactory;\n\n    // Add quads if passed\n    if (quads)\n      this.addQuads(quads);\n  }\n\n  _termFromId(id, factory) {\n    if (id[0] === '.') {\n      const entities = this._entities;\n      const terms = id.split('.');\n      const q = this._factory.quad(\n        this._termFromId(entities[terms[1]]),\n        this._termFromId(entities[terms[2]]),\n        this._termFromId(entities[terms[3]]),\n        terms[4] && this._termFromId(entities[terms[4]])\n      );\n      return q;\n    }\n    return termFromId(id, factory);\n  }\n\n  _termToNumericId(term) {\n    if (term.termType === 'Quad') {\n      const s = this._termToNumericId(term.subject),\n          p = this._termToNumericId(term.predicate),\n          o = this._termToNumericId(term.object);\n      let g;\n\n      return s && p && o && (isDefaultGraph(term.graph) || (g = this._termToNumericId(term.graph))) &&\n        this._ids[g ? `.${s}.${p}.${o}.${g}` : `.${s}.${p}.${o}`];\n    }\n    return this._ids[termToId(term)];\n  }\n\n  _termToNewNumericId(term) {\n    // This assumes that no graph term is present - we may wish to error if there is one\n    const str = term && term.termType === 'Quad' ?\n      `.${this._termToNewNumericId(term.subject)}.${this._termToNewNumericId(term.predicate)}.${this._termToNewNumericId(term.object)}${\n        isDefaultGraph(term.graph) ? '' : `.${this._termToNewNumericId(term.graph)}`\n      }`\n      : termToId(term);\n\n    return this._ids[str] || (this._ids[this._entities[++this._id] = str] = this._id);\n  }\n\n  // ## Public properties\n\n  // ### `size` returns the number of quads in the store\n  get size() {\n    // Return the quad count if if was cached\n    let size = this._size;\n    if (size !== null)\n      return size;\n\n    // Calculate the number of quads by counting to the deepest level\n    size = 0;\n    const graphs = this._graphs;\n    let subjects, subject;\n    for (const graphKey in graphs)\n      for (const subjectKey in (subjects = graphs[graphKey].subjects))\n        for (const predicateKey in (subject = subjects[subjectKey]))\n          size += Object.keys(subject[predicateKey]).length;\n    return this._size = size;\n  }\n\n  // ## Private methods\n\n  // ### `_addToIndex` adds a quad to a three-layered index.\n  // Returns if the index has changed, if the entry did not already exist.\n  _addToIndex(index0, key0, key1, key2) {\n    // Create layers as necessary\n    const index1 = index0[key0] || (index0[key0] = {});\n    const index2 = index1[key1] || (index1[key1] = {});\n    // Setting the key to _any_ value signals the presence of the quad\n    const existed = key2 in index2;\n    if (!existed)\n      index2[key2] = null;\n    return !existed;\n  }\n\n  // ### `_removeFromIndex` removes a quad from a three-layered index\n  _removeFromIndex(index0, key0, key1, key2) {\n    // Remove the quad from the index\n    const index1 = index0[key0], index2 = index1[key1];\n    delete index2[key2];\n\n    // Remove intermediary index layers if they are empty\n    for (const key in index2) return;\n    delete index1[key1];\n    for (const key in index1) return;\n    delete index0[key0];\n  }\n\n  // ### `_findInIndex` finds a set of quads in a three-layered index.\n  // The index base is `index0` and the keys at each level are `key0`, `key1`, and `key2`.\n  // Any of these keys can be undefined, which is interpreted as a wildcard.\n  // `name0`, `name1`, and `name2` are the names of the keys at each level,\n  // used when reconstructing the resulting quad\n  // (for instance: _subject_, _predicate_, and _object_).\n  // Finally, `graphId` will be the graph of the created quads.\n  *_findInIndex(index0, key0, key1, key2, name0, name1, name2, graphId) {\n    let tmp, index1, index2;\n    const entityKeys = this._entities;\n    const graph = this._termFromId(graphId, this._factory);\n    const parts = { subject: null, predicate: null, object: null };\n\n    // If a key is specified, use only that part of index 0.\n    if (key0) (tmp = index0, index0 = {})[key0] = tmp[key0];\n    for (const value0 in index0) {\n      if (index1 = index0[value0]) {\n        parts[name0] = this._termFromId(entityKeys[value0], this._factory);\n        // If a key is specified, use only that part of index 1.\n        if (key1) (tmp = index1, index1 = {})[key1] = tmp[key1];\n        for (const value1 in index1) {\n          if (index2 = index1[value1]) {\n            parts[name1] = this._termFromId(entityKeys[value1], this._factory);\n            // If a key is specified, use only that part of index 2, if it exists.\n            const values = key2 ? (key2 in index2 ? [key2] : []) : Object.keys(index2);\n            // Create quads for all items found in index 2.\n            for (let l = 0; l < values.length; l++) {\n              parts[name2] = this._termFromId(entityKeys[values[l]], this._factory);\n              yield this._factory.quad(parts.subject, parts.predicate, parts.object, graph);\n            }\n          }\n        }\n      }\n    }\n  }\n\n  // ### `_loop` executes the callback on all keys of index 0\n  _loop(index0, callback) {\n    for (const key0 in index0)\n      callback(key0);\n  }\n\n  // ### `_loopByKey0` executes the callback on all keys of a certain entry in index 0\n  _loopByKey0(index0, key0, callback) {\n    let index1, key1;\n    if (index1 = index0[key0]) {\n      for (key1 in index1)\n        callback(key1);\n    }\n  }\n\n  // ### `_loopByKey1` executes the callback on given keys of all entries in index 0\n  _loopByKey1(index0, key1, callback) {\n    let key0, index1;\n    for (key0 in index0) {\n      index1 = index0[key0];\n      if (index1[key1])\n        callback(key0);\n    }\n  }\n\n  // ### `_loopBy2Keys` executes the callback on given keys of certain entries in index 2\n  _loopBy2Keys(index0, key0, key1, callback) {\n    let index1, index2, key2;\n    if ((index1 = index0[key0]) && (index2 = index1[key1])) {\n      for (key2 in index2)\n        callback(key2);\n    }\n  }\n\n  // ### `_countInIndex` counts matching quads in a three-layered index.\n  // The index base is `index0` and the keys at each level are `key0`, `key1`, and `key2`.\n  // Any of these keys can be undefined, which is interpreted as a wildcard.\n  _countInIndex(index0, key0, key1, key2) {\n    let count = 0, tmp, index1, index2;\n\n    // If a key is specified, count only that part of index 0\n    if (key0) (tmp = index0, index0 = {})[key0] = tmp[key0];\n    for (const value0 in index0) {\n      if (index1 = index0[value0]) {\n        // If a key is specified, count only that part of index 1\n        if (key1) (tmp = index1, index1 = {})[key1] = tmp[key1];\n        for (const value1 in index1) {\n          if (index2 = index1[value1]) {\n            // If a key is specified, count the quad if it exists\n            if (key2) (key2 in index2) && count++;\n            // Otherwise, count all quads\n            else count += Object.keys(index2).length;\n          }\n        }\n      }\n    }\n    return count;\n  }\n\n  // ### `_getGraphs` returns an array with the given graph,\n  // or all graphs if the argument is null or undefined.\n  _getGraphs(graph) {\n    if (!isString(graph))\n      return this._graphs;\n    const graphs = {};\n    graphs[graph] = this._graphs[graph];\n    return graphs;\n  }\n\n  // ### `_uniqueEntities` returns a function that accepts an entity ID\n  // and passes the corresponding entity to callback if it hasn't occurred before.\n  _uniqueEntities(callback) {\n    const uniqueIds = Object.create(null);\n    return id => {\n      if (!(id in uniqueIds)) {\n        uniqueIds[id] = true;\n        callback(this._termFromId(this._entities[id], this._factory));\n      }\n    };\n  }\n\n  // ## Public methods\n\n  // ### `add` adds the specified quad to the dataset.\n  // Returns the dataset instance it was called on.\n  // Existing quads, as defined in Quad.equals, will be ignored.\n  add(quad) {\n    this.addQuad(quad);\n    return this;\n  }\n\n  // ### `addQuad` adds a new quad to the store.\n  // Returns if the quad index has changed, if the quad did not already exist.\n  addQuad(subject, predicate, object, graph) {\n    // Shift arguments if a quad object is given instead of components\n    if (!predicate)\n      graph = subject.graph, object = subject.object,\n        predicate = subject.predicate, subject = subject.subject;\n\n    // Convert terms to internal string representation\n    graph = termToId(graph);\n\n    // Find the graph that will contain the triple\n    let graphItem = this._graphs[graph];\n    // Create the graph if it doesn't exist yet\n    if (!graphItem) {\n      graphItem = this._graphs[graph] = { subjects: {}, predicates: {}, objects: {} };\n      // Freezing a graph helps subsequent `add` performance,\n      // and properties will never be modified anyway\n      Object.freeze(graphItem);\n    }\n\n    // Since entities can often be long IRIs, we avoid storing them in every index.\n    // Instead, we have a separate index that maps entities to numbers,\n    // which are then used as keys in the other indexes.\n    subject   = this._termToNewNumericId(subject);\n    predicate = this._termToNewNumericId(predicate);\n    object    = this._termToNewNumericId(object);\n\n    const changed = this._addToIndex(graphItem.subjects,   subject,   predicate, object);\n    this._addToIndex(graphItem.predicates, predicate, object,    subject);\n    this._addToIndex(graphItem.objects,    object,    subject,   predicate);\n\n    // The cached quad count is now invalid\n    this._size = null;\n    return changed;\n  }\n\n  // ### `addQuads` adds multiple quads to the store\n  addQuads(quads) {\n    for (let i = 0; i < quads.length; i++)\n      this.addQuad(quads[i]);\n  }\n\n  // ### `delete` removes the specified quad from the dataset.\n  // Returns the dataset instance it was called on.\n  delete(quad) {\n    this.removeQuad(quad);\n    return this;\n  }\n\n  // ### `has` determines whether a dataset includes a certain quad or quad pattern.\n  has(subjectOrQuad, predicate, object, graph) {\n    if (subjectOrQuad && subjectOrQuad.subject)\n      ({ subject: subjectOrQuad, predicate, object, graph } = subjectOrQuad);\n    return !this.readQuads(subjectOrQuad, predicate, object, graph).next().done;\n  }\n\n  // ### `import` adds a stream of quads to the store\n  import(stream) {\n    stream.on('data', quad => { this.addQuad(quad); });\n    return stream;\n  }\n\n  // ### `removeQuad` removes a quad from the store if it exists\n  removeQuad(subject, predicate, object, graph) {\n    // Shift arguments if a quad object is given instead of components\n    if (!predicate)\n      graph = subject.graph, object = subject.object,\n        predicate = subject.predicate, subject = subject.subject;\n\n    // Convert terms to internal string representation\n    graph = termToId(graph);\n\n    // Find internal identifiers for all components\n    // and verify the quad exists.\n    const graphs = this._graphs;\n    let graphItem, subjects, predicates;\n    if (!(subject    = subject && this._termToNumericId(subject)) || !(predicate = predicate && this._termToNumericId(predicate)) ||\n        !(object     = object && this._termToNumericId(object))  || !(graphItem = graphs[graph])  ||\n        !(subjects   = graphItem.subjects[subject]) ||\n        !(predicates = subjects[predicate]) ||\n        !(object in predicates))\n      return false;\n\n    // Remove it from all indexes\n    this._removeFromIndex(graphItem.subjects,   subject,   predicate, object);\n    this._removeFromIndex(graphItem.predicates, predicate, object,    subject);\n    this._removeFromIndex(graphItem.objects,    object,    subject,   predicate);\n    if (this._size !== null) this._size--;\n\n    // Remove the graph if it is empty\n    for (subject in graphItem.subjects) return true;\n    delete graphs[graph];\n    return true;\n  }\n\n  // ### `removeQuads` removes multiple quads from the store\n  removeQuads(quads) {\n    for (let i = 0; i < quads.length; i++)\n      this.removeQuad(quads[i]);\n  }\n\n  // ### `remove` removes a stream of quads from the store\n  remove(stream) {\n    stream.on('data', quad => { this.removeQuad(quad); });\n    return stream;\n  }\n\n  // ### `removeMatches` removes all matching quads from the store\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  removeMatches(subject, predicate, object, graph) {\n    const stream = new Readable({ objectMode: true });\n\n    stream._read = () => {\n      for (const quad of this.readQuads(subject, predicate, object, graph))\n        stream.push(quad);\n      stream.push(null);\n    };\n\n    return this.remove(stream);\n  }\n\n  // ### `deleteGraph` removes all triples with the given graph from the store\n  deleteGraph(graph) {\n    return this.removeMatches(null, null, null, graph);\n  }\n\n  // ### `getQuads` returns an array of quads matching a pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  getQuads(subject, predicate, object, graph) {\n    return [...this.readQuads(subject, predicate, object, graph)];\n  }\n\n  // ### `readQuads` returns an generator of quads matching a pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  *readQuads(subject, predicate, object, graph) {\n    // Convert terms to internal string representation\n    graph = graph && termToId(graph);\n\n    const graphs = this._getGraphs(graph);\n    let content, subjectId, predicateId, objectId;\n\n    // Translate IRIs to internal index keys.\n    if (subject   && !(subjectId   = this._termToNumericId(subject))   ||\n        predicate && !(predicateId = this._termToNumericId(predicate)) ||\n        object    && !(objectId    = this._termToNumericId(object)))\n      return;\n\n    for (const graphId in graphs) {\n      // Only if the specified graph contains triples, there can be results\n      if (content = graphs[graphId]) {\n        // Choose the optimal index, based on what fields are present\n        if (subjectId) {\n          if (objectId)\n            // If subject and object are given, the object index will be the fastest\n            yield* this._findInIndex(content.objects, objectId, subjectId, predicateId,\n                              'object', 'subject', 'predicate', graphId);\n          else\n            // If only subject and possibly predicate are given, the subject index will be the fastest\n            yield* this._findInIndex(content.subjects, subjectId, predicateId, null,\n                              'subject', 'predicate', 'object', graphId);\n        }\n        else if (predicateId)\n          // If only predicate and possibly object are given, the predicate index will be the fastest\n          yield* this._findInIndex(content.predicates, predicateId, objectId, null,\n                            'predicate', 'object', 'subject', graphId);\n        else if (objectId)\n          // If only object is given, the object index will be the fastest\n          yield* this._findInIndex(content.objects, objectId, null, null,\n                            'object', 'subject', 'predicate', graphId);\n        else\n          // If nothing is given, iterate subjects and predicates first\n          yield* this._findInIndex(content.subjects, null, null, null,\n                            'subject', 'predicate', 'object', graphId);\n      }\n    }\n  }\n\n  // ### `match` returns a new dataset that is comprised of all quads in the current instance matching the given arguments.\n  // The logic described in Quad Matching is applied for each quad in this dataset to check if it should be included in the output dataset.\n  // Note: This method always returns a new DatasetCore, even if that dataset contains no quads.\n  // Note: Since a DatasetCore is an unordered set, the order of the quads within the returned sequence is arbitrary.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  // For backwards compatibility, the object return also implements the Readable stream interface.\n  match(subject, predicate, object, graph) {\n    return new DatasetCoreAndReadableStream(this, subject, predicate, object, graph);\n  }\n\n  // ### `countQuads` returns the number of quads matching a pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  countQuads(subject, predicate, object, graph) {\n    // Convert terms to internal string representation\n    graph = graph && termToId(graph);\n\n    const graphs = this._getGraphs(graph);\n    let count = 0, content, subjectId, predicateId, objectId;\n\n    // Translate IRIs to internal index keys.\n    if (subject   && !(subjectId   = this._termToNumericId(subject))   ||\n        predicate && !(predicateId = this._termToNumericId(predicate)) ||\n        object    && !(objectId    = this._termToNumericId(object)))\n      return 0;\n\n    for (const graphId in graphs) {\n      // Only if the specified graph contains triples, there can be results\n      if (content = graphs[graphId]) {\n        // Choose the optimal index, based on what fields are present\n        if (subject) {\n          if (object)\n            // If subject and object are given, the object index will be the fastest\n            count += this._countInIndex(content.objects, objectId, subjectId, predicateId);\n          else\n            // If only subject and possibly predicate are given, the subject index will be the fastest\n            count += this._countInIndex(content.subjects, subjectId, predicateId, objectId);\n        }\n        else if (predicate) {\n          // If only predicate and possibly object are given, the predicate index will be the fastest\n          count += this._countInIndex(content.predicates, predicateId, objectId, subjectId);\n        }\n        else {\n          // If only object is possibly given, the object index will be the fastest\n          count += this._countInIndex(content.objects, objectId, subjectId, predicateId);\n        }\n      }\n    }\n    return count;\n  }\n\n  // ### `forEach` executes the callback on all quads.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  forEach(callback, subject, predicate, object, graph) {\n    this.some(quad => {\n      callback(quad);\n      return false;\n    }, subject, predicate, object, graph);\n  }\n\n  // ### `every` executes the callback on all quads,\n  // and returns `true` if it returns truthy for all them.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  every(callback, subject, predicate, object, graph) {\n    let some = false;\n    const every = !this.some(quad => {\n      some = true;\n      return !callback(quad);\n    }, subject, predicate, object, graph);\n    return some && every;\n  }\n\n  // ### `some` executes the callback on all quads,\n  // and returns `true` if it returns truthy for any of them.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  some(callback, subject, predicate, object, graph) {\n    for (const quad of this.readQuads(subject, predicate, object, graph))\n      if (callback(quad))\n        return true;\n    return false;\n  }\n\n  // ### `getSubjects` returns all subjects that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  getSubjects(predicate, object, graph) {\n    const results = [];\n    this.forSubjects(s => { results.push(s); }, predicate, object, graph);\n    return results;\n  }\n\n  // ### `forSubjects` executes the callback on all subjects that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  forSubjects(callback, predicate, object, graph) {\n    // Convert terms to internal string representation\n    graph = graph && termToId(graph);\n\n    const graphs = this._getGraphs(graph);\n    let content, predicateId, objectId;\n    callback = this._uniqueEntities(callback);\n\n    // Translate IRIs to internal index keys.\n    if (predicate && !(predicateId = this._termToNumericId(predicate)) ||\n        object    && !(objectId    = this._termToNumericId(object)))\n      return;\n\n    for (graph in graphs) {\n      // Only if the specified graph contains triples, there can be results\n      if (content = graphs[graph]) {\n        // Choose optimal index based on which fields are wildcards\n        if (predicateId) {\n          if (objectId)\n            // If predicate and object are given, the POS index is best.\n            this._loopBy2Keys(content.predicates, predicateId, objectId, callback);\n          else\n            // If only predicate is given, the SPO index is best.\n            this._loopByKey1(content.subjects, predicateId, callback);\n        }\n        else if (objectId)\n          // If only object is given, the OSP index is best.\n          this._loopByKey0(content.objects, objectId, callback);\n        else\n          // If no params given, iterate all the subjects\n          this._loop(content.subjects, callback);\n      }\n    }\n  }\n\n  // ### `getPredicates` returns all predicates that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  getPredicates(subject, object, graph) {\n    const results = [];\n    this.forPredicates(p => { results.push(p); }, subject, object, graph);\n    return results;\n  }\n\n  // ### `forPredicates` executes the callback on all predicates that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  forPredicates(callback, subject, object, graph) {\n    // Convert terms to internal string representation\n    graph = graph && termToId(graph);\n\n    const graphs = this._getGraphs(graph);\n    let content, subjectId, objectId;\n    callback = this._uniqueEntities(callback);\n\n    // Translate IRIs to internal index keys.\n    if (subject   && !(subjectId   = this._termToNumericId(subject))   ||\n        object    && !(objectId    = this._termToNumericId(object)))\n      return;\n\n    for (graph in graphs) {\n      // Only if the specified graph contains triples, there can be results\n      if (content = graphs[graph]) {\n        // Choose optimal index based on which fields are wildcards\n        if (subjectId) {\n          if (objectId)\n            // If subject and object are given, the OSP index is best.\n            this._loopBy2Keys(content.objects, objectId, subjectId, callback);\n          else\n            // If only subject is given, the SPO index is best.\n            this._loopByKey0(content.subjects, subjectId, callback);\n        }\n        else if (objectId)\n          // If only object is given, the POS index is best.\n          this._loopByKey1(content.predicates, objectId, callback);\n        else\n          // If no params given, iterate all the predicates.\n          this._loop(content.predicates, callback);\n      }\n    }\n  }\n\n  // ### `getObjects` returns all objects that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  getObjects(subject, predicate, graph) {\n    const results = [];\n    this.forObjects(o => { results.push(o); }, subject, predicate, graph);\n    return results;\n  }\n\n  // ### `forObjects` executes the callback on all objects that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  forObjects(callback, subject, predicate, graph) {\n    // Convert terms to internal string representation\n    graph = graph && termToId(graph);\n\n    const graphs = this._getGraphs(graph);\n    let content, subjectId, predicateId;\n    callback = this._uniqueEntities(callback);\n\n    // Translate IRIs to internal index keys.\n    if (subject   && !(subjectId   = this._termToNumericId(subject))   ||\n        predicate && !(predicateId = this._termToNumericId(predicate)))\n      return;\n\n    for (graph in graphs) {\n      // Only if the specified graph contains triples, there can be results\n      if (content = graphs[graph]) {\n        // Choose optimal index based on which fields are wildcards\n        if (subjectId) {\n          if (predicateId)\n            // If subject and predicate are given, the SPO index is best.\n            this._loopBy2Keys(content.subjects, subjectId, predicateId, callback);\n          else\n            // If only subject is given, the OSP index is best.\n            this._loopByKey1(content.objects, subjectId, callback);\n        }\n        else if (predicateId)\n          // If only predicate is given, the POS index is best.\n          this._loopByKey0(content.predicates, predicateId, callback);\n        else\n          // If no params given, iterate all the objects.\n          this._loop(content.objects, callback);\n      }\n    }\n  }\n\n  // ### `getGraphs` returns all graphs that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  getGraphs(subject, predicate, object) {\n    const results = [];\n    this.forGraphs(g => { results.push(g); }, subject, predicate, object);\n    return results;\n  }\n\n  // ### `forGraphs` executes the callback on all graphs that match the pattern.\n  // Setting any field to `undefined` or `null` indicates a wildcard.\n  forGraphs(callback, subject, predicate, object) {\n    for (const graph in this._graphs) {\n      this.some(quad => {\n        callback(quad.graph);\n        return true; // Halt iteration of some()\n      }, subject, predicate, object, graph);\n    }\n  }\n\n  // ### `createBlankNode` creates a new blank node, returning its name\n  createBlankNode(suggestedName) {\n    let name, index;\n    // Generate a name based on the suggested name\n    if (suggestedName) {\n      name = suggestedName = `_:${suggestedName}`, index = 1;\n      while (this._ids[name])\n        name = suggestedName + index++;\n    }\n    // Generate a generic blank node name\n    else {\n      do { name = `_:b${this._blankNodeIndex++}`; }\n      while (this._ids[name]);\n    }\n    // Add the blank node to the entities, avoiding the generation of duplicates\n    this._ids[name] = ++this._id;\n    this._entities[this._id] = name;\n    return this._factory.blankNode(name.substr(2));\n  }\n\n  // ### `extractLists` finds and removes all list triples\n  // and returns the items per list.\n  extractLists({ remove = false, ignoreErrors = false } = {}) {\n    const lists = {}; // has scalar keys so could be a simple Object\n    const onError = ignoreErrors ? (() => true) :\n                  ((node, message) => { throw new Error(`${node.value} ${message}`); });\n\n    // Traverse each list from its tail\n    const tails = this.getQuads(null, namespaces.rdf.rest, namespaces.rdf.nil, null);\n    const toRemove = remove ? [...tails] : [];\n    tails.forEach(tailQuad => {\n      const items = [];             // the members found as objects of rdf:first quads\n      let malformed = false;      // signals whether the current list is malformed\n      let head;                   // the head of the list (_:b1 in above example)\n      let headPos;                // set to subject or object when head is set\n      const graph = tailQuad.graph; // make sure list is in exactly one graph\n\n      // Traverse the list from tail to end\n      let current = tailQuad.subject;\n      while (current && !malformed) {\n        const objectQuads = this.getQuads(null, null, current, null);\n        const subjectQuads = this.getQuads(current, null, null, null);\n        let quad, first = null, rest = null, parent = null;\n\n        // Find the first and rest of this list node\n        for (let i = 0; i < subjectQuads.length && !malformed; i++) {\n          quad = subjectQuads[i];\n          if (!quad.graph.equals(graph))\n            malformed = onError(current, 'not confined to single graph');\n          else if (head)\n            malformed = onError(current, 'has non-list arcs out');\n\n          // one rdf:first\n          else if (quad.predicate.value === namespaces.rdf.first) {\n            if (first)\n              malformed = onError(current, 'has multiple rdf:first arcs');\n            else\n              toRemove.push(first = quad);\n          }\n\n          // one rdf:rest\n          else if (quad.predicate.value === namespaces.rdf.rest) {\n            if (rest)\n              malformed = onError(current, 'has multiple rdf:rest arcs');\n            else\n              toRemove.push(rest = quad);\n          }\n\n          // alien triple\n          else if (objectQuads.length)\n            malformed = onError(current, 'can\\'t be subject and object');\n          else {\n            head = quad; // e.g. { (1 2 3) :p :o }\n            headPos = 'subject';\n          }\n        }\n\n        // { :s :p (1 2) } arrives here with no head\n        // { (1 2) :p :o } arrives here with head set to the list.\n        for (let i = 0; i < objectQuads.length && !malformed; ++i) {\n          quad = objectQuads[i];\n          if (head)\n            malformed = onError(current, 'can\\'t have coreferences');\n          // one rdf:rest\n          else if (quad.predicate.value === namespaces.rdf.rest) {\n            if (parent)\n              malformed = onError(current, 'has incoming rdf:rest arcs');\n            else\n              parent = quad;\n          }\n          else {\n            head = quad; // e.g. { :s :p (1 2) }\n            headPos = 'object';\n          }\n        }\n\n        // Store the list item and continue with parent\n        if (!first)\n          malformed = onError(current, 'has no list head');\n        else\n          items.unshift(first.object);\n        current = parent && parent.subject;\n      }\n\n      // Don't remove any quads if the list is malformed\n      if (malformed)\n        remove = false;\n      // Store the list under the value of its head\n      else if (head)\n        lists[head[headPos].value] = items;\n    });\n\n    // Remove list quads if requested\n    if (remove)\n      this.removeQuads(toRemove);\n    return lists;\n  }\n\n  // ### Store is an iterable.\n  // Can be used where iterables are expected: for...of loops, array spread operator,\n  // `yield*`, and destructuring assignment (order is not guaranteed).\n  *[Symbol.iterator]() {\n    yield* this.readQuads();\n  }\n}\n\n// Determines whether the argument is a string\nfunction isString(s) {\n  return typeof s === 'string' || s instanceof String;\n}\n\n/**\n * A class that implements both DatasetCore and Readable.\n */\nclass DatasetCoreAndReadableStream extends Readable {\n  constructor(n3Store, subject, predicate, object, graph) {\n    super({ objectMode: true });\n    Object.assign(this, { n3Store, subject, predicate, object, graph });\n  }\n\n  get filtered() {\n    if (!this._filtered) {\n      const { n3Store, graph, object, predicate, subject } = this;\n      const newStore = this._filtered = new N3Store({ factory: n3Store._factory });\n      for (const quad of n3Store.readQuads(subject, predicate, object, graph))\n        newStore.addQuad(quad);\n    }\n    return this._filtered;\n  }\n\n  get size() {\n    return this.filtered.size;\n  }\n\n  _read() {\n    for (const quad of this)\n      this.push(quad);\n    this.push(null);\n  }\n\n  add(quad) {\n    return this.filtered.add(quad);\n  }\n\n  delete(quad) {\n    return this.filtered.delete(quad);\n  }\n\n  has(quad) {\n    return this.filtered.has(quad);\n  }\n\n  match(subject, predicate, object, graph) {\n    return new DatasetCoreAndReadableStream(this.filtered, subject, predicate, object, graph);\n  }\n\n  *[Symbol.iterator]() {\n    yield* this._filtered || this.n3Store.readQuads(this.subject, this.predicate, this.object, this.graph);\n  }\n}\n",
-      "start": 1701230037222,
-      "end": 1701230037256,
+      "start": 1701230370638,
+      "end": 1701230370668,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037256,
-      "end": 1701230037256,
+      "start": 1701230370668,
+      "end": 1701230370668,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230037256,
-      "end": 1701230037257,
+      "start": 1701230370668,
+      "end": 1701230370669,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370669,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370669,
+      "end": 1701230370670,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037257,
-      "end": 1701230037257,
+      "start": 1701230370670,
+      "end": 1701230370670,
       "order": "normal"
     }
   ]

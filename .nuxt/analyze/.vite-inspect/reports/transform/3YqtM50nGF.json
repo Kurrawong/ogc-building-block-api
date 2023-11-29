@@ -4,206 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "// N3.js implementations of the RDF/JS core data types\n// See https://github.com/rdfjs/representation-task-force/blob/master/interface-spec.md\n\nimport namespaces from './IRIs';\nimport { isDefaultGraph } from './N3Util';\nconst { rdf, xsd } = namespaces;\n\n// eslint-disable-next-line prefer-const\nlet DEFAULTGRAPH;\nlet _blankNodeCounter = 0;\n\nconst escapedLiteral = /^\"(.*\".*)(?=\"[^\"]*$)/;\n\n// ## DataFactory singleton\nconst DataFactory = {\n  namedNode,\n  blankNode,\n  variable,\n  literal,\n  defaultGraph,\n  quad,\n  triple: quad,\n};\nexport default DataFactory;\n\n// ## Term constructor\nexport class Term {\n  constructor(id) {\n    this.id = id;\n  }\n\n  // ### The value of this term\n  get value() {\n    return this.id;\n  }\n\n  // ### Returns whether this object represents the same term as the other\n  equals(other) {\n    // If both terms were created by this library,\n    // equality can be computed through ids\n    if (other instanceof Term)\n      return this.id === other.id;\n    // Otherwise, compare term type and value\n    return !!other && this.termType === other.termType &&\n                      this.value    === other.value;\n  }\n\n  // ### Implement hashCode for Immutable.js, since we implement `equals`\n  // https://immutable-js.com/docs/v4.0.0/ValueObject/#hashCode()\n  hashCode() {\n    return 0;\n  }\n\n  // ### Returns a plain object representation of this term\n  toJSON() {\n    return {\n      termType: this.termType,\n      value:    this.value,\n    };\n  }\n}\n\n\n// ## NamedNode constructor\nexport class NamedNode extends Term {\n  // ### The term type of this term\n  get termType() {\n    return 'NamedNode';\n  }\n}\n\n// ## Literal constructor\nexport class Literal extends Term {\n  // ### The term type of this term\n  get termType() {\n    return 'Literal';\n  }\n\n  // ### The text value of this literal\n  get value() {\n    return this.id.substring(1, this.id.lastIndexOf('\"'));\n  }\n\n  // ### The language of this literal\n  get language() {\n    // Find the last quotation mark (e.g., '\"abc\"@en-us')\n    const id = this.id;\n    let atPos = id.lastIndexOf('\"') + 1;\n    // If \"@\" it follows, return the remaining substring; empty otherwise\n    return atPos < id.length && id[atPos++] === '@' ? id.substr(atPos).toLowerCase() : '';\n  }\n\n  // ### The datatype IRI of this literal\n  get datatype() {\n    return new NamedNode(this.datatypeString);\n  }\n\n  // ### The datatype string of this literal\n  get datatypeString() {\n    // Find the last quotation mark (e.g., '\"abc\"^^http://ex.org/types#t')\n    const id = this.id, dtPos = id.lastIndexOf('\"') + 1;\n    const char = dtPos < id.length ? id[dtPos] : '';\n    // If \"^\" it follows, return the remaining substring\n    return char === '^' ? id.substr(dtPos + 2) :\n           // If \"@\" follows, return rdf:langString; xsd:string otherwise\n           (char !== '@' ? xsd.string : rdf.langString);\n  }\n\n  // ### Returns whether this object represents the same term as the other\n  equals(other) {\n    // If both literals were created by this library,\n    // equality can be computed through ids\n    if (other instanceof Literal)\n      return this.id === other.id;\n    // Otherwise, compare term type, value, language, and datatype\n    return !!other && !!other.datatype &&\n                      this.termType === other.termType &&\n                      this.value    === other.value    &&\n                      this.language === other.language &&\n                      this.datatype.value === other.datatype.value;\n  }\n\n  toJSON() {\n    return {\n      termType: this.termType,\n      value:    this.value,\n      language: this.language,\n      datatype: { termType: 'NamedNode', value: this.datatypeString },\n    };\n  }\n}\n\n// ## BlankNode constructor\nexport class BlankNode extends Term {\n  constructor(name) {\n    super(`_:${name}`);\n  }\n\n  // ### The term type of this term\n  get termType() {\n    return 'BlankNode';\n  }\n\n  // ### The name of this blank node\n  get value() {\n    return this.id.substr(2);\n  }\n}\n\nexport class Variable extends Term {\n  constructor(name) {\n    super(`?${name}`);\n  }\n\n  // ### The term type of this term\n  get termType() {\n    return 'Variable';\n  }\n\n  // ### The name of this variable\n  get value() {\n    return this.id.substr(1);\n  }\n}\n\n// ## DefaultGraph constructor\nexport class DefaultGraph extends Term {\n  constructor() {\n    super('');\n    return DEFAULTGRAPH || this;\n  }\n\n  // ### The term type of this term\n  get termType() {\n    return 'DefaultGraph';\n  }\n\n  // ### Returns whether this object represents the same term as the other\n  equals(other) {\n    // If both terms were created by this library,\n    // equality can be computed through strict equality;\n    // otherwise, compare term types.\n    return (this === other) || (!!other && (this.termType === other.termType));\n  }\n}\n\n// ## DefaultGraph singleton\nDEFAULTGRAPH = new DefaultGraph();\n\n// ### Constructs a term from the given internal string ID\n// The third 'nested' parameter of this function is to aid\n// with recursion over nested terms. It should not be used\n// by consumers of this library.\n// See https://github.com/rdfjs/N3.js/pull/311#discussion_r1061042725\nexport function termFromId(id, factory, nested) {\n  factory = factory || DataFactory;\n\n  // Falsy value or empty string indicate the default graph\n  if (!id)\n    return factory.defaultGraph();\n\n  // Identify the term type based on the first character\n  switch (id[0]) {\n  case '?':\n    return factory.variable(id.substr(1));\n  case '_':\n    return factory.blankNode(id.substr(2));\n  case '\"':\n    // Shortcut for internal literals\n    if (factory === DataFactory)\n      return new Literal(id);\n    // Literal without datatype or language\n    if (id[id.length - 1] === '\"')\n      return factory.literal(id.substr(1, id.length - 2));\n    // Literal with datatype or language\n    const endPos = id.lastIndexOf('\"', id.length - 1);\n    return factory.literal(id.substr(1, endPos - 1),\n            id[endPos + 1] === '@' ? id.substr(endPos + 2)\n                                   : factory.namedNode(id.substr(endPos + 3)));\n  case '[':\n    id = JSON.parse(id);\n    break;\n  default:\n    if (!nested || !Array.isArray(id)) {\n      return factory.namedNode(id);\n    }\n  }\n  return factory.quad(\n    termFromId(id[0], factory, true),\n    termFromId(id[1], factory, true),\n    termFromId(id[2], factory, true),\n    id[3] && termFromId(id[3], factory, true)\n  );\n}\n\n// ### Constructs an internal string ID from the given term or ID string\n// The third 'nested' parameter of this function is to aid\n// with recursion over nested terms. It should not be used\n// by consumers of this library.\n// See https://github.com/rdfjs/N3.js/pull/311#discussion_r1061042725\nexport function termToId(term, nested) {\n  if (typeof term === 'string')\n    return term;\n  if (term instanceof Term && term.termType !== 'Quad')\n    return term.id;\n  if (!term)\n    return DEFAULTGRAPH.id;\n\n  // Term instantiated with another library\n  switch (term.termType) {\n  case 'NamedNode':    return term.value;\n  case 'BlankNode':    return `_:${term.value}`;\n  case 'Variable':     return `?${term.value}`;\n  case 'DefaultGraph': return '';\n  case 'Literal':      return `\"${term.value}\"${\n    term.language ? `@${term.language}` :\n      (term.datatype && term.datatype.value !== xsd.string ? `^^${term.datatype.value}` : '')}`;\n  case 'Quad':\n    const res = [\n      termToId(term.subject, true),\n      termToId(term.predicate, true),\n      termToId(term.object, true),\n    ];\n    if (!isDefaultGraph(term.graph)) {\n      res.push(termToId(term.graph, true));\n    }\n    return nested ? res : JSON.stringify(res);\n  default: throw new Error(`Unexpected termType: ${term.termType}`);\n  }\n}\n\n\n// ## Quad constructor\nexport class Quad extends Term {\n  constructor(subject, predicate, object, graph) {\n    super('');\n    this._subject   = subject;\n    this._predicate = predicate;\n    this._object    = object;\n    this._graph     = graph || DEFAULTGRAPH;\n  }\n\n  // ### The term type of this term\n  get termType() {\n    return 'Quad';\n  }\n\n  get subject() {\n    return this._subject;\n  }\n\n  get predicate() {\n    return this._predicate;\n  }\n\n  get object() {\n    return this._object;\n  }\n\n  get graph() {\n    return this._graph;\n  }\n\n  // ### Returns a plain object representation of this quad\n  toJSON() {\n    return {\n      termType:  this.termType,\n      subject:   this._subject.toJSON(),\n      predicate: this._predicate.toJSON(),\n      object:    this._object.toJSON(),\n      graph:     this._graph.toJSON(),\n    };\n  }\n\n  // ### Returns whether this object represents the same quad as the other\n  equals(other) {\n    return !!other && this._subject.equals(other.subject)     &&\n                      this._predicate.equals(other.predicate) &&\n                      this._object.equals(other.object)       &&\n                      this._graph.equals(other.graph);\n  }\n}\nexport { Quad as Triple };\n\n// ### Escapes the quotes within the given literal\nexport function escapeQuotes(id) {\n  return id.replace(escapedLiteral, (_, quoted) => `\"${quoted.replace(/\"/g, '\"\"')}`);\n}\n\n// ### Unescapes the quotes within the given literal\nexport function unescapeQuotes(id) {\n  return id.replace(escapedLiteral, (_, quoted) => `\"${quoted.replace(/\"\"/g, '\"')}`);\n}\n\n// ### Creates an IRI\nfunction namedNode(iri) {\n  return new NamedNode(iri);\n}\n\n// ### Creates a blank node\nfunction blankNode(name) {\n  return new BlankNode(name || `n3-${_blankNodeCounter++}`);\n}\n\n// ### Creates a literal\nfunction literal(value, languageOrDataType) {\n  // Create a language-tagged string\n  if (typeof languageOrDataType === 'string')\n    return new Literal(`\"${value}\"@${languageOrDataType.toLowerCase()}`);\n\n  // Automatically determine datatype for booleans and numbers\n  let datatype = languageOrDataType ? languageOrDataType.value : '';\n  if (datatype === '') {\n    // Convert a boolean\n    if (typeof value === 'boolean')\n      datatype = xsd.boolean;\n    // Convert an integer or double\n    else if (typeof value === 'number') {\n      if (Number.isFinite(value))\n        datatype = Number.isInteger(value) ? xsd.integer : xsd.double;\n      else {\n        datatype = xsd.double;\n        if (!Number.isNaN(value))\n          value = value > 0 ? 'INF' : '-INF';\n      }\n    }\n  }\n\n  // Create a datatyped literal\n  return (datatype === '' || datatype === xsd.string) ?\n    new Literal(`\"${value}\"`) :\n    new Literal(`\"${value}\"^^${datatype}`);\n}\n\n// ### Creates a variable\nfunction variable(name) {\n  return new Variable(name);\n}\n\n// ### Returns the default graph\nfunction defaultGraph() {\n  return DEFAULTGRAPH;\n}\n\n// ### Creates a quad\nfunction quad(subject, predicate, object, graph) {\n  return new Quad(subject, predicate, object, graph);\n}\n",
-      "start": 1701230037223,
-      "end": 1701230037261,
+      "start": 1701230370640,
+      "end": 1701230370663,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370663,
+      "end": 1701230370663,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037261,
-      "end": 1701230037261,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230037261,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037262,
-      "end": 1701230037262,
+      "start": 1701230370664,
+      "end": 1701230370664,
       "order": "normal"
     }
   ]

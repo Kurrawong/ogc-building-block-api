@@ -4,159 +4,159 @@
     {
       "name": "vite:load-fallback",
       "result": "// plugins/vuetify.js\nimport { createVuetify } from 'vuetify'\nimport * as components from 'vuetify/components'\nimport * as directives from 'vuetify/directives'\n\nexport default defineNuxtPlugin(nuxtApp => {\n  const vuetify = createVuetify({\n    ssr: true,\n    components,\n    directives,\n  })\n\n  nuxtApp.vueApp.use(vuetify)\n})",
-      "start": 1701230034722,
-      "end": 1701230034789,
+      "start": 1701230368070,
+      "end": 1701230368141,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230034789,
-      "end": 1701230034789,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230034789,
-      "end": 1701230034789,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230034789,
-      "end": 1701230034789,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230034789,
-      "end": 1701230034789,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { defineNuxtPlugin } from '#app/nuxt';\n// plugins/vuetify.js\nimport { createVuetify } from 'vuetify'\nimport * as components from 'vuetify/components'\nimport * as directives from 'vuetify/directives'\n\nexport default defineNuxtPlugin(nuxtApp => {\n  const vuetify = createVuetify({\n    ssr: true,\n    components,\n    directives,\n  })\n\n  nuxtApp.vueApp.use(vuetify)\n})",
-      "start": 1701230034790,
-      "end": 1701230034790,
+      "start": 1701230368141,
+      "end": 1701230368141,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -169,50 +169,50 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230034790,
-      "end": 1701230034791,
+      "start": 1701230368141,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230034791,
-      "end": 1701230034791,
+      "start": 1701230368142,
+      "end": 1701230368142,
       "order": "normal"
     }
   ]

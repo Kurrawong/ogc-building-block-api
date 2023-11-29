@@ -20,7 +20,7 @@ import { dirname, resolve } from 'file:///Users/hjohns/workspace/kurrawong/ogc-b
 
 const inlineAppConfig = {
   "nuxt": {
-    "buildId": "127a9ac3-ffcc-469a-8702-c66193ef47e8"
+    "buildId": "208d0537-388d-4852-b99b-4f28850e54a2"
   }
 };
 
@@ -30,7 +30,7 @@ const appConfig = defuFn(inlineAppConfig);
 
 const _inlineRuntimeConfig = {
   "app": {
-    "baseURL": "/",
+    "baseURL": "/ogc-building-block-api/",
     "buildAssetsDir": "nuxt/",
     "cdnURL": ""
   },

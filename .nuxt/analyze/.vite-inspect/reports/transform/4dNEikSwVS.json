@@ -4,38 +4,38 @@
     {
       "name": "vite:vue",
       "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createVNode as _createVNode, renderList as _renderList, Fragment as _Fragment, createElementVNode as _createElementVNode, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-f59d8ffd\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = { style: {\"position\":\"relative\"} }\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n}\nconst _hoisted_3 = { style: {\"white-space\":\"nowrap\"} }\nconst _hoisted_4 = [\"href\", \"title\"]\nconst _hoisted_5 = { key: 1 }\nconst _hoisted_6 = [\"onClick\"]\nconst _hoisted_7 = [\"title\"]\n\nimport type { List, HeaderLink } from '~/lib/prez.d';\nimport { template } from '~/helpers/str';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'List',\n  props: {\n    list: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props: any) {\n\nconst props = __props;\nconst fields = props.fields ? props.fields : Object.keys(props.list.listHeaders);\nconst excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./]\nconst route = useRouter();\n\nreturn (_ctx: any,_cache: any) => {\n  const _component_v_chip = _resolveComponent(\"v-chip\")!\n  const _component_v_icon = _resolveComponent(\"v-icon\")!\n  const _component_v_table = _resolveComponent(\"v-table\")!\n  const _component_v_chip_group = _resolveComponent(\"v-chip-group\")!\n\n  return (_openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n    (_ctx.headerTitle && _ctx.list)\n      ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.list)), 1))\n      : _createCommentVNode(\"\", true),\n    _createVNode(_component_v_chip, {\n      variant: \"flat\",\n      style: {\"position\":\"absolute\",\"right\":\"0\",\"top\":\"0\"}\n    }, {\n      default: _withCtx(() => [\n        _createTextVNode(_toDisplayString(_ctx.list.header.label), 1)\n      ]),\n      _: 1\n    }),\n    (_ctx.list)\n      ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 1,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _createElementVNode(\"thead\", null, [\n              _createElementVNode(\"tr\", null, [\n                (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                  return (_openBlock(), _createElementBlock(\"th\", _hoisted_3, [\n                    _createTextVNode(_toDisplayString(field in _ctx.list.listHeaders ? _ctx.list.listHeaders[field].label : `${field} missing`) + \"  \", 1),\n                    (field in _ctx.list.listHeaders)\n                      ? (_openBlock(), _createElementBlock(\"a\", {\n                          key: 0,\n                          href: _ctx.list.listHeaders[field].iri,\n                          title: field\n                        }, [\n                          _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                        ], 8, _hoisted_4))\n                      : _createCommentVNode(\"\", true),\n                    (_ctx.info)\n                      ? (_openBlock(), _createElementBlock(\"div\", _hoisted_5, _toDisplayString(field), 1))\n                      : _createCommentVNode(\"\", true)\n                  ]))\n                }), 256))\n              ])\n            ]),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.list.list, (item) => {\n                return (_openBlock(), _createElementBlock(\"tr\", {\n                  onClick: ($event: any) => (_ctx.$router.push(item['prez:link']))\n                }, [\n                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                    return (_openBlock(), _createElementBlock(\"td\", null, [\n                      _createElementVNode(\"div\", {\n                        title: field in item ? item[field] : null,\n                        class: \"td-max\"\n                      }, _toDisplayString(field in item ? item[field] : `\"${field}\" not found`), 9, _hoisted_7)\n                    ]))\n                  }), 256))\n                ], 8, _hoisted_6))\n              }), 256))\n            ])\n          ]),\n          _: 1\n        }))\n      : _createCommentVNode(\"\", true),\n    (_ctx.links)\n      ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 2 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter(link=>link.title), (link) => {\n              return (_openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024))\n            }), 256))\n          ]),\n          _: 1\n        }))\n      : _createCommentVNode(\"\", true)\n  ]))\n}\n}\n\n})",
-      "start": 1701230037541,
-      "end": 1701230037541
+      "start": 1701230370955,
+      "end": 1701230370955
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037541,
-      "end": 1701230037541,
+      "start": 1701230370955,
+      "end": 1701230370955,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037541,
-      "end": 1701230037541,
+      "start": 1701230370955,
+      "end": 1701230370955,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037541,
-      "end": 1701230037541,
+      "start": 1701230370955,
+      "end": 1701230370955,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037541,
-      "end": 1701230037541,
+      "start": 1701230370955,
+      "end": 1701230370955,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
       "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createVNode as _createVNode, renderList as _renderList, Fragment as _Fragment, createElementVNode as _createElementVNode, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\";\nconst _withScopeId = (n) => (_pushScopeId(\"data-v-f59d8ffd\"), n = n(), _popScopeId(), n);\nconst _hoisted_1 = { style: { \"position\": \"relative\" } };\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n};\nconst _hoisted_3 = { style: { \"white-space\": \"nowrap\" } };\nconst _hoisted_4 = [\"href\", \"title\"];\nconst _hoisted_5 = { key: 1 };\nconst _hoisted_6 = [\"onClick\"];\nconst _hoisted_7 = [\"title\"];\nimport { template } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"List\",\n  props: {\n    list: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props) {\n    const props = __props;\n    const fields = props.fields ? props.fields : Object.keys(props.list.listHeaders);\n    const excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n    const route = useRouter();\n    return (_ctx, _cache) => {\n      const _component_v_chip = _resolveComponent(\"v-chip\");\n      const _component_v_icon = _resolveComponent(\"v-icon\");\n      const _component_v_table = _resolveComponent(\"v-table\");\n      const _component_v_chip_group = _resolveComponent(\"v-chip-group\");\n      return _openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        _ctx.headerTitle && _ctx.list ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.list)), 1)) : _createCommentVNode(\"\", true),\n        _createVNode(_component_v_chip, {\n          variant: \"flat\",\n          style: { \"position\": \"absolute\", \"right\": \"0\", \"top\": \"0\" }\n        }, {\n          default: _withCtx(() => [\n            _createTextVNode(_toDisplayString(_ctx.list.header.label), 1)\n          ]),\n          _: 1\n        }),\n        _ctx.list ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 1,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _createElementVNode(\"thead\", null, [\n              _createElementVNode(\"tr\", null, [\n                (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                  return _openBlock(), _createElementBlock(\"th\", _hoisted_3, [\n                    _createTextVNode(_toDisplayString(field in _ctx.list.listHeaders ? _ctx.list.listHeaders[field].label : `${field} missing`) + \"  \", 1),\n                    field in _ctx.list.listHeaders ? (_openBlock(), _createElementBlock(\"a\", {\n                      key: 0,\n                      href: _ctx.list.listHeaders[field].iri,\n                      title: field\n                    }, [\n                      _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                    ], 8, _hoisted_4)) : _createCommentVNode(\"\", true),\n                    _ctx.info ? (_openBlock(), _createElementBlock(\"div\", _hoisted_5, _toDisplayString(field), 1)) : _createCommentVNode(\"\", true)\n                  ]);\n                }), 256))\n              ])\n            ]),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.list.list, (item) => {\n                return _openBlock(), _createElementBlock(\"tr\", {\n                  onClick: ($event) => _ctx.$router.push(item[\"prez:link\"])\n                }, [\n                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                    return _openBlock(), _createElementBlock(\"td\", null, [\n                      _createElementVNode(\"div\", {\n                        title: field in item ? item[field] : null,\n                        class: \"td-max\"\n                      }, _toDisplayString(field in item ? item[field] : `\"${field}\" not found`), 9, _hoisted_7)\n                    ]);\n                  }), 256))\n                ], 8, _hoisted_6);\n              }), 256))\n            ])\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.links ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 2 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter((link) => link.title), (link) => {\n              return _openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024);\n            }), 256))\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true)\n      ]);\n    };\n  }\n});\n",
-      "start": 1701230037541,
-      "end": 1701230037592,
+      "start": 1701230370955,
+      "end": 1701230371045,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -51,123 +51,123 @@
     },
     {
       "name": "vite:json",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037592,
-      "end": 1701230037592,
+      "start": 1701230371045,
+      "end": 1701230371045,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRouter } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createVNode as _createVNode, renderList as _renderList, Fragment as _Fragment, createElementVNode as _createElementVNode, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\";\nconst _withScopeId = (n) => (_pushScopeId(\"data-v-f59d8ffd\"), n = n(), _popScopeId(), n);\nconst _hoisted_1 = { style: { \"position\": \"relative\" } };\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n};\nconst _hoisted_3 = { style: { \"white-space\": \"nowrap\" } };\nconst _hoisted_4 = [\"href\", \"title\"];\nconst _hoisted_5 = { key: 1 };\nconst _hoisted_6 = [\"onClick\"];\nconst _hoisted_7 = [\"title\"];\nimport { template } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"List\",\n  props: {\n    list: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props) {\n    const props = __props;\n    const fields = props.fields ? props.fields : Object.keys(props.list.listHeaders);\n    const excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n    const route = useRouter();\n    return (_ctx, _cache) => {\n      const _component_v_chip = _resolveComponent(\"v-chip\");\n      const _component_v_icon = _resolveComponent(\"v-icon\");\n      const _component_v_table = _resolveComponent(\"v-table\");\n      const _component_v_chip_group = _resolveComponent(\"v-chip-group\");\n      return _openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        _ctx.headerTitle && _ctx.list ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.list)), 1)) : _createCommentVNode(\"\", true),\n        _createVNode(_component_v_chip, {\n          variant: \"flat\",\n          style: { \"position\": \"absolute\", \"right\": \"0\", \"top\": \"0\" }\n        }, {\n          default: _withCtx(() => [\n            _createTextVNode(_toDisplayString(_ctx.list.header.label), 1)\n          ]),\n          _: 1\n        }),\n        _ctx.list ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 1,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _createElementVNode(\"thead\", null, [\n              _createElementVNode(\"tr\", null, [\n                (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                  return _openBlock(), _createElementBlock(\"th\", _hoisted_3, [\n                    _createTextVNode(_toDisplayString(field in _ctx.list.listHeaders ? _ctx.list.listHeaders[field].label : `${field} missing`) + \"  \", 1),\n                    field in _ctx.list.listHeaders ? (_openBlock(), _createElementBlock(\"a\", {\n                      key: 0,\n                      href: _ctx.list.listHeaders[field].iri,\n                      title: field\n                    }, [\n                      _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                    ], 8, _hoisted_4)) : _createCommentVNode(\"\", true),\n                    _ctx.info ? (_openBlock(), _createElementBlock(\"div\", _hoisted_5, _toDisplayString(field), 1)) : _createCommentVNode(\"\", true)\n                  ]);\n                }), 256))\n              ])\n            ]),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.list.list, (item) => {\n                return _openBlock(), _createElementBlock(\"tr\", {\n                  onClick: ($event) => _ctx.$router.push(item[\"prez:link\"])\n                }, [\n                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                    return _openBlock(), _createElementBlock(\"td\", null, [\n                      _createElementVNode(\"div\", {\n                        title: field in item ? item[field] : null,\n                        class: \"td-max\"\n                      }, _toDisplayString(field in item ? item[field] : `\"${field}\" not found`), 9, _hoisted_7)\n                    ]);\n                  }), 256))\n                ], 8, _hoisted_6);\n              }), 256))\n            ])\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.links ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 2 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter((link) => link.title), (link) => {\n              return _openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024);\n            }), 256))\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true)\n      ]);\n    };\n  }\n});\n",
-      "start": 1701230037592,
-      "end": 1701230037593,
+      "start": 1701230371045,
+      "end": 1701230371046,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -180,50 +180,50 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037593,
-      "end": 1701230037593,
+      "start": 1701230371046,
+      "end": 1701230371046,
       "order": "normal"
     }
   ]

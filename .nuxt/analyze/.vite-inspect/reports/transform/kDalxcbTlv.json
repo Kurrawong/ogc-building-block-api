@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array } = require('../../ours/primordials')\nconst { Buffer } = require('buffer')\nconst { inspect } = require('../../ours/util')\nmodule.exports = class BufferList {\n  constructor() {\n    this.head = null\n    this.tail = null\n    this.length = 0\n  }\n  push(v) {\n    const entry = {\n      data: v,\n      next: null\n    }\n    if (this.length > 0) this.tail.next = entry\n    else this.head = entry\n    this.tail = entry\n    ++this.length\n  }\n  unshift(v) {\n    const entry = {\n      data: v,\n      next: this.head\n    }\n    if (this.length === 0) this.tail = entry\n    this.head = entry\n    ++this.length\n  }\n  shift() {\n    if (this.length === 0) return\n    const ret = this.head.data\n    if (this.length === 1) this.head = this.tail = null\n    else this.head = this.head.next\n    --this.length\n    return ret\n  }\n  clear() {\n    this.head = this.tail = null\n    this.length = 0\n  }\n  join(s) {\n    if (this.length === 0) return ''\n    let p = this.head\n    let ret = '' + p.data\n    while ((p = p.next) !== null) ret += s + p.data\n    return ret\n  }\n  concat(n) {\n    if (this.length === 0) return Buffer.alloc(0)\n    const ret = Buffer.allocUnsafe(n >>> 0)\n    let p = this.head\n    let i = 0\n    while (p) {\n      TypedArrayPrototypeSet(ret, p.data, i)\n      i += p.data.length\n      p = p.next\n    }\n    return ret\n  }\n\n  // Consumes a specified amount of bytes or characters from the buffered data.\n  consume(n, hasStrings) {\n    const data = this.head.data\n    if (n < data.length) {\n      // `slice` is the same for buffers and strings.\n      const slice = data.slice(0, n)\n      this.head.data = data.slice(n)\n      return slice\n    }\n    if (n === data.length) {\n      // First chunk is a perfect match.\n      return this.shift()\n    }\n    // Result spans more than one buffer.\n    return hasStrings ? this._getString(n) : this._getBuffer(n)\n  }\n  first() {\n    return this.head.data\n  }\n  *[SymbolIterator]() {\n    for (let p = this.head; p; p = p.next) {\n      yield p.data\n    }\n  }\n\n  // Consumes a specified amount of characters from the buffered data.\n  _getString(n) {\n    let ret = ''\n    let p = this.head\n    let c = 0\n    do {\n      const str = p.data\n      if (n > str.length) {\n        ret += str\n        n -= str.length\n      } else {\n        if (n === str.length) {\n          ret += str\n          ++c\n          if (p.next) this.head = p.next\n          else this.head = this.tail = null\n        } else {\n          ret += StringPrototypeSlice(str, 0, n)\n          this.head = p\n          p.data = StringPrototypeSlice(str, n)\n        }\n        break\n      }\n      ++c\n    } while ((p = p.next) !== null)\n    this.length -= c\n    return ret\n  }\n\n  // Consumes a specified amount of bytes from the buffered data.\n  _getBuffer(n) {\n    const ret = Buffer.allocUnsafe(n)\n    const retLen = n\n    let p = this.head\n    let c = 0\n    do {\n      const buf = p.data\n      if (n > buf.length) {\n        TypedArrayPrototypeSet(ret, buf, retLen - n)\n        n -= buf.length\n      } else {\n        if (n === buf.length) {\n          TypedArrayPrototypeSet(ret, buf, retLen - n)\n          ++c\n          if (p.next) this.head = p.next\n          else this.head = this.tail = null\n        } else {\n          TypedArrayPrototypeSet(ret, new Uint8Array(buf.buffer, buf.byteOffset, n), retLen - n)\n          this.head = p\n          p.data = buf.slice(n)\n        }\n        break\n      }\n      ++c\n    } while ((p = p.next) !== null)\n    this.length -= c\n    return ret\n  }\n\n  // Make sure the linked list only shows the minimal necessary information.\n  [Symbol.for('nodejs.util.inspect.custom')](_, options) {\n    return inspect(this, {\n      ...options,\n      // Only inspect one level.\n      depth: 0,\n      // It should not recurse.\n      customInspect: false\n    })\n  }\n}\n",
-      "start": 1701230037680,
-      "end": 1701230037728,
+      "start": 1701230371103,
+      "end": 1701230371154,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371154,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371154,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230037728,
-      "end": 1701230037728,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/buffer/index.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js?commonjs-proxy\";\n\n'use strict'\n\nconst { StringPrototypeSlice, SymbolIterator, TypedArrayPrototypeSet, Uint8Array } = require$$0\nconst { Buffer } = require$$1\nconst { inspect } = require$$2\nvar buffer_list = class BufferList {\n  constructor() {\n    this.head = null\n    this.tail = null\n    this.length = 0\n  }\n  push(v) {\n    const entry = {\n      data: v,\n      next: null\n    }\n    if (this.length > 0) this.tail.next = entry\n    else this.head = entry\n    this.tail = entry\n    ++this.length\n  }\n  unshift(v) {\n    const entry = {\n      data: v,\n      next: this.head\n    }\n    if (this.length === 0) this.tail = entry\n    this.head = entry\n    ++this.length\n  }\n  shift() {\n    if (this.length === 0) return\n    const ret = this.head.data\n    if (this.length === 1) this.head = this.tail = null\n    else this.head = this.head.next\n    --this.length\n    return ret\n  }\n  clear() {\n    this.head = this.tail = null\n    this.length = 0\n  }\n  join(s) {\n    if (this.length === 0) return ''\n    let p = this.head\n    let ret = '' + p.data\n    while ((p = p.next) !== null) ret += s + p.data\n    return ret\n  }\n  concat(n) {\n    if (this.length === 0) return Buffer.alloc(0)\n    const ret = Buffer.allocUnsafe(n >>> 0)\n    let p = this.head\n    let i = 0\n    while (p) {\n      TypedArrayPrototypeSet(ret, p.data, i)\n      i += p.data.length\n      p = p.next\n    }\n    return ret\n  }\n\n  // Consumes a specified amount of bytes or characters from the buffered data.\n  consume(n, hasStrings) {\n    const data = this.head.data\n    if (n < data.length) {\n      // `slice` is the same for buffers and strings.\n      const slice = data.slice(0, n)\n      this.head.data = data.slice(n)\n      return slice\n    }\n    if (n === data.length) {\n      // First chunk is a perfect match.\n      return this.shift()\n    }\n    // Result spans more than one buffer.\n    return hasStrings ? this._getString(n) : this._getBuffer(n)\n  }\n  first() {\n    return this.head.data\n  }\n  *[SymbolIterator]() {\n    for (let p = this.head; p; p = p.next) {\n      yield p.data\n    }\n  }\n\n  // Consumes a specified amount of characters from the buffered data.\n  _getString(n) {\n    let ret = ''\n    let p = this.head\n    let c = 0\n    do {\n      const str = p.data\n      if (n > str.length) {\n        ret += str\n        n -= str.length\n      } else {\n        if (n === str.length) {\n          ret += str\n          ++c\n          if (p.next) this.head = p.next\n          else this.head = this.tail = null\n        } else {\n          ret += StringPrototypeSlice(str, 0, n)\n          this.head = p\n          p.data = StringPrototypeSlice(str, n)\n        }\n        break\n      }\n      ++c\n    } while ((p = p.next) !== null)\n    this.length -= c\n    return ret\n  }\n\n  // Consumes a specified amount of bytes from the buffered data.\n  _getBuffer(n) {\n    const ret = Buffer.allocUnsafe(n)\n    const retLen = n\n    let p = this.head\n    let c = 0\n    do {\n      const buf = p.data\n      if (n > buf.length) {\n        TypedArrayPrototypeSet(ret, buf, retLen - n)\n        n -= buf.length\n      } else {\n        if (n === buf.length) {\n          TypedArrayPrototypeSet(ret, buf, retLen - n)\n          ++c\n          if (p.next) this.head = p.next\n          else this.head = this.tail = null\n        } else {\n          TypedArrayPrototypeSet(ret, new Uint8Array(buf.buffer, buf.byteOffset, n), retLen - n)\n          this.head = p\n          p.data = buf.slice(n)\n        }\n        break\n      }\n      ++c\n    } while ((p = p.next) !== null)\n    this.length -= c\n    return ret\n  }\n\n  // Make sure the linked list only shows the minimal necessary information.\n  [Symbol.for('nodejs.util.inspect.custom')](_, options) {\n    return inspect(this, {\n      ...options,\n      // Only inspect one level.\n      depth: 0,\n      // It should not recurse.\n      customInspect: false\n    })\n  }\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(buffer_list);\nexport { buffer_list as __moduleExports };",
-      "start": 1701230037728,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371155,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371155,
+      "end": 1701230371156,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230037729,
-      "end": 1701230037729,
+      "start": 1701230371156,
+      "end": 1701230371156,
       "order": "normal"
     }
   ]

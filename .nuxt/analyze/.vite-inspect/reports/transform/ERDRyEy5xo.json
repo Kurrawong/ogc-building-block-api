@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\nimport { ref, watch } from 'vue';\n\nconst route = useRoute();\n\nconst path = ref(route.path);\nwatch(()=> path.value = route.path, ()=>{});\n\n</script>\n\n\n<template>\n  <v-app>\n\n    <v-toolbar color=\"white\" dark fixed app>\n      <v-app-bar-nav-icon></v-app-bar-nav-icon>\n\n      <v-toolbar-title><img style=\"width:160px;\" src=\"https://kurrawong.ai/KurrawongAI_350.png\" /></v-toolbar-title>\n\n      <v-spacer></v-spacer>\n\n      <CommonNavigation />\n\n    </v-toolbar>\n    \n    <v-container fluid=\"\">\n      <slot></slot>\n    </v-container>\n  </v-app>\n</template>\n\n<style scoped>\n.v-toolbar {\n  border-bottom:2px solid #eee !important;\n}\n</style>\n",
-      "start": 1701230036234,
-      "end": 1701230036314,
+      "start": 1701230369683,
+      "end": 1701230369722,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230036314,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369722,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { resolveComponent as _resolveComponent, createVNode as _createVNode, createElementVNode as _createElementVNode, withCtx as _withCtx, renderSlot as _renderSlot, openBlock as _openBlock, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-cb993a98\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/_createElementVNode(\"img\", {\n  style: {\"width\":\"160px\"},\n  src: \"https://kurrawong.ai/KurrawongAI_350.png\"\n}, null, -1))\n\nimport { ref, watch } from 'vue';\n\n\nconst _sfc_main = {\n  __name: 'default',\n  setup(__props) {\n\nconst route = useRoute();\n\nconst path = ref(route.path);\nwatch(()=> path.value = route.path, ()=>{});\n\n\nreturn (_ctx, _cache) => {\n  const _component_v_app_bar_nav_icon = _resolveComponent(\"v-app-bar-nav-icon\")\n  const _component_v_toolbar_title = _resolveComponent(\"v-toolbar-title\")\n  const _component_v_spacer = _resolveComponent(\"v-spacer\")\n  const _component_CommonNavigation = _resolveComponent(\"CommonNavigation\")\n  const _component_v_toolbar = _resolveComponent(\"v-toolbar\")\n  const _component_v_container = _resolveComponent(\"v-container\")\n  const _component_v_app = _resolveComponent(\"v-app\")\n\n  return (_openBlock(), _createBlock(_component_v_app, null, {\n    default: _withCtx(() => [\n      _createVNode(_component_v_toolbar, {\n        color: \"white\",\n        dark: \"\",\n        fixed: \"\",\n        app: \"\"\n      }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_app_bar_nav_icon),\n          _createVNode(_component_v_toolbar_title, null, {\n            default: _withCtx(() => [\n              _hoisted_1\n            ]),\n            _: 1\n          }),\n          _createVNode(_component_v_spacer),\n          _createVNode(_component_CommonNavigation)\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_v_container, { fluid: \"\" }, {\n        default: _withCtx(() => [\n          _renderSlot(_ctx.$slots, \"default\", {}, undefined, true)\n        ]),\n        _: 3\n      })\n    ]),\n    _: 3\n  }))\n}\n}\n\n}\n\n\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue?vue&type=style&index=0&scoped=cb993a98&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-cb993a98\"]])",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369722,
+      "end": 1701230369723,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,105 +62,105 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230036315,
-      "end": 1701230036315,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRoute } from '#app/composables/router';\nimport { resolveComponent as _resolveComponent, createVNode as _createVNode, createElementVNode as _createElementVNode, withCtx as _withCtx, renderSlot as _renderSlot, openBlock as _openBlock, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-cb993a98\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/_createElementVNode(\"img\", {\n  style: {\"width\":\"160px\"},\n  src: \"https://kurrawong.ai/KurrawongAI_350.png\"\n}, null, -1))\n\nimport { ref, watch } from 'vue';\n\n\nconst _sfc_main = {\n  __name: 'default',\n  setup(__props) {\n\nconst route = useRoute();\n\nconst path = ref(route.path);\nwatch(()=> path.value = route.path, ()=>{});\n\n\nreturn (_ctx, _cache) => {\n  const _component_v_app_bar_nav_icon = _resolveComponent(\"v-app-bar-nav-icon\")\n  const _component_v_toolbar_title = _resolveComponent(\"v-toolbar-title\")\n  const _component_v_spacer = _resolveComponent(\"v-spacer\")\n  const _component_CommonNavigation = _resolveComponent(\"CommonNavigation\")\n  const _component_v_toolbar = _resolveComponent(\"v-toolbar\")\n  const _component_v_container = _resolveComponent(\"v-container\")\n  const _component_v_app = _resolveComponent(\"v-app\")\n\n  return (_openBlock(), _createBlock(_component_v_app, null, {\n    default: _withCtx(() => [\n      _createVNode(_component_v_toolbar, {\n        color: \"white\",\n        dark: \"\",\n        fixed: \"\",\n        app: \"\"\n      }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_app_bar_nav_icon),\n          _createVNode(_component_v_toolbar_title, null, {\n            default: _withCtx(() => [\n              _hoisted_1\n            ]),\n            _: 1\n          }),\n          _createVNode(_component_v_spacer),\n          _createVNode(_component_CommonNavigation)\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_v_container, { fluid: \"\" }, {\n        default: _withCtx(() => [\n          _renderSlot(_ctx.$slots, \"default\", {}, undefined, true)\n        ]),\n        _: 3\n      })\n    ]),\n    _: 3\n  }))\n}\n}\n\n}\n\n\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue?vue&type=style&index=0&scoped=cb993a98&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-cb993a98\"]])",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -173,51 +173,51 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue\";\nimport { useRoute } from '#app/composables/router';\nimport { resolveComponent as _resolveComponent, createVNode as _createVNode, createElementVNode as _createElementVNode, withCtx as _withCtx, renderSlot as _renderSlot, openBlock as _openBlock, createBlock as _createBlock, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-cb993a98\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/_createElementVNode(\"img\", {\n  style: {\"width\":\"160px\"},\n  src: \"https://kurrawong.ai/KurrawongAI_350.png\"\n}, null, -1))\n\nimport { ref, watch } from 'vue';\n\n\nconst _sfc_main = {\n  __name: 'default',\n  setup(__props) {\n\nconst route = useRoute();\n\nconst path = ref(route.path);\nwatch(()=> path.value = route.path, ()=>{});\n\n\nreturn (_ctx, _cache) => {\n  const _component_v_app_bar_nav_icon = _resolveComponent(\"v-app-bar-nav-icon\")\n  const _component_v_toolbar_title = _resolveComponent(\"v-toolbar-title\")\n  const _component_v_spacer = _resolveComponent(\"v-spacer\")\n  const _component_CommonNavigation = __nuxt_component_0\n  const _component_v_toolbar = _resolveComponent(\"v-toolbar\")\n  const _component_v_container = _resolveComponent(\"v-container\")\n  const _component_v_app = _resolveComponent(\"v-app\")\n\n  return (_openBlock(), _createBlock(_component_v_app, null, {\n    default: _withCtx(() => [\n      _createVNode(_component_v_toolbar, {\n        color: \"white\",\n        dark: \"\",\n        fixed: \"\",\n        app: \"\"\n      }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_app_bar_nav_icon),\n          _createVNode(_component_v_toolbar_title, null, {\n            default: _withCtx(() => [\n              _hoisted_1\n            ]),\n            _: 1\n          }),\n          _createVNode(_component_v_spacer),\n          _createVNode(_component_CommonNavigation)\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_v_container, { fluid: \"\" }, {\n        default: _withCtx(() => [\n          _renderSlot(_ctx.$slots, \"default\", {}, undefined, true)\n        ]),\n        _: 3\n      })\n    ]),\n    _: 3\n  }))\n}\n}\n\n}\n\n\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/layouts/default.vue?vue&type=style&index=0&scoped=cb993a98&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-cb993a98\"]])",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230036316,
-      "end": 1701230036316,
+      "start": 1701230369723,
+      "end": 1701230369723,
       "order": "normal"
     }
   ]

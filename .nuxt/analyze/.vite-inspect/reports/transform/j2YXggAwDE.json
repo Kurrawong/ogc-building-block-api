@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n</script>\n\n<template>\n  <div>COUNT = {{ countRef }}</div>\n  <div>DATA = {{ dataRef }}</div>\n  <div>\n    <h1>Vocab listing</h1>\n\n    <form method=\"post\" v-on:submit=\"(e)=>{ e.preventDefault(); update()}\">\n      <div>\n        <input placeholder=\"url\" name=\"url\" v-model=\"url\" style=\"width:500px;\" />\n        <button type=\"button\" v-on:click=\"reload()\">Reload</button>\n      </div>\n      <div>\n        <input placeholder=\"subject\" name=\"subject\" v-model=\"subject\" />\n        <input placeholder=\"predicate\" name=\"predict\" v-model=\"predicate\" />\n        <input placeholder=\"object\" name=\"object\" v-model=\"object\" />\n      </div>\n      <div>\n        <button type=\"submit\">Refresh</button>\n      </div>\n    </form>\n    {{ subject }} - {{ predicate }} - {{ object }}\n\n    <div>\n      <div>Loading = {{ loading }}</div>\n      <div>Error = {{ error }}</div>\n      <div>Success = {{ success }}</div>\n    </div>\n\n    <h2>Prefixes</h2>\n    {{ prefixes }}\n\n\n    <h2>Match All</h2>\n    <table>\n      <thead><tr><th>subject</th><th>predicate</th><th>object</th></tr></thead>\n      <tbody>\n        <tr v-for=\"(m, idx) in matchall\">\n          <td>{{ idx }}# {{ m.subject.value }}</td>\n          <td>{{ m.predicate.value }}</td>\n          <td>{{ m.object.value }}</td>\n        </tr>\n      </tbody>\n    </table>\n\n  </div>\n</template>\n",
-      "start": 1701230035732,
-      "end": 1701230035830,
+      "start": 1701230369150,
+      "end": 1701230369226,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369226,
+      "end": 1701230369226,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701230035830,
-      "end": 1701230035830,
+      "start": 1701230369227,
+      "end": 1701230369227,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, isRef as _isRef, vModelText as _vModelText, withDirectives as _withDirectives, renderList as _renderList, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock, createTextVNode as _createTextVNode } from \"vue\"\n\nconst _hoisted_1 = /*#__PURE__*/_createElementVNode(\"h1\", null, \"Vocab listing\", -1)\nconst _hoisted_2 = /*#__PURE__*/_createElementVNode(\"div\", null, [\n  /*#__PURE__*/_createElementVNode(\"button\", { type: \"submit\" }, \"Refresh\")\n], -1)\nconst _hoisted_3 = /*#__PURE__*/_createElementVNode(\"h2\", null, \"Prefixes\", -1)\nconst _hoisted_4 = /*#__PURE__*/_createElementVNode(\"h2\", null, \"Match All\", -1)\nconst _hoisted_5 = /*#__PURE__*/_createElementVNode(\"thead\", null, [\n  /*#__PURE__*/_createElementVNode(\"tr\", null, [\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"subject\"),\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"predicate\"),\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"object\")\n  ])\n], -1)\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\n\nconst _sfc_main = {\n  __name: 'debug',\n  setup(__props) {\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createElementVNode(\"div\", null, \"COUNT = \" + _toDisplayString(_unref(countRef)), 1),\n    _createElementVNode(\"div\", null, \"DATA = \" + _toDisplayString(_unref(dataRef)), 1),\n    _createElementVNode(\"div\", null, [\n      _hoisted_1,\n      _createElementVNode(\"form\", {\n        method: \"post\",\n        onSubmit: _cache[5] || (_cache[5] = (e)=>{ e.preventDefault(); update()})\n      }, [\n        _createElementVNode(\"div\", null, [\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"url\",\n            name: \"url\",\n            \"onUpdate:modelValue\": _cache[0] || (_cache[0] = $event => (_isRef(url) ? (url).value = $event : null)),\n            style: {\"width\":\"500px\"}\n          }, null, 512), [\n            [_vModelText, _unref(url)]\n          ]),\n          _createElementVNode(\"button\", {\n            type: \"button\",\n            onClick: _cache[1] || (_cache[1] = $event => (reload()))\n          }, \"Reload\")\n        ]),\n        _createElementVNode(\"div\", null, [\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"subject\",\n            name: \"subject\",\n            \"onUpdate:modelValue\": _cache[2] || (_cache[2] = $event => (_isRef(subject) ? (subject).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(subject)]\n          ]),\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"predicate\",\n            name: \"predict\",\n            \"onUpdate:modelValue\": _cache[3] || (_cache[3] = $event => (_isRef(predicate) ? (predicate).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(predicate)]\n          ]),\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"object\",\n            name: \"object\",\n            \"onUpdate:modelValue\": _cache[4] || (_cache[4] = $event => (_isRef(object) ? (object).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(object)]\n          ])\n        ]),\n        _hoisted_2\n      ], 32),\n      _createTextVNode(\" \" + _toDisplayString(_unref(subject)) + \" - \" + _toDisplayString(_unref(predicate)) + \" - \" + _toDisplayString(_unref(object)) + \" \", 1),\n      _createElementVNode(\"div\", null, [\n        _createElementVNode(\"div\", null, \"Loading = \" + _toDisplayString(_unref(loading)), 1),\n        _createElementVNode(\"div\", null, \"Error = \" + _toDisplayString(_unref(error)), 1),\n        _createElementVNode(\"div\", null, \"Success = \" + _toDisplayString(_unref(success)), 1)\n      ]),\n      _hoisted_3,\n      _createTextVNode(\" \" + _toDisplayString(_unref(prefixes)) + \" \", 1),\n      _hoisted_4,\n      _createElementVNode(\"table\", null, [\n        _hoisted_5,\n        _createElementVNode(\"tbody\", null, [\n          (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(matchall), (m, idx) => {\n            return (_openBlock(), _createElementBlock(\"tr\", null, [\n              _createElementVNode(\"td\", null, _toDisplayString(idx) + \"# \" + _toDisplayString(m.subject.value), 1),\n              _createElementVNode(\"td\", null, _toDisplayString(m.predicate.value), 1),\n              _createElementVNode(\"td\", null, _toDisplayString(m.object.value), 1)\n            ]))\n          }), 256))\n        ])\n      ])\n    ])\n  ], 64))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1701230035830,
-      "end": 1701230035834,
+      "start": 1701230369227,
+      "end": 1701230369231,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,105 +62,105 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701230035834,
-      "end": 1701230035834,
+      "start": 1701230369231,
+      "end": 1701230369231,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted } from 'vue';\nimport { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, isRef as _isRef, vModelText as _vModelText, withDirectives as _withDirectives, renderList as _renderList, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock, createTextVNode as _createTextVNode } from \"vue\"\n\nconst _hoisted_1 = /*#__PURE__*/_createElementVNode(\"h1\", null, \"Vocab listing\", -1)\nconst _hoisted_2 = /*#__PURE__*/_createElementVNode(\"div\", null, [\n  /*#__PURE__*/_createElementVNode(\"button\", { type: \"submit\" }, \"Refresh\")\n], -1)\nconst _hoisted_3 = /*#__PURE__*/_createElementVNode(\"h2\", null, \"Prefixes\", -1)\nconst _hoisted_4 = /*#__PURE__*/_createElementVNode(\"h2\", null, \"Match All\", -1)\nconst _hoisted_5 = /*#__PURE__*/_createElementVNode(\"thead\", null, [\n  /*#__PURE__*/_createElementVNode(\"tr\", null, [\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"subject\"),\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"predicate\"),\n    /*#__PURE__*/_createElementVNode(\"th\", null, \"object\")\n  ])\n], -1)\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\n\nconst _sfc_main = {\n  __name: 'debug',\n  setup(__props) {\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createElementVNode(\"div\", null, \"COUNT = \" + _toDisplayString(_unref(countRef)), 1),\n    _createElementVNode(\"div\", null, \"DATA = \" + _toDisplayString(_unref(dataRef)), 1),\n    _createElementVNode(\"div\", null, [\n      _hoisted_1,\n      _createElementVNode(\"form\", {\n        method: \"post\",\n        onSubmit: _cache[5] || (_cache[5] = (e)=>{ e.preventDefault(); update()})\n      }, [\n        _createElementVNode(\"div\", null, [\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"url\",\n            name: \"url\",\n            \"onUpdate:modelValue\": _cache[0] || (_cache[0] = $event => (_isRef(url) ? (url).value = $event : null)),\n            style: {\"width\":\"500px\"}\n          }, null, 512), [\n            [_vModelText, _unref(url)]\n          ]),\n          _createElementVNode(\"button\", {\n            type: \"button\",\n            onClick: _cache[1] || (_cache[1] = $event => (reload()))\n          }, \"Reload\")\n        ]),\n        _createElementVNode(\"div\", null, [\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"subject\",\n            name: \"subject\",\n            \"onUpdate:modelValue\": _cache[2] || (_cache[2] = $event => (_isRef(subject) ? (subject).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(subject)]\n          ]),\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"predicate\",\n            name: \"predict\",\n            \"onUpdate:modelValue\": _cache[3] || (_cache[3] = $event => (_isRef(predicate) ? (predicate).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(predicate)]\n          ]),\n          _withDirectives(_createElementVNode(\"input\", {\n            placeholder: \"object\",\n            name: \"object\",\n            \"onUpdate:modelValue\": _cache[4] || (_cache[4] = $event => (_isRef(object) ? (object).value = $event : null))\n          }, null, 512), [\n            [_vModelText, _unref(object)]\n          ])\n        ]),\n        _hoisted_2\n      ], 32),\n      _createTextVNode(\" \" + _toDisplayString(_unref(subject)) + \" - \" + _toDisplayString(_unref(predicate)) + \" - \" + _toDisplayString(_unref(object)) + \" \", 1),\n      _createElementVNode(\"div\", null, [\n        _createElementVNode(\"div\", null, \"Loading = \" + _toDisplayString(_unref(loading)), 1),\n        _createElementVNode(\"div\", null, \"Error = \" + _toDisplayString(_unref(error)), 1),\n        _createElementVNode(\"div\", null, \"Success = \" + _toDisplayString(_unref(success)), 1)\n      ]),\n      _hoisted_3,\n      _createTextVNode(\" \" + _toDisplayString(_unref(prefixes)) + \" \", 1),\n      _hoisted_4,\n      _createElementVNode(\"table\", null, [\n        _hoisted_5,\n        _createElementVNode(\"tbody\", null, [\n          (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(matchall), (m, idx) => {\n            return (_openBlock(), _createElementBlock(\"tr\", null, [\n              _createElementVNode(\"td\", null, _toDisplayString(idx) + \"# \" + _toDisplayString(m.subject.value), 1),\n              _createElementVNode(\"td\", null, _toDisplayString(m.predicate.value), 1),\n              _createElementVNode(\"td\", null, _toDisplayString(m.object.value), 1)\n            ]))\n          }), 256))\n        ])\n      ])\n    ])\n  ], 64))\n}\n}\n\n}\n\n\n\nexport default _sfc_main",
-      "start": 1701230035834,
-      "end": 1701230035835,
+      "start": 1701230369231,
+      "end": 1701230369232,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -173,15 +173,15 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701230035835,
-      "end": 1701230035835,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
       "result": "\nconst __nuxt_page_meta = null\nexport default __nuxt_page_meta\n",
-      "start": 1701230035835,
-      "end": 1701230035835,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -194,38 +194,38 @@
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701230035835,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701230035836,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701230035836,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701230035836,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701230035836,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701230035836,
-      "end": 1701230035836,
+      "start": 1701230369232,
+      "end": 1701230369232,
       "order": "normal"
     }
   ]
