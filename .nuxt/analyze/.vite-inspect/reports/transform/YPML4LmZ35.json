@@ -4,38 +4,38 @@
     {
       "name": "vite:vue",
       "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, createTextVNode as _createTextVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\"\n\nimport { useRDFStore } from \"@/stores/rdf2\";\nimport { storeToRefs } from \"pinia\";\nimport { emit } from \"process\";\nimport config from \"~/config\";\nimport type { PrezForm } from \"~/lib/prez2.d\";\n\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'test',\n  setup(__props) {\n\nconst rdfStore = useRDFStore();\nconst { loading, success, error, prez } = storeToRefs(rdfStore)\n\nconst page = ref(1);\nconst form = ref<PrezForm|undefined>(undefined);\nconst parseError = ref<string|null>(null);\n\nonMounted(async ()=> {\n    await rdfStore.load(config.API_BASE_URL + '/' + config.CATALOG_LIST_URL + '/bblck-ctlg:bblocks',\n        { params: { page: page.value } });\n\n    form.value = prez.value?.form({\n        classPredicates: ['rdf:type'],\n        labelPredicates: ['skos:prefLabel', 'dcterms:title', 'rdfs:label', 'schema:name'],\n        descriptionPredicates: ['skos:definition', 'dcterms:description', 'schema:description']\n    })\n})\n//['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']\n\nreturn (_ctx: any,_cache: any) => {\n  return (_openBlock(), _createElementBlock(_Fragment, null, [\n    _createTextVNode(\" OUTPUT: \"),\n    _createElementVNode(\"pre\", null, _toDisplayString(_unref(form)), 1)\n  ], 64))\n}\n}\n\n})",
-      "start": 1701229710205,
-      "end": 1701229710205
+      "start": 1701230036943,
+      "end": 1701230036943
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710205,
-      "end": 1701229710205,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710206,
-      "end": 1701229710206,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710206,
-      "end": 1701229710206,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710206,
-      "end": 1701229710206,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
       "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, createTextVNode as _createTextVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\";\nimport { useRDFStore } from \"@/stores/rdf2\";\nimport { storeToRefs } from \"pinia\";\nimport config from \"~/config\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"test\",\n  setup(__props) {\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await rdfStore.load(\n        config.API_BASE_URL + \"/\" + config.CATALOG_LIST_URL + \"/bblck-ctlg:bblocks\",\n        { params: { page: page.value } }\n      );\n      form.value = prez.value?.form({\n        classPredicates: [\"rdf:type\"],\n        labelPredicates: [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n        descriptionPredicates: [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n      });\n    });\n    return (_ctx, _cache) => {\n      return _openBlock(), _createElementBlock(_Fragment, null, [\n        _createTextVNode(\" OUTPUT: \"),\n        _createElementVNode(\"pre\", null, _toDisplayString(_unref(form)), 1)\n      ], 64);\n    };\n  }\n});\n",
-      "start": 1701229710206,
-      "end": 1701229710222,
+      "start": 1701230036943,
+      "end": 1701230036959,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -51,123 +51,123 @@
     },
     {
       "name": "vite:json",
-      "start": 1701229710222,
-      "end": 1701229710222,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710222,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036959,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted } from 'vue';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, createElementVNode as _createElementVNode, createTextVNode as _createTextVNode, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock } from \"vue\";\nimport { useRDFStore } from \"@/stores/rdf2\";\nimport { storeToRefs } from \"pinia\";\nimport config from \"~/config\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"test\",\n  setup(__props) {\n    const rdfStore = useRDFStore();\n    const { loading, success, error, prez } = storeToRefs(rdfStore);\n    const page = ref(1);\n    const form = ref(void 0);\n    const parseError = ref(null);\n    onMounted(async () => {\n      await rdfStore.load(\n        config.API_BASE_URL + \"/\" + config.CATALOG_LIST_URL + \"/bblck-ctlg:bblocks\",\n        { params: { page: page.value } }\n      );\n      form.value = prez.value?.form({\n        classPredicates: [\"rdf:type\"],\n        labelPredicates: [\"skos:prefLabel\", \"dcterms:title\", \"rdfs:label\", \"schema:name\"],\n        descriptionPredicates: [\"skos:definition\", \"dcterms:description\", \"schema:description\"]\n      });\n    });\n    return (_ctx, _cache) => {\n      return _openBlock(), _createElementBlock(_Fragment, null, [\n        _createTextVNode(\" OUTPUT: \"),\n        _createElementVNode(\"pre\", null, _toDisplayString(_unref(form)), 1)\n      ], 64);\n    };\n  }\n});\n",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036959,
+      "end": 1701230036960,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -180,15 +180,15 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
       "result": "\nconst __nuxt_page_meta = null\nexport default __nuxt_page_meta\n",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -201,38 +201,38 @@
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229710223,
-      "end": 1701229710223,
+      "start": 1701230036960,
+      "end": 1701230036960,
       "order": "normal"
     }
   ]

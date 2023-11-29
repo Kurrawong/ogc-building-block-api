@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\n/* replacement start */\n\nconst process = require('process/')\n\n/* replacement end */\n\nconst { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require('../../ours/primordials')\nconst { Buffer } = require('buffer')\nconst { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = require('../../ours/errors').codes\nfunction from(Readable, iterable, opts) {\n  let iterator\n  if (typeof iterable === 'string' || iterable instanceof Buffer) {\n    return new Readable({\n      objectMode: true,\n      ...opts,\n      read() {\n        this.push(iterable)\n        this.push(null)\n      }\n    })\n  }\n  let isAsync\n  if (iterable && iterable[SymbolAsyncIterator]) {\n    isAsync = true\n    iterator = iterable[SymbolAsyncIterator]()\n  } else if (iterable && iterable[SymbolIterator]) {\n    isAsync = false\n    iterator = iterable[SymbolIterator]()\n  } else {\n    throw new ERR_INVALID_ARG_TYPE('iterable', ['Iterable'], iterable)\n  }\n  const readable = new Readable({\n    objectMode: true,\n    highWaterMark: 1,\n    // TODO(ronag): What options should be allowed?\n    ...opts\n  })\n\n  // Flag to protect against _read\n  // being called before last iteration completion.\n  let reading = false\n  readable._read = function () {\n    if (!reading) {\n      reading = true\n      next()\n    }\n  }\n  readable._destroy = function (error, cb) {\n    PromisePrototypeThen(\n      close(error),\n      () => process.nextTick(cb, error),\n      // nextTick is here in case cb throws\n      (e) => process.nextTick(cb, e || error)\n    )\n  }\n  async function close(error) {\n    const hadError = error !== undefined && error !== null\n    const hasThrow = typeof iterator.throw === 'function'\n    if (hadError && hasThrow) {\n      const { value, done } = await iterator.throw(error)\n      await value\n      if (done) {\n        return\n      }\n    }\n    if (typeof iterator.return === 'function') {\n      const { value } = await iterator.return()\n      await value\n    }\n  }\n  async function next() {\n    for (;;) {\n      try {\n        const { value, done } = isAsync ? await iterator.next() : iterator.next()\n        if (done) {\n          readable.push(null)\n        } else {\n          const res = value && typeof value.then === 'function' ? await value : value\n          if (res === null) {\n            reading = false\n            throw new ERR_STREAM_NULL_VALUES()\n          } else if (readable.push(res)) {\n            continue\n          } else {\n            reading = false\n          }\n        }\n      } catch (err) {\n        readable.destroy(err)\n      }\n      break\n    }\n  }\n  return readable\n}\nmodule.exports = from\n",
-      "start": 1701229710974,
-      "end": 1701229711030,
+      "start": 1701230037682,
+      "end": 1701230037732,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229711030,
-      "end": 1701229711030,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229711030,
-      "end": 1701229711030,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037732,
+      "end": 1701230037732,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229711032,
-      "end": 1701229711032,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/process/browser.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/buffer/index.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\n\n'use strict'\n\n/* replacement start */\n\nconst process = require$$0\n\n/* replacement end */\n\nconst { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require$$1\nconst { Buffer } = require$$2\nconst { ERR_INVALID_ARG_TYPE, ERR_STREAM_NULL_VALUES } = require$$3.codes\nfunction from(Readable, iterable, opts) {\n  let iterator\n  if (typeof iterable === 'string' || iterable instanceof Buffer) {\n    return new Readable({\n      objectMode: true,\n      ...opts,\n      read() {\n        this.push(iterable)\n        this.push(null)\n      }\n    })\n  }\n  let isAsync\n  if (iterable && iterable[SymbolAsyncIterator]) {\n    isAsync = true\n    iterator = iterable[SymbolAsyncIterator]()\n  } else if (iterable && iterable[SymbolIterator]) {\n    isAsync = false\n    iterator = iterable[SymbolIterator]()\n  } else {\n    throw new ERR_INVALID_ARG_TYPE('iterable', ['Iterable'], iterable)\n  }\n  const readable = new Readable({\n    objectMode: true,\n    highWaterMark: 1,\n    // TODO(ronag): What options should be allowed?\n    ...opts\n  })\n\n  // Flag to protect against _read\n  // being called before last iteration completion.\n  let reading = false\n  readable._read = function () {\n    if (!reading) {\n      reading = true\n      next()\n    }\n  }\n  readable._destroy = function (error, cb) {\n    PromisePrototypeThen(\n      close(error),\n      () => process.nextTick(cb, error),\n      // nextTick is here in case cb throws\n      (e) => process.nextTick(cb, e || error)\n    )\n  }\n  async function close(error) {\n    const hadError = error !== undefined && error !== null\n    const hasThrow = typeof iterator.throw === 'function'\n    if (hadError && hasThrow) {\n      const { value, done } = await iterator.throw(error)\n      await value\n      if (done) {\n        return\n      }\n    }\n    if (typeof iterator.return === 'function') {\n      const { value } = await iterator.return()\n      await value\n    }\n  }\n  async function next() {\n    for (;;) {\n      try {\n        const { value, done } = isAsync ? await iterator.next() : iterator.next()\n        if (done) {\n          readable.push(null)\n        } else {\n          const res = value && typeof value.then === 'function' ? await value : value\n          if (res === null) {\n            reading = false\n            throw new ERR_STREAM_NULL_VALUES()\n          } else if (readable.push(res)) {\n            continue\n          } else {\n            reading = false\n          }\n        }\n      } catch (err) {\n        readable.destroy(err)\n      }\n      break\n    }\n  }\n  return readable\n}\nvar from_1 = from\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(from_1);\nexport { from_1 as __moduleExports };",
-      "start": 1701229711032,
-      "end": 1701229711033,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037734,
+      "end": 1701230037734,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711033,
-      "end": 1701229711033,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     }
   ]

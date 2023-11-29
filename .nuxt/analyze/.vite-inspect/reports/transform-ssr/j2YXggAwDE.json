@@ -4,69 +4,69 @@
     {
       "name": "vite:load-fallback",
       "result": "<script setup>\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n</script>\n\n<template>\n  <div>COUNT = {{ countRef }}</div>\n  <div>DATA = {{ dataRef }}</div>\n  <div>\n    <h1>Vocab listing</h1>\n\n    <form method=\"post\" v-on:submit=\"(e)=>{ e.preventDefault(); update()}\">\n      <div>\n        <input placeholder=\"url\" name=\"url\" v-model=\"url\" style=\"width:500px;\" />\n        <button type=\"button\" v-on:click=\"reload()\">Reload</button>\n      </div>\n      <div>\n        <input placeholder=\"subject\" name=\"subject\" v-model=\"subject\" />\n        <input placeholder=\"predicate\" name=\"predict\" v-model=\"predicate\" />\n        <input placeholder=\"object\" name=\"object\" v-model=\"object\" />\n      </div>\n      <div>\n        <button type=\"submit\">Refresh</button>\n      </div>\n    </form>\n    {{ subject }} - {{ predicate }} - {{ object }}\n\n    <div>\n      <div>Loading = {{ loading }}</div>\n      <div>Error = {{ error }}</div>\n      <div>Success = {{ success }}</div>\n    </div>\n\n    <h2>Prefixes</h2>\n    {{ prefixes }}\n\n\n    <h2>Match All</h2>\n    <table>\n      <thead><tr><th>subject</th><th>predicate</th><th>object</th></tr></thead>\n      <tbody>\n        <tr v-for=\"(m, idx) in matchall\">\n          <td>{{ idx }}# {{ m.subject.value }}</td>\n          <td>{{ m.predicate.value }}</td>\n          <td>{{ m.object.value }}</td>\n        </tr>\n      </tbody>\n    </table>\n\n  </div>\n</template>\n",
-      "start": 1701229713170,
-      "end": 1701229713219,
+      "start": 1701230039771,
+      "end": 1701230039821,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229713219,
-      "end": 1701229713219,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229713219,
-      "end": 1701229713219,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229713219,
-      "end": 1701229713219,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229713219,
-      "end": 1701229713219,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229713219,
-      "end": 1701229713220,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229713220,
-      "end": 1701229713220,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229713220,
-      "end": 1701229713220,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229713220,
-      "end": 1701229713220,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229713220,
-      "end": 1701229713220,
+      "start": 1701230039821,
+      "end": 1701230039821,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref } from \"vue\"\nimport { ssrRenderAttr as _ssrRenderAttr, ssrRenderStyle as _ssrRenderStyle, ssrInterpolate as _ssrInterpolate, ssrRenderList as _ssrRenderList } from \"vue/server-renderer\"\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\n\nconst _sfc_main = {\n  __name: 'debug',\n  __ssrInlineRender: true,\n  setup(__props) {\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n\nreturn (_ctx, _push, _parent, _attrs) => {\n  _push(`<!--[--><div>COUNT = ${\n    _ssrInterpolate(_unref(countRef))\n  }</div><div>DATA = ${\n    _ssrInterpolate(_unref(dataRef))\n  }</div><div><h1>Vocab listing</h1><form method=\"post\"><div><input placeholder=\"url\" name=\"url\"${\n    _ssrRenderAttr(\"value\", _unref(url))\n  } style=\"${\n    _ssrRenderStyle({\"width\":\"500px\"})\n  }\"><button type=\"button\">Reload</button></div><div><input placeholder=\"subject\" name=\"subject\"${\n    _ssrRenderAttr(\"value\", _unref(subject))\n  }><input placeholder=\"predicate\" name=\"predict\"${\n    _ssrRenderAttr(\"value\", _unref(predicate))\n  }><input placeholder=\"object\" name=\"object\"${\n    _ssrRenderAttr(\"value\", _unref(object))\n  }></div><div><button type=\"submit\">Refresh</button></div></form> ${\n    _ssrInterpolate(_unref(subject))\n  } - ${\n    _ssrInterpolate(_unref(predicate))\n  } - ${\n    _ssrInterpolate(_unref(object))\n  } <div><div>Loading = ${\n    _ssrInterpolate(_unref(loading))\n  }</div><div>Error = ${\n    _ssrInterpolate(_unref(error))\n  }</div><div>Success = ${\n    _ssrInterpolate(_unref(success))\n  }</div></div><h2>Prefixes</h2> ${\n    _ssrInterpolate(_unref(prefixes))\n  } <h2>Match All</h2><table><thead><tr><th>subject</th><th>predicate</th><th>object</th></tr></thead><tbody><!--[-->`)\n  _ssrRenderList(_unref(matchall), (m, idx) => {\n    _push(`<tr><td>${\n      _ssrInterpolate(idx)\n    }# ${\n      _ssrInterpolate(m.subject.value)\n    }</td><td>${\n      _ssrInterpolate(m.predicate.value)\n    }</td><td>${\n      _ssrInterpolate(m.object.value)\n    }</td></tr>`)\n  })\n  _push(`<!--]--></tbody></table></div><!--]-->`)\n}\n}\n\n}\n\n\n\nimport { useSSRContext as __vite_useSSRContext } from 'vue'\nconst _sfc_setup = _sfc_main.setup\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext()\n  ;(ssrContext.modules || (ssrContext.modules = new Set())).add(\"pages/debug.vue\")\n  return _sfc_setup ? _sfc_setup(props, ctx) : undefined\n}\nexport default _sfc_main",
-      "start": 1701229713220,
-      "end": 1701229713222,
+      "start": 1701230039821,
+      "end": 1701230039826,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -82,117 +82,117 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229713222,
-      "end": 1701229713222,
+      "start": 1701230039826,
+      "end": 1701230039826,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted } from 'vue';\nimport { unref as _unref } from \"vue\"\nimport { ssrRenderAttr as _ssrRenderAttr, ssrRenderStyle as _ssrRenderStyle, ssrInterpolate as _ssrInterpolate, ssrRenderList as _ssrRenderList } from \"vue/server-renderer\"\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\n\nconst _sfc_main = {\n  __name: 'debug',\n  __ssrInlineRender: true,\n  setup(__props) {\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n\nreturn (_ctx, _push, _parent, _attrs) => {\n  _push(`<!--[--><div>COUNT = ${\n    _ssrInterpolate(_unref(countRef))\n  }</div><div>DATA = ${\n    _ssrInterpolate(_unref(dataRef))\n  }</div><div><h1>Vocab listing</h1><form method=\"post\"><div><input placeholder=\"url\" name=\"url\"${\n    _ssrRenderAttr(\"value\", _unref(url))\n  } style=\"${\n    _ssrRenderStyle({\"width\":\"500px\"})\n  }\"><button type=\"button\">Reload</button></div><div><input placeholder=\"subject\" name=\"subject\"${\n    _ssrRenderAttr(\"value\", _unref(subject))\n  }><input placeholder=\"predicate\" name=\"predict\"${\n    _ssrRenderAttr(\"value\", _unref(predicate))\n  }><input placeholder=\"object\" name=\"object\"${\n    _ssrRenderAttr(\"value\", _unref(object))\n  }></div><div><button type=\"submit\">Refresh</button></div></form> ${\n    _ssrInterpolate(_unref(subject))\n  } - ${\n    _ssrInterpolate(_unref(predicate))\n  } - ${\n    _ssrInterpolate(_unref(object))\n  } <div><div>Loading = ${\n    _ssrInterpolate(_unref(loading))\n  }</div><div>Error = ${\n    _ssrInterpolate(_unref(error))\n  }</div><div>Success = ${\n    _ssrInterpolate(_unref(success))\n  }</div></div><h2>Prefixes</h2> ${\n    _ssrInterpolate(_unref(prefixes))\n  } <h2>Match All</h2><table><thead><tr><th>subject</th><th>predicate</th><th>object</th></tr></thead><tbody><!--[-->`)\n  _ssrRenderList(_unref(matchall), (m, idx) => {\n    _push(`<tr><td>${\n      _ssrInterpolate(idx)\n    }# ${\n      _ssrInterpolate(m.subject.value)\n    }</td><td>${\n      _ssrInterpolate(m.predicate.value)\n    }</td><td>${\n      _ssrInterpolate(m.object.value)\n    }</td></tr>`)\n  })\n  _push(`<!--]--></tbody></table></div><!--]-->`)\n}\n}\n\n}\n\n\n\nimport { useSSRContext as __vite_useSSRContext } from 'vue'\nconst _sfc_setup = _sfc_main.setup\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext()\n  ;(ssrContext.modules || (ssrContext.modules = new Set())).add(\"pages/debug.vue\")\n  return _sfc_setup ? _sfc_setup(props, ctx) : undefined\n}\nexport default _sfc_main",
-      "start": 1701229713222,
-      "end": 1701229713223,
+      "start": 1701230039826,
+      "end": 1701230039827,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -206,8 +206,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { ref, onMounted } from 'vue';\nimport { unref as _unref } from \"vue\"\nimport { ssrRenderAttr as _ssrRenderAttr, ssrRenderStyle as _ssrRenderStyle, ssrInterpolate as _ssrInterpolate, ssrRenderList as _ssrRenderList } from \"vue/server-renderer\"\n\nimport { useRDFStore } from \"@/stores/rdf\";\nimport { storeToRefs } from \"pinia\";\n\n\nconst _sfc_main = {\n  __name: 'debug',\n  __ssrInlineRender: true,\n  setup(__props) {\n\nconst rdfStore = useRDFStore()\nconst { loading, success, error, prefixes, prez } = storeToRefs(rdfStore)\n\nconst matchall = ref([]);\n\nconst subject = ref('');\nconst predicate = ref('');\nconst object = ref('');\nconst url = ref('https://api.gswa.dev.kurrawong.ai/v/vocab/df:vertical-depth-reference-systems')\n\nonMounted(async ()=> {\n  await rdfStore.load(url.value);\n  console.log('mounted')\n  //await vocabStore.fetchAndParse();\n  loadStuff();\n})\n\nasync function reload() {\n  await rdfStore.load(url.value);\n  loadStuff();\n}\n\nconst countRef = ref(0);\nconst dataRef = ref({});\n\nfunction loadStuff() {\n  console.log(\"LOAD\")\n  matchall.value = prez.value.store.getQuads(null, null, null, null);\n  console.log(\"MATCH\")\n  const countData = prez.value.firstQuad(null, 'prez:count', null, null);\n  console.log(\"COUNT\")\n  if(countData !== null) {\n    countRef.value = countData.object.value;\n    const lookupFilter = rdfStore.getPrefixExpandedFilter({predicate: 'rdf:type', object: countData.subject.value});\n//    alert(loaderStore.prefixer('rdf:type'));\n    dataRef.value = rdfStore.store.getSubjects(lookupFilter.predicate, countData[0].subject, null);\n    //dataRef.value = loaderStore.getMatchedData({predicate: 'rdf:type', object: countData[0].subject})\n  }\n}\n\nfunction update() {\n  matchall.value = prez.value.store.getQuads(\n    subject.value != '' ? subject.value : null, \n    predicate.value != '' ? predicate.value : null,\n    object.value != '' ? object.value : null, null);  \n}\n\n\nreturn (_ctx, _push, _parent, _attrs) => {\n  _push(`<!--[--><div>COUNT = ${\n    _ssrInterpolate(_unref(countRef))\n  }</div><div>DATA = ${\n    _ssrInterpolate(_unref(dataRef))\n  }</div><div><h1>Vocab listing</h1><form method=\"post\"><div><input placeholder=\"url\" name=\"url\"${\n    _ssrRenderAttr(\"value\", _unref(url))\n  } style=\"${\n    _ssrRenderStyle({\"width\":\"500px\"})\n  }\"><button type=\"button\">Reload</button></div><div><input placeholder=\"subject\" name=\"subject\"${\n    _ssrRenderAttr(\"value\", _unref(subject))\n  }><input placeholder=\"predicate\" name=\"predict\"${\n    _ssrRenderAttr(\"value\", _unref(predicate))\n  }><input placeholder=\"object\" name=\"object\"${\n    _ssrRenderAttr(\"value\", _unref(object))\n  }></div><div><button type=\"submit\">Refresh</button></div></form> ${\n    _ssrInterpolate(_unref(subject))\n  } - ${\n    _ssrInterpolate(_unref(predicate))\n  } - ${\n    _ssrInterpolate(_unref(object))\n  } <div><div>Loading = ${\n    _ssrInterpolate(_unref(loading))\n  }</div><div>Error = ${\n    _ssrInterpolate(_unref(error))\n  }</div><div>Success = ${\n    _ssrInterpolate(_unref(success))\n  }</div></div><h2>Prefixes</h2> ${\n    _ssrInterpolate(_unref(prefixes))\n  } <h2>Match All</h2><table><thead><tr><th>subject</th><th>predicate</th><th>object</th></tr></thead><tbody><!--[-->`)\n  _ssrRenderList(_unref(matchall), (m, idx) => {\n    _push(`<tr><td>${\n      _ssrInterpolate(idx)\n    }# ${\n      _ssrInterpolate(m.subject.value)\n    }</td><td>${\n      _ssrInterpolate(m.predicate.value)\n    }</td><td>${\n      _ssrInterpolate(m.object.value)\n    }</td></tr>`)\n  })\n  _push(`<!--]--></tbody></table></div><!--]-->`)\n}\n}\n\n}\n\n\n\nimport { useSSRContext as __vite_useSSRContext } from 'vue'\nconst _sfc_setup = _sfc_main.setup\n_sfc_main.setup = (props, ctx) => {\n  const ssrContext = __vite_useSSRContext()\n  ;(ssrContext.modules || (ssrContext.modules = new Set())).add(\"pages/debug.vue\")\n  return _sfc_setup ? _sfc_setup(props, ctx) : undefined\n}\nexport default _sfc_main",
-      "start": 1701229713222,
-      "end": 1701229713223,
+      "start": 1701230039826,
+      "end": 1701230039827,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -220,21 +220,21 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
       "result": "\nconst __nuxt_page_meta = null\nexport default __nuxt_page_meta\n",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -248,8 +248,8 @@
     {
       "name": "nuxt:pages-macros-transform",
       "result": "\nconst __nuxt_page_meta = null\nexport default __nuxt_page_meta\n",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -262,32 +262,32 @@
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229713223,
-      "end": 1701229713223,
+      "start": 1701230039827,
+      "end": 1701230039827,
       "order": "normal"
     }
   ]

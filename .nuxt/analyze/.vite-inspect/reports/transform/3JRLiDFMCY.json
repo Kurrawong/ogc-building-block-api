@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\n/* replacement start */\n\nconst process = require('process/')\n\n/* replacement end */\n\nconst {\n  aggregateTwoErrors,\n  codes: { ERR_MULTIPLE_CALLBACK },\n  AbortError\n} = require('../../ours/errors')\nconst { Symbol } = require('../../ours/primordials')\nconst { kDestroyed, isDestroyed, isFinished, isServerRequest } = require('./utils')\nconst kDestroy = Symbol('kDestroy')\nconst kConstruct = Symbol('kConstruct')\nfunction checkError(err, w, r) {\n  if (err) {\n    // Avoid V8 leak, https://github.com/nodejs/node/pull/34103#issuecomment-652002364\n    err.stack // eslint-disable-line no-unused-expressions\n\n    if (w && !w.errored) {\n      w.errored = err\n    }\n    if (r && !r.errored) {\n      r.errored = err\n    }\n  }\n}\n\n// Backwards compat. cb() is undocumented and unused in core but\n// unfortunately might be used by modules.\nfunction destroy(err, cb) {\n  const r = this._readableState\n  const w = this._writableState\n  // With duplex streams we use the writable side for state.\n  const s = w || r\n  if ((w !== null && w !== undefined && w.destroyed) || (r !== null && r !== undefined && r.destroyed)) {\n    if (typeof cb === 'function') {\n      cb()\n    }\n    return this\n  }\n\n  // We set destroyed to true before firing error callbacks in order\n  // to make it re-entrance safe in case destroy() is called within callbacks\n  checkError(err, w, r)\n  if (w) {\n    w.destroyed = true\n  }\n  if (r) {\n    r.destroyed = true\n  }\n\n  // If still constructing then defer calling _destroy.\n  if (!s.constructed) {\n    this.once(kDestroy, function (er) {\n      _destroy(this, aggregateTwoErrors(er, err), cb)\n    })\n  } else {\n    _destroy(this, err, cb)\n  }\n  return this\n}\nfunction _destroy(self, err, cb) {\n  let called = false\n  function onDestroy(err) {\n    if (called) {\n      return\n    }\n    called = true\n    const r = self._readableState\n    const w = self._writableState\n    checkError(err, w, r)\n    if (w) {\n      w.closed = true\n    }\n    if (r) {\n      r.closed = true\n    }\n    if (typeof cb === 'function') {\n      cb(err)\n    }\n    if (err) {\n      process.nextTick(emitErrorCloseNT, self, err)\n    } else {\n      process.nextTick(emitCloseNT, self)\n    }\n  }\n  try {\n    self._destroy(err || null, onDestroy)\n  } catch (err) {\n    onDestroy(err)\n  }\n}\nfunction emitErrorCloseNT(self, err) {\n  emitErrorNT(self, err)\n  emitCloseNT(self)\n}\nfunction emitCloseNT(self) {\n  const r = self._readableState\n  const w = self._writableState\n  if (w) {\n    w.closeEmitted = true\n  }\n  if (r) {\n    r.closeEmitted = true\n  }\n  if ((w !== null && w !== undefined && w.emitClose) || (r !== null && r !== undefined && r.emitClose)) {\n    self.emit('close')\n  }\n}\nfunction emitErrorNT(self, err) {\n  const r = self._readableState\n  const w = self._writableState\n  if ((w !== null && w !== undefined && w.errorEmitted) || (r !== null && r !== undefined && r.errorEmitted)) {\n    return\n  }\n  if (w) {\n    w.errorEmitted = true\n  }\n  if (r) {\n    r.errorEmitted = true\n  }\n  self.emit('error', err)\n}\nfunction undestroy() {\n  const r = this._readableState\n  const w = this._writableState\n  if (r) {\n    r.constructed = true\n    r.closed = false\n    r.closeEmitted = false\n    r.destroyed = false\n    r.errored = null\n    r.errorEmitted = false\n    r.reading = false\n    r.ended = r.readable === false\n    r.endEmitted = r.readable === false\n  }\n  if (w) {\n    w.constructed = true\n    w.destroyed = false\n    w.closed = false\n    w.closeEmitted = false\n    w.errored = null\n    w.errorEmitted = false\n    w.finalCalled = false\n    w.prefinished = false\n    w.ended = w.writable === false\n    w.ending = w.writable === false\n    w.finished = w.writable === false\n  }\n}\nfunction errorOrDestroy(stream, err, sync) {\n  // We have tests that rely on errors being emitted\n  // in the same tick, so changing this is semver major.\n  // For now when you opt-in to autoDestroy we allow\n  // the error to be emitted nextTick. In a future\n  // semver major update we should change the default to this.\n\n  const r = stream._readableState\n  const w = stream._writableState\n  if ((w !== null && w !== undefined && w.destroyed) || (r !== null && r !== undefined && r.destroyed)) {\n    return this\n  }\n  if ((r !== null && r !== undefined && r.autoDestroy) || (w !== null && w !== undefined && w.autoDestroy))\n    stream.destroy(err)\n  else if (err) {\n    // Avoid V8 leak, https://github.com/nodejs/node/pull/34103#issuecomment-652002364\n    err.stack // eslint-disable-line no-unused-expressions\n\n    if (w && !w.errored) {\n      w.errored = err\n    }\n    if (r && !r.errored) {\n      r.errored = err\n    }\n    if (sync) {\n      process.nextTick(emitErrorNT, stream, err)\n    } else {\n      emitErrorNT(stream, err)\n    }\n  }\n}\nfunction construct(stream, cb) {\n  if (typeof stream._construct !== 'function') {\n    return\n  }\n  const r = stream._readableState\n  const w = stream._writableState\n  if (r) {\n    r.constructed = false\n  }\n  if (w) {\n    w.constructed = false\n  }\n  stream.once(kConstruct, cb)\n  if (stream.listenerCount(kConstruct) > 1) {\n    // Duplex\n    return\n  }\n  process.nextTick(constructNT, stream)\n}\nfunction constructNT(stream) {\n  let called = false\n  function onConstruct(err) {\n    if (called) {\n      errorOrDestroy(stream, err !== null && err !== undefined ? err : new ERR_MULTIPLE_CALLBACK())\n      return\n    }\n    called = true\n    const r = stream._readableState\n    const w = stream._writableState\n    const s = w || r\n    if (r) {\n      r.constructed = true\n    }\n    if (w) {\n      w.constructed = true\n    }\n    if (s.destroyed) {\n      stream.emit(kDestroy, err)\n    } else if (err) {\n      errorOrDestroy(stream, err, true)\n    } else {\n      process.nextTick(emitConstructNT, stream)\n    }\n  }\n  try {\n    stream._construct((err) => {\n      process.nextTick(onConstruct, err)\n    })\n  } catch (err) {\n    process.nextTick(onConstruct, err)\n  }\n}\nfunction emitConstructNT(stream) {\n  stream.emit(kConstruct)\n}\nfunction isRequest(stream) {\n  return (stream === null || stream === undefined ? undefined : stream.setHeader) && typeof stream.abort === 'function'\n}\nfunction emitCloseLegacy(stream) {\n  stream.emit('close')\n}\nfunction emitErrorCloseLegacy(stream, err) {\n  stream.emit('error', err)\n  process.nextTick(emitCloseLegacy, stream)\n}\n\n// Normalize destroy for legacy.\nfunction destroyer(stream, err) {\n  if (!stream || isDestroyed(stream)) {\n    return\n  }\n  if (!err && !isFinished(stream)) {\n    err = new AbortError()\n  }\n\n  // TODO: Remove isRequest branches.\n  if (isServerRequest(stream)) {\n    stream.socket = null\n    stream.destroy(err)\n  } else if (isRequest(stream)) {\n    stream.abort()\n  } else if (isRequest(stream.req)) {\n    stream.req.abort()\n  } else if (typeof stream.destroy === 'function') {\n    stream.destroy(err)\n  } else if (typeof stream.close === 'function') {\n    // TODO: Don't lose err?\n    stream.close()\n  } else if (err) {\n    process.nextTick(emitErrorCloseLegacy, stream, err)\n  } else {\n    process.nextTick(emitCloseLegacy, stream)\n  }\n  if (!stream.destroyed) {\n    stream[kDestroyed] = true\n  }\n}\nmodule.exports = {\n  construct,\n  destroyer,\n  destroy,\n  undestroy,\n  errorOrDestroy\n}\n",
-      "start": 1701229710913,
-      "end": 1701229710952,
+      "start": 1701230037625,
+      "end": 1701230037657,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710952,
-      "end": 1701229710952,
+      "start": 1701230037657,
+      "end": 1701230037657,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/process/browser.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\n\n'use strict'\n\n/* replacement start */\n\nconst process = require$$0\n\n/* replacement end */\n\nconst {\n  aggregateTwoErrors,\n  codes: { ERR_MULTIPLE_CALLBACK },\n  AbortError\n} = require$$1\nconst { Symbol } = require$$2\nconst { kDestroyed, isDestroyed, isFinished, isServerRequest } = require$$3\nconst kDestroy = Symbol('kDestroy')\nconst kConstruct = Symbol('kConstruct')\nfunction checkError(err, w, r) {\n  if (err) {\n    // Avoid V8 leak, https://github.com/nodejs/node/pull/34103#issuecomment-652002364\n    err.stack // eslint-disable-line no-unused-expressions\n\n    if (w && !w.errored) {\n      w.errored = err\n    }\n    if (r && !r.errored) {\n      r.errored = err\n    }\n  }\n}\n\n// Backwards compat. cb() is undocumented and unused in core but\n// unfortunately might be used by modules.\nfunction destroy(err, cb) {\n  const r = this._readableState\n  const w = this._writableState\n  // With duplex streams we use the writable side for state.\n  const s = w || r\n  if ((w !== null && w !== undefined && w.destroyed) || (r !== null && r !== undefined && r.destroyed)) {\n    if (typeof cb === 'function') {\n      cb()\n    }\n    return this\n  }\n\n  // We set destroyed to true before firing error callbacks in order\n  // to make it re-entrance safe in case destroy() is called within callbacks\n  checkError(err, w, r)\n  if (w) {\n    w.destroyed = true\n  }\n  if (r) {\n    r.destroyed = true\n  }\n\n  // If still constructing then defer calling _destroy.\n  if (!s.constructed) {\n    this.once(kDestroy, function (er) {\n      _destroy(this, aggregateTwoErrors(er, err), cb)\n    })\n  } else {\n    _destroy(this, err, cb)\n  }\n  return this\n}\nfunction _destroy(self, err, cb) {\n  let called = false\n  function onDestroy(err) {\n    if (called) {\n      return\n    }\n    called = true\n    const r = self._readableState\n    const w = self._writableState\n    checkError(err, w, r)\n    if (w) {\n      w.closed = true\n    }\n    if (r) {\n      r.closed = true\n    }\n    if (typeof cb === 'function') {\n      cb(err)\n    }\n    if (err) {\n      process.nextTick(emitErrorCloseNT, self, err)\n    } else {\n      process.nextTick(emitCloseNT, self)\n    }\n  }\n  try {\n    self._destroy(err || null, onDestroy)\n  } catch (err) {\n    onDestroy(err)\n  }\n}\nfunction emitErrorCloseNT(self, err) {\n  emitErrorNT(self, err)\n  emitCloseNT(self)\n}\nfunction emitCloseNT(self) {\n  const r = self._readableState\n  const w = self._writableState\n  if (w) {\n    w.closeEmitted = true\n  }\n  if (r) {\n    r.closeEmitted = true\n  }\n  if ((w !== null && w !== undefined && w.emitClose) || (r !== null && r !== undefined && r.emitClose)) {\n    self.emit('close')\n  }\n}\nfunction emitErrorNT(self, err) {\n  const r = self._readableState\n  const w = self._writableState\n  if ((w !== null && w !== undefined && w.errorEmitted) || (r !== null && r !== undefined && r.errorEmitted)) {\n    return\n  }\n  if (w) {\n    w.errorEmitted = true\n  }\n  if (r) {\n    r.errorEmitted = true\n  }\n  self.emit('error', err)\n}\nfunction undestroy() {\n  const r = this._readableState\n  const w = this._writableState\n  if (r) {\n    r.constructed = true\n    r.closed = false\n    r.closeEmitted = false\n    r.destroyed = false\n    r.errored = null\n    r.errorEmitted = false\n    r.reading = false\n    r.ended = r.readable === false\n    r.endEmitted = r.readable === false\n  }\n  if (w) {\n    w.constructed = true\n    w.destroyed = false\n    w.closed = false\n    w.closeEmitted = false\n    w.errored = null\n    w.errorEmitted = false\n    w.finalCalled = false\n    w.prefinished = false\n    w.ended = w.writable === false\n    w.ending = w.writable === false\n    w.finished = w.writable === false\n  }\n}\nfunction errorOrDestroy(stream, err, sync) {\n  // We have tests that rely on errors being emitted\n  // in the same tick, so changing this is semver major.\n  // For now when you opt-in to autoDestroy we allow\n  // the error to be emitted nextTick. In a future\n  // semver major update we should change the default to this.\n\n  const r = stream._readableState\n  const w = stream._writableState\n  if ((w !== null && w !== undefined && w.destroyed) || (r !== null && r !== undefined && r.destroyed)) {\n    return this\n  }\n  if ((r !== null && r !== undefined && r.autoDestroy) || (w !== null && w !== undefined && w.autoDestroy))\n    stream.destroy(err)\n  else if (err) {\n    // Avoid V8 leak, https://github.com/nodejs/node/pull/34103#issuecomment-652002364\n    err.stack // eslint-disable-line no-unused-expressions\n\n    if (w && !w.errored) {\n      w.errored = err\n    }\n    if (r && !r.errored) {\n      r.errored = err\n    }\n    if (sync) {\n      process.nextTick(emitErrorNT, stream, err)\n    } else {\n      emitErrorNT(stream, err)\n    }\n  }\n}\nfunction construct(stream, cb) {\n  if (typeof stream._construct !== 'function') {\n    return\n  }\n  const r = stream._readableState\n  const w = stream._writableState\n  if (r) {\n    r.constructed = false\n  }\n  if (w) {\n    w.constructed = false\n  }\n  stream.once(kConstruct, cb)\n  if (stream.listenerCount(kConstruct) > 1) {\n    // Duplex\n    return\n  }\n  process.nextTick(constructNT, stream)\n}\nfunction constructNT(stream) {\n  let called = false\n  function onConstruct(err) {\n    if (called) {\n      errorOrDestroy(stream, err !== null && err !== undefined ? err : new ERR_MULTIPLE_CALLBACK())\n      return\n    }\n    called = true\n    const r = stream._readableState\n    const w = stream._writableState\n    const s = w || r\n    if (r) {\n      r.constructed = true\n    }\n    if (w) {\n      w.constructed = true\n    }\n    if (s.destroyed) {\n      stream.emit(kDestroy, err)\n    } else if (err) {\n      errorOrDestroy(stream, err, true)\n    } else {\n      process.nextTick(emitConstructNT, stream)\n    }\n  }\n  try {\n    stream._construct((err) => {\n      process.nextTick(onConstruct, err)\n    })\n  } catch (err) {\n    process.nextTick(onConstruct, err)\n  }\n}\nfunction emitConstructNT(stream) {\n  stream.emit(kConstruct)\n}\nfunction isRequest(stream) {\n  return (stream === null || stream === undefined ? undefined : stream.setHeader) && typeof stream.abort === 'function'\n}\nfunction emitCloseLegacy(stream) {\n  stream.emit('close')\n}\nfunction emitErrorCloseLegacy(stream, err) {\n  stream.emit('error', err)\n  process.nextTick(emitCloseLegacy, stream)\n}\n\n// Normalize destroy for legacy.\nfunction destroyer(stream, err) {\n  if (!stream || isDestroyed(stream)) {\n    return\n  }\n  if (!err && !isFinished(stream)) {\n    err = new AbortError()\n  }\n\n  // TODO: Remove isRequest branches.\n  if (isServerRequest(stream)) {\n    stream.socket = null\n    stream.destroy(err)\n  } else if (isRequest(stream)) {\n    stream.abort()\n  } else if (isRequest(stream.req)) {\n    stream.req.abort()\n  } else if (typeof stream.destroy === 'function') {\n    stream.destroy(err)\n  } else if (typeof stream.close === 'function') {\n    // TODO: Don't lose err?\n    stream.close()\n  } else if (err) {\n    process.nextTick(emitErrorCloseLegacy, stream, err)\n  } else {\n    process.nextTick(emitCloseLegacy, stream)\n  }\n  if (!stream.destroyed) {\n    stream[kDestroyed] = true\n  }\n}\nvar destroy_1 = {\n  construct,\n  destroyer,\n  destroy,\n  undestroy,\n  errorOrDestroy\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(destroy_1);\nexport { destroy_1 as __moduleExports };",
-      "start": 1701229710952,
-      "end": 1701229711013,
+      "start": 1701230037657,
+      "end": 1701230037715,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711013,
-      "end": 1701229711013,
+      "start": 1701230037715,
+      "end": 1701230037715,
       "order": "normal"
     }
   ]

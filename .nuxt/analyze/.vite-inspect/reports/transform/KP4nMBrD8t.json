@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst { AbortError, codes } = require('../../ours/errors')\nconst { isNodeStream, isWebStream, kControllerErrorFunction } = require('./utils')\nconst eos = require('./end-of-stream')\nconst { ERR_INVALID_ARG_TYPE } = codes\n\n// This method is inlined here for readable-stream\n// It also does not allow for signal to not exist on the stream\n// https://github.com/nodejs/node/pull/36061#discussion_r533718029\nconst validateAbortSignal = (signal, name) => {\n  if (typeof signal !== 'object' || !('aborted' in signal)) {\n    throw new ERR_INVALID_ARG_TYPE(name, 'AbortSignal', signal)\n  }\n}\nmodule.exports.addAbortSignal = function addAbortSignal(signal, stream) {\n  validateAbortSignal(signal, 'signal')\n  if (!isNodeStream(stream) && !isWebStream(stream)) {\n    throw new ERR_INVALID_ARG_TYPE('stream', ['ReadableStream', 'WritableStream', 'Stream'], stream)\n  }\n  return module.exports.addAbortSignalNoValidate(signal, stream)\n}\nmodule.exports.addAbortSignalNoValidate = function (signal, stream) {\n  if (typeof signal !== 'object' || !('aborted' in signal)) {\n    return stream\n  }\n  const onAbort = isNodeStream(stream)\n    ? () => {\n        stream.destroy(\n          new AbortError(undefined, {\n            cause: signal.reason\n          })\n        )\n      }\n    : () => {\n        stream[kControllerErrorFunction](\n          new AbortError(undefined, {\n            cause: signal.reason\n          })\n        )\n      }\n  if (signal.aborted) {\n    onAbort()\n  } else {\n    signal.addEventListener('abort', onAbort)\n    eos(stream, () => signal.removeEventListener('abort', onAbort))\n  }\n  return stream\n}\n",
-      "start": 1701229710925,
-      "end": 1701229710972,
+      "start": 1701230037635,
+      "end": 1701230037680,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710972,
-      "end": 1701229710972,
+      "start": 1701230037680,
+      "end": 1701230037680,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport { __module as addAbortSignalModule } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/add-abort-signal.js?commonjs-module\";\nvar addAbortSignal = addAbortSignalModule.exports;\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/end-of-stream.js?commonjs-proxy\";\n\n(function (module) {\n\t'use strict'\n\n\tconst { AbortError, codes } = require$$0\n\tconst { isNodeStream, isWebStream, kControllerErrorFunction } = require$$1\n\tconst eos = require$$2\n\tconst { ERR_INVALID_ARG_TYPE } = codes\n\n\t// This method is inlined here for readable-stream\n\t// It also does not allow for signal to not exist on the stream\n\t// https://github.com/nodejs/node/pull/36061#discussion_r533718029\n\tconst validateAbortSignal = (signal, name) => {\n\t  if (typeof signal !== 'object' || !('aborted' in signal)) {\n\t    throw new ERR_INVALID_ARG_TYPE(name, 'AbortSignal', signal)\n\t  }\n\t}\n\tmodule.exports.addAbortSignal = function addAbortSignal(signal, stream) {\n\t  validateAbortSignal(signal, 'signal')\n\t  if (!isNodeStream(stream) && !isWebStream(stream)) {\n\t    throw new ERR_INVALID_ARG_TYPE('stream', ['ReadableStream', 'WritableStream', 'Stream'], stream)\n\t  }\n\t  return module.exports.addAbortSignalNoValidate(signal, stream)\n\t}\n\tmodule.exports.addAbortSignalNoValidate = function (signal, stream) {\n\t  if (typeof signal !== 'object' || !('aborted' in signal)) {\n\t    return stream\n\t  }\n\t  const onAbort = isNodeStream(stream)\n\t    ? () => {\n\t        stream.destroy(\n\t          new AbortError(undefined, {\n\t            cause: signal.reason\n\t          })\n\t        )\n\t      }\n\t    : () => {\n\t        stream[kControllerErrorFunction](\n\t          new AbortError(undefined, {\n\t            cause: signal.reason\n\t          })\n\t        )\n\t      }\n\t  if (signal.aborted) {\n\t    onAbort()\n\t  } else {\n\t    signal.addEventListener('abort', onAbort)\n\t    eos(stream, () => signal.removeEventListener('abort', onAbort))\n\t  }\n\t  return stream\n\t} \n} (addAbortSignalModule));\n\nvar addAbortSignalExports = addAbortSignalModule.exports;\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(addAbortSignalExports);\nexport { addAbortSignalExports as __moduleExports };",
-      "start": 1701229710972,
-      "end": 1701229711017,
+      "start": 1701230037680,
+      "end": 1701230037723,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711017,
-      "end": 1701229711017,
+      "start": 1701230037723,
+      "end": 1701230037723,
       "order": "normal"
     }
   ]

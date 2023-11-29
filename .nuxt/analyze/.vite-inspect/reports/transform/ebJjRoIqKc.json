@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "/* replacement start */\n\nconst process = require('process/')\n\n/* replacement end */\n\n;('use strict')\nconst bufferModule = require('buffer')\nconst {\n  isReadable,\n  isWritable,\n  isIterable,\n  isNodeStream,\n  isReadableNodeStream,\n  isWritableNodeStream,\n  isDuplexNodeStream\n} = require('./utils')\nconst eos = require('./end-of-stream')\nconst {\n  AbortError,\n  codes: { ERR_INVALID_ARG_TYPE, ERR_INVALID_RETURN_VALUE }\n} = require('../../ours/errors')\nconst { destroyer } = require('./destroy')\nconst Duplex = require('./duplex')\nconst Readable = require('./readable')\nconst { createDeferredPromise } = require('../../ours/util')\nconst from = require('./from')\nconst Blob = globalThis.Blob || bufferModule.Blob\nconst isBlob =\n  typeof Blob !== 'undefined'\n    ? function isBlob(b) {\n        return b instanceof Blob\n      }\n    : function isBlob(b) {\n        return false\n      }\nconst AbortController = globalThis.AbortController || require('abort-controller').AbortController\nconst { FunctionPrototypeCall } = require('../../ours/primordials')\n\n// This is needed for pre node 17.\nclass Duplexify extends Duplex {\n  constructor(options) {\n    super(options)\n\n    // https://github.com/nodejs/node/pull/34385\n\n    if ((options === null || options === undefined ? undefined : options.readable) === false) {\n      this._readableState.readable = false\n      this._readableState.ended = true\n      this._readableState.endEmitted = true\n    }\n    if ((options === null || options === undefined ? undefined : options.writable) === false) {\n      this._writableState.writable = false\n      this._writableState.ending = true\n      this._writableState.ended = true\n      this._writableState.finished = true\n    }\n  }\n}\nmodule.exports = function duplexify(body, name) {\n  if (isDuplexNodeStream(body)) {\n    return body\n  }\n  if (isReadableNodeStream(body)) {\n    return _duplexify({\n      readable: body\n    })\n  }\n  if (isWritableNodeStream(body)) {\n    return _duplexify({\n      writable: body\n    })\n  }\n  if (isNodeStream(body)) {\n    return _duplexify({\n      writable: false,\n      readable: false\n    })\n  }\n\n  // TODO: Webstreams\n  // if (isReadableStream(body)) {\n  //   return _duplexify({ readable: Readable.fromWeb(body) });\n  // }\n\n  // TODO: Webstreams\n  // if (isWritableStream(body)) {\n  //   return _duplexify({ writable: Writable.fromWeb(body) });\n  // }\n\n  if (typeof body === 'function') {\n    const { value, write, final, destroy } = fromAsyncGen(body)\n    if (isIterable(value)) {\n      return from(Duplexify, value, {\n        // TODO (ronag): highWaterMark?\n        objectMode: true,\n        write,\n        final,\n        destroy\n      })\n    }\n    const then = value === null || value === undefined ? undefined : value.then\n    if (typeof then === 'function') {\n      let d\n      const promise = FunctionPrototypeCall(\n        then,\n        value,\n        (val) => {\n          if (val != null) {\n            throw new ERR_INVALID_RETURN_VALUE('nully', 'body', val)\n          }\n        },\n        (err) => {\n          destroyer(d, err)\n        }\n      )\n      return (d = new Duplexify({\n        // TODO (ronag): highWaterMark?\n        objectMode: true,\n        readable: false,\n        write,\n        final(cb) {\n          final(async () => {\n            try {\n              await promise\n              process.nextTick(cb, null)\n            } catch (err) {\n              process.nextTick(cb, err)\n            }\n          })\n        },\n        destroy\n      }))\n    }\n    throw new ERR_INVALID_RETURN_VALUE('Iterable, AsyncIterable or AsyncFunction', name, value)\n  }\n  if (isBlob(body)) {\n    return duplexify(body.arrayBuffer())\n  }\n  if (isIterable(body)) {\n    return from(Duplexify, body, {\n      // TODO (ronag): highWaterMark?\n      objectMode: true,\n      writable: false\n    })\n  }\n\n  // TODO: Webstreams.\n  // if (\n  //   isReadableStream(body?.readable) &&\n  //   isWritableStream(body?.writable)\n  // ) {\n  //   return Duplexify.fromWeb(body);\n  // }\n\n  if (\n    typeof (body === null || body === undefined ? undefined : body.writable) === 'object' ||\n    typeof (body === null || body === undefined ? undefined : body.readable) === 'object'\n  ) {\n    const readable =\n      body !== null && body !== undefined && body.readable\n        ? isReadableNodeStream(body === null || body === undefined ? undefined : body.readable)\n          ? body === null || body === undefined\n            ? undefined\n            : body.readable\n          : duplexify(body.readable)\n        : undefined\n    const writable =\n      body !== null && body !== undefined && body.writable\n        ? isWritableNodeStream(body === null || body === undefined ? undefined : body.writable)\n          ? body === null || body === undefined\n            ? undefined\n            : body.writable\n          : duplexify(body.writable)\n        : undefined\n    return _duplexify({\n      readable,\n      writable\n    })\n  }\n  const then = body === null || body === undefined ? undefined : body.then\n  if (typeof then === 'function') {\n    let d\n    FunctionPrototypeCall(\n      then,\n      body,\n      (val) => {\n        if (val != null) {\n          d.push(val)\n        }\n        d.push(null)\n      },\n      (err) => {\n        destroyer(d, err)\n      }\n    )\n    return (d = new Duplexify({\n      objectMode: true,\n      writable: false,\n      read() {}\n    }))\n  }\n  throw new ERR_INVALID_ARG_TYPE(\n    name,\n    [\n      'Blob',\n      'ReadableStream',\n      'WritableStream',\n      'Stream',\n      'Iterable',\n      'AsyncIterable',\n      'Function',\n      '{ readable, writable } pair',\n      'Promise'\n    ],\n    body\n  )\n}\nfunction fromAsyncGen(fn) {\n  let { promise, resolve } = createDeferredPromise()\n  const ac = new AbortController()\n  const signal = ac.signal\n  const value = fn(\n    (async function* () {\n      while (true) {\n        const _promise = promise\n        promise = null\n        const { chunk, done, cb } = await _promise\n        process.nextTick(cb)\n        if (done) return\n        if (signal.aborted)\n          throw new AbortError(undefined, {\n            cause: signal.reason\n          })\n        ;({ promise, resolve } = createDeferredPromise())\n        yield chunk\n      }\n    })(),\n    {\n      signal\n    }\n  )\n  return {\n    value,\n    write(chunk, encoding, cb) {\n      const _resolve = resolve\n      resolve = null\n      _resolve({\n        chunk,\n        done: false,\n        cb\n      })\n    },\n    final(cb) {\n      const _resolve = resolve\n      resolve = null\n      _resolve({\n        done: true,\n        cb\n      })\n    },\n    destroy(err, cb) {\n      ac.abort()\n      cb(err)\n    }\n  }\n}\nfunction _duplexify(pair) {\n  const r = pair.readable && typeof pair.readable.read !== 'function' ? Readable.wrap(pair.readable) : pair.readable\n  const w = pair.writable\n  let readable = !!isReadable(r)\n  let writable = !!isWritable(w)\n  let ondrain\n  let onfinish\n  let onreadable\n  let onclose\n  let d\n  function onfinished(err) {\n    const cb = onclose\n    onclose = null\n    if (cb) {\n      cb(err)\n    } else if (err) {\n      d.destroy(err)\n    }\n  }\n\n  // TODO(ronag): Avoid double buffering.\n  // Implement Writable/Readable/Duplex traits.\n  // See, https://github.com/nodejs/node/pull/33515.\n  d = new Duplexify({\n    // TODO (ronag): highWaterMark?\n    readableObjectMode: !!(r !== null && r !== undefined && r.readableObjectMode),\n    writableObjectMode: !!(w !== null && w !== undefined && w.writableObjectMode),\n    readable,\n    writable\n  })\n  if (writable) {\n    eos(w, (err) => {\n      writable = false\n      if (err) {\n        destroyer(r, err)\n      }\n      onfinished(err)\n    })\n    d._write = function (chunk, encoding, callback) {\n      if (w.write(chunk, encoding)) {\n        callback()\n      } else {\n        ondrain = callback\n      }\n    }\n    d._final = function (callback) {\n      w.end()\n      onfinish = callback\n    }\n    w.on('drain', function () {\n      if (ondrain) {\n        const cb = ondrain\n        ondrain = null\n        cb()\n      }\n    })\n    w.on('finish', function () {\n      if (onfinish) {\n        const cb = onfinish\n        onfinish = null\n        cb()\n      }\n    })\n  }\n  if (readable) {\n    eos(r, (err) => {\n      readable = false\n      if (err) {\n        destroyer(r, err)\n      }\n      onfinished(err)\n    })\n    r.on('readable', function () {\n      if (onreadable) {\n        const cb = onreadable\n        onreadable = null\n        cb()\n      }\n    })\n    r.on('end', function () {\n      d.push(null)\n    })\n    d._read = function () {\n      while (true) {\n        const buf = r.read()\n        if (buf === null) {\n          onreadable = d._read\n          return\n        }\n        if (!d.push(buf)) {\n          return\n        }\n      }\n    }\n  }\n  d._destroy = function (err, callback) {\n    if (!err && onclose !== null) {\n      err = new AbortError()\n    }\n    onreadable = null\n    ondrain = null\n    onfinish = null\n    if (onclose === null) {\n      callback(err)\n    } else {\n      onclose = callback\n      destroyer(w, err)\n      destroyer(r, err)\n    }\n  }\n  return d\n}\n",
-      "start": 1701229710975,
-      "end": 1701229711034,
+      "start": 1701230037683,
+      "end": 1701230037735,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229711034,
-      "end": 1701229711034,
+      "start": 1701230037735,
+      "end": 1701230037735,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "/* replacement start */\nimport * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/process/browser.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/buffer/index.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/end-of-stream.js?commonjs-proxy\";\nimport require$$4 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\nimport require$$5 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/destroy.js?commonjs-proxy\";\nimport { __require as require$$6 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/duplex.js?commonjs-wrapped\";\nimport { __require as require$$7 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/readable.js?commonjs-wrapped\";\nimport require$$8 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/util.js?commonjs-proxy\";\nimport require$$9 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/from.js?commonjs-proxy\";\nimport { __require as require$$10 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/unenv/runtime/mock/empty.cjs?commonjs-wrapped\";\nimport require$$11 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\n\nvar duplexify;\nvar hasRequiredDuplexify;\n\nfunction requireDuplexify () {\n\tif (hasRequiredDuplexify) return duplexify;\n\thasRequiredDuplexify = 1;\n\tconst process = require$$0\n\n\t/* replacement end */\n\n\t;('use strict')\n\tconst bufferModule = require$$1\n\tconst {\n\t  isReadable,\n\t  isWritable,\n\t  isIterable,\n\t  isNodeStream,\n\t  isReadableNodeStream,\n\t  isWritableNodeStream,\n\t  isDuplexNodeStream\n\t} = require$$2\n\tconst eos = require$$3\n\tconst {\n\t  AbortError,\n\t  codes: { ERR_INVALID_ARG_TYPE, ERR_INVALID_RETURN_VALUE }\n\t} = require$$4\n\tconst { destroyer } = require$$5\n\tconst Duplex = require$$6()\n\tconst Readable = require$$7()\n\tconst { createDeferredPromise } = require$$8\n\tconst from = require$$9\n\tconst Blob = globalThis.Blob || bufferModule.Blob\n\tconst isBlob =\n\t  typeof Blob !== 'undefined'\n\t    ? function isBlob(b) {\n\t        return b instanceof Blob\n\t      }\n\t    : function isBlob(b) {\n\t        return false\n\t      }\n\tconst AbortController = globalThis.AbortController || require$$10().AbortController\n\tconst { FunctionPrototypeCall } = require$$11\n\n\t// This is needed for pre node 17.\n\tclass Duplexify extends Duplex {\n\t  constructor(options) {\n\t    super(options)\n\n\t    // https://github.com/nodejs/node/pull/34385\n\n\t    if ((options === null || options === undefined ? undefined : options.readable) === false) {\n\t      this._readableState.readable = false\n\t      this._readableState.ended = true\n\t      this._readableState.endEmitted = true\n\t    }\n\t    if ((options === null || options === undefined ? undefined : options.writable) === false) {\n\t      this._writableState.writable = false\n\t      this._writableState.ending = true\n\t      this._writableState.ended = true\n\t      this._writableState.finished = true\n\t    }\n\t  }\n\t}\n\tduplexify = function duplexify(body, name) {\n\t  if (isDuplexNodeStream(body)) {\n\t    return body\n\t  }\n\t  if (isReadableNodeStream(body)) {\n\t    return _duplexify({\n\t      readable: body\n\t    })\n\t  }\n\t  if (isWritableNodeStream(body)) {\n\t    return _duplexify({\n\t      writable: body\n\t    })\n\t  }\n\t  if (isNodeStream(body)) {\n\t    return _duplexify({\n\t      writable: false,\n\t      readable: false\n\t    })\n\t  }\n\n\t  // TODO: Webstreams\n\t  // if (isReadableStream(body)) {\n\t  //   return _duplexify({ readable: Readable.fromWeb(body) });\n\t  // }\n\n\t  // TODO: Webstreams\n\t  // if (isWritableStream(body)) {\n\t  //   return _duplexify({ writable: Writable.fromWeb(body) });\n\t  // }\n\n\t  if (typeof body === 'function') {\n\t    const { value, write, final, destroy } = fromAsyncGen(body)\n\t    if (isIterable(value)) {\n\t      return from(Duplexify, value, {\n\t        // TODO (ronag): highWaterMark?\n\t        objectMode: true,\n\t        write,\n\t        final,\n\t        destroy\n\t      })\n\t    }\n\t    const then = value === null || value === undefined ? undefined : value.then\n\t    if (typeof then === 'function') {\n\t      let d\n\t      const promise = FunctionPrototypeCall(\n\t        then,\n\t        value,\n\t        (val) => {\n\t          if (val != null) {\n\t            throw new ERR_INVALID_RETURN_VALUE('nully', 'body', val)\n\t          }\n\t        },\n\t        (err) => {\n\t          destroyer(d, err)\n\t        }\n\t      )\n\t      return (d = new Duplexify({\n\t        // TODO (ronag): highWaterMark?\n\t        objectMode: true,\n\t        readable: false,\n\t        write,\n\t        final(cb) {\n\t          final(async () => {\n\t            try {\n\t              await promise\n\t              process.nextTick(cb, null)\n\t            } catch (err) {\n\t              process.nextTick(cb, err)\n\t            }\n\t          })\n\t        },\n\t        destroy\n\t      }))\n\t    }\n\t    throw new ERR_INVALID_RETURN_VALUE('Iterable, AsyncIterable or AsyncFunction', name, value)\n\t  }\n\t  if (isBlob(body)) {\n\t    return duplexify(body.arrayBuffer())\n\t  }\n\t  if (isIterable(body)) {\n\t    return from(Duplexify, body, {\n\t      // TODO (ronag): highWaterMark?\n\t      objectMode: true,\n\t      writable: false\n\t    })\n\t  }\n\n\t  // TODO: Webstreams.\n\t  // if (\n\t  //   isReadableStream(body?.readable) &&\n\t  //   isWritableStream(body?.writable)\n\t  // ) {\n\t  //   return Duplexify.fromWeb(body);\n\t  // }\n\n\t  if (\n\t    typeof (body === null || body === undefined ? undefined : body.writable) === 'object' ||\n\t    typeof (body === null || body === undefined ? undefined : body.readable) === 'object'\n\t  ) {\n\t    const readable =\n\t      body !== null && body !== undefined && body.readable\n\t        ? isReadableNodeStream(body === null || body === undefined ? undefined : body.readable)\n\t          ? body === null || body === undefined\n\t            ? undefined\n\t            : body.readable\n\t          : duplexify(body.readable)\n\t        : undefined\n\t    const writable =\n\t      body !== null && body !== undefined && body.writable\n\t        ? isWritableNodeStream(body === null || body === undefined ? undefined : body.writable)\n\t          ? body === null || body === undefined\n\t            ? undefined\n\t            : body.writable\n\t          : duplexify(body.writable)\n\t        : undefined\n\t    return _duplexify({\n\t      readable,\n\t      writable\n\t    })\n\t  }\n\t  const then = body === null || body === undefined ? undefined : body.then\n\t  if (typeof then === 'function') {\n\t    let d\n\t    FunctionPrototypeCall(\n\t      then,\n\t      body,\n\t      (val) => {\n\t        if (val != null) {\n\t          d.push(val)\n\t        }\n\t        d.push(null)\n\t      },\n\t      (err) => {\n\t        destroyer(d, err)\n\t      }\n\t    )\n\t    return (d = new Duplexify({\n\t      objectMode: true,\n\t      writable: false,\n\t      read() {}\n\t    }))\n\t  }\n\t  throw new ERR_INVALID_ARG_TYPE(\n\t    name,\n\t    [\n\t      'Blob',\n\t      'ReadableStream',\n\t      'WritableStream',\n\t      'Stream',\n\t      'Iterable',\n\t      'AsyncIterable',\n\t      'Function',\n\t      '{ readable, writable } pair',\n\t      'Promise'\n\t    ],\n\t    body\n\t  )\n\t}\n\tfunction fromAsyncGen(fn) {\n\t  let { promise, resolve } = createDeferredPromise()\n\t  const ac = new AbortController()\n\t  const signal = ac.signal\n\t  const value = fn(\n\t    (async function* () {\n\t      while (true) {\n\t        const _promise = promise\n\t        promise = null\n\t        const { chunk, done, cb } = await _promise\n\t        process.nextTick(cb)\n\t        if (done) return\n\t        if (signal.aborted)\n\t          throw new AbortError(undefined, {\n\t            cause: signal.reason\n\t          })\n\t        ;({ promise, resolve } = createDeferredPromise())\n\t        yield chunk\n\t      }\n\t    })(),\n\t    {\n\t      signal\n\t    }\n\t  )\n\t  return {\n\t    value,\n\t    write(chunk, encoding, cb) {\n\t      const _resolve = resolve\n\t      resolve = null\n\t      _resolve({\n\t        chunk,\n\t        done: false,\n\t        cb\n\t      })\n\t    },\n\t    final(cb) {\n\t      const _resolve = resolve\n\t      resolve = null\n\t      _resolve({\n\t        done: true,\n\t        cb\n\t      })\n\t    },\n\t    destroy(err, cb) {\n\t      ac.abort()\n\t      cb(err)\n\t    }\n\t  }\n\t}\n\tfunction _duplexify(pair) {\n\t  const r = pair.readable && typeof pair.readable.read !== 'function' ? Readable.wrap(pair.readable) : pair.readable\n\t  const w = pair.writable\n\t  let readable = !!isReadable(r)\n\t  let writable = !!isWritable(w)\n\t  let ondrain\n\t  let onfinish\n\t  let onreadable\n\t  let onclose\n\t  let d\n\t  function onfinished(err) {\n\t    const cb = onclose\n\t    onclose = null\n\t    if (cb) {\n\t      cb(err)\n\t    } else if (err) {\n\t      d.destroy(err)\n\t    }\n\t  }\n\n\t  // TODO(ronag): Avoid double buffering.\n\t  // Implement Writable/Readable/Duplex traits.\n\t  // See, https://github.com/nodejs/node/pull/33515.\n\t  d = new Duplexify({\n\t    // TODO (ronag): highWaterMark?\n\t    readableObjectMode: !!(r !== null && r !== undefined && r.readableObjectMode),\n\t    writableObjectMode: !!(w !== null && w !== undefined && w.writableObjectMode),\n\t    readable,\n\t    writable\n\t  })\n\t  if (writable) {\n\t    eos(w, (err) => {\n\t      writable = false\n\t      if (err) {\n\t        destroyer(r, err)\n\t      }\n\t      onfinished(err)\n\t    })\n\t    d._write = function (chunk, encoding, callback) {\n\t      if (w.write(chunk, encoding)) {\n\t        callback()\n\t      } else {\n\t        ondrain = callback\n\t      }\n\t    }\n\t    d._final = function (callback) {\n\t      w.end()\n\t      onfinish = callback\n\t    }\n\t    w.on('drain', function () {\n\t      if (ondrain) {\n\t        const cb = ondrain\n\t        ondrain = null\n\t        cb()\n\t      }\n\t    })\n\t    w.on('finish', function () {\n\t      if (onfinish) {\n\t        const cb = onfinish\n\t        onfinish = null\n\t        cb()\n\t      }\n\t    })\n\t  }\n\t  if (readable) {\n\t    eos(r, (err) => {\n\t      readable = false\n\t      if (err) {\n\t        destroyer(r, err)\n\t      }\n\t      onfinished(err)\n\t    })\n\t    r.on('readable', function () {\n\t      if (onreadable) {\n\t        const cb = onreadable\n\t        onreadable = null\n\t        cb()\n\t      }\n\t    })\n\t    r.on('end', function () {\n\t      d.push(null)\n\t    })\n\t    d._read = function () {\n\t      while (true) {\n\t        const buf = r.read()\n\t        if (buf === null) {\n\t          onreadable = d._read\n\t          return\n\t        }\n\t        if (!d.push(buf)) {\n\t          return\n\t        }\n\t      }\n\t    }\n\t  }\n\t  d._destroy = function (err, callback) {\n\t    if (!err && onclose !== null) {\n\t      err = new AbortError()\n\t    }\n\t    onreadable = null\n\t    ondrain = null\n\t    onfinish = null\n\t    if (onclose === null) {\n\t      callback(err)\n\t    } else {\n\t      onclose = callback\n\t      destroyer(w, err)\n\t      destroyer(r, err)\n\t    }\n\t  }\n\t  return d\n\t}\n\treturn duplexify;\n}\n\nexport { requireDuplexify as __require };",
-      "start": 1701229711034,
-      "end": 1701229711036,
+      "start": 1701230037735,
+      "end": 1701230037737,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711036,
-      "end": 1701229711036,
+      "start": 1701230037737,
+      "end": 1701230037737,
       "order": "normal"
     }
   ]

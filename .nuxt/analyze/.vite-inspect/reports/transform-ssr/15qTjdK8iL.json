@@ -4,8 +4,8 @@
     {
       "name": "vite:vue",
       "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\"\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\"\n\nimport config from '~/config';\nimport { tpl } from '~/helpers/str';\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'index',\n  __ssrInlineRender: true,\n  setup(__props) {\n\nconst route = useRoute();\n\nreturn (_ctx: any,_push: any,_parent: any,_attrs: any) => {\n  const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\")!\n  const _component_ContainersList = _resolveComponent(\"ContainersList\")!\n\n  _push(`<!--[-->`)\n  _push(_ssrRenderComponent(_component_CommonBreadcrumbs, {\n    items: [{title: _unref(tpl)('{{!bc}}Home'), to: '/'}, {title: _unref(tpl)('{{!bc}}Catalogs'), to: '/catalogs', disabled: true}]\n  }, null, _parent))\n  _push(_ssrRenderComponent(_component_ContainersList, {\n    \"header-title\": _unref(tpl)('{{ header.label }} collection'),\n    \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n    fields: ['dcterms:title', 'dcterms:identifier', 'iri']\n  }, null, _parent))\n  _push(`<!--]-->`)\n}\n}\n\n})",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "sourcemaps": {
         "version": 3,
         "sources": [
@@ -20,45 +20,45 @@
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "pre"
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229715289,
-      "end": 1701229715289,
+      "start": 1701230041954,
+      "end": 1701230041954,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
       "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  __ssrInlineRender: true,\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\");\n      const _component_ContainersList = _resolveComponent(\"ContainersList\");\n      _push(`<!--[-->`);\n      _push(_ssrRenderComponent(_component_CommonBreadcrumbs, {\n        items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n      }, null, _parent));\n      _push(_ssrRenderComponent(_component_ContainersList, {\n        \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n        \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n        fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701229715289,
-      "end": 1701229715301,
+      "start": 1701230041954,
+      "end": 1701230041966,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -74,135 +74,135 @@
     },
     {
       "name": "vite:json",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701229715301,
-      "end": 1701229715301,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "post"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041966,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  __ssrInlineRender: true,\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\");\n      const _component_ContainersList = _resolveComponent(\"ContainersList\");\n      _push(`<!--[-->`);\n      _push(_ssrRenderComponent(_component_CommonBreadcrumbs, {\n        items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n      }, null, _parent));\n      _push(_ssrRenderComponent(_component_ContainersList, {\n        \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n        \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n        fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041967,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -216,8 +216,8 @@
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  __ssrInlineRender: true,\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonBreadcrumbs = _resolveComponent(\"CommonBreadcrumbs\");\n      const _component_ContainersList = _resolveComponent(\"ContainersList\");\n      _push(`<!--[-->`);\n      _push(_ssrRenderComponent(_component_CommonBreadcrumbs, {\n        items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n      }, null, _parent));\n      _push(_ssrRenderComponent(_component_ContainersList, {\n        \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n        \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n        fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041966,
+      "end": 1701230041967,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -230,39 +230,39 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-template",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Breadcrumbs.vue\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/containers/List.vue\";\nimport { useRoute } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, resolveComponent as _resolveComponent } from \"vue\";\nimport { ssrRenderComponent as _ssrRenderComponent } from \"vue/server-renderer\";\nimport config from \"~/config\";\nimport { tpl } from \"~/helpers/str\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"index\",\n  __ssrInlineRender: true,\n  setup(__props) {\n    const route = useRoute();\n    return (_ctx, _push, _parent, _attrs) => {\n      const _component_CommonBreadcrumbs = __nuxt_component_0;\n      const _component_ContainersList = __nuxt_component_1;\n      _push(`<!--[-->`);\n      _push(_ssrRenderComponent(_component_CommonBreadcrumbs, {\n        items: [{ title: _unref(tpl)(\"{{!bc}}Home\"), to: \"/\" }, { title: _unref(tpl)(\"{{!bc}}Catalogs\"), to: \"/catalogs\", disabled: true }]\n      }, null, _parent));\n      _push(_ssrRenderComponent(_component_ContainersList, {\n        \"header-title\": _unref(tpl)(\"{{ header.label }} collection\"),\n        \"data-url\": _unref(config).API_BASE_URL + _unref(route).path,\n        fields: [\"dcterms:title\", \"dcterms:identifier\", \"iri\"]\n      }, null, _parent));\n      _push(`<!--]-->`);\n    };\n  }\n});\n",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -275,20 +275,20 @@
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229715302,
-      "end": 1701229715302,
+      "start": 1701230041967,
+      "end": 1701230041967,
       "order": "normal"
     }
   ]

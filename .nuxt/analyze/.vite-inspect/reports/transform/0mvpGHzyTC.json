@@ -4,38 +4,38 @@
     {
       "name": "vite:vue",
       "result": "import { defineComponent as _defineComponent } from 'vue'\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createBlock as _createBlock, createElementVNode as _createElementVNode, renderList as _renderList, Fragment as _Fragment, createVNode as _createVNode, normalizeClass as _normalizeClass, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-6ce81e14\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = {\n  key: 0,\n  class: \"form\",\n  style: {\"position\":\"relative\"}\n}\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n}\nconst _hoisted_3 = { key: 0 }\nconst _hoisted_4 = { colspan: \"2\" }\nconst _hoisted_5 = { style: {\"white-space\":\"nowrap\"} }\nconst _hoisted_6 = [\"href\", \"title\"]\nconst _hoisted_7 = { key: 0 }\nconst _hoisted_8 = [\"title\"]\nconst _hoisted_9 = { key: 1 }\n\nimport type { Form, HeaderLink } from '~/lib/prez.d';\nimport { template } from '~/helpers/str';\nimport registry from './widgets/registry';\n\n\nexport default /*#__PURE__*/_defineComponent({\n  __name: 'Form',\n  props: {\n    form: {},\n    formTitle: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props: any) {\n\nconst props = __props;\nconst excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n\nconst customWidgets:Record<string, boolean>= {};\nconst fields = (props.fields ? props.fields : Object.keys(props.form.formHeaders))\n  .filter(field=>{\n    // check the field to output is available\n    if(!(field in props.form.formHeaders) || !(field in props.form.fields)) {\n      console.warn(`${field} not found in form\\n(${Object.keys(props.form.formHeaders)})`)\n      return false;\n    }\n    // if this field is in the registry, then only exclude if we have an exact match\n    if(field in registry) {\n      if((excludeFields as string[]).indexOf(field) >= 0) {\n        return false;\n      } else {\n        return true;\n      }\n    } else {\n      // check it doesn't match one of the exclude fields\n      for(const idx in excludeFields) {\n        if(field.match(excludeFields[idx])) {\n          return false;\n        }\n      }\n      return true;\n    }\n  });\n\nconst isSubForm = (field:string) => {\n  return Array.isArray(props.form.fields[field]) && typeof(props.form.fields[field][0]) == 'object'\n}\n\nconst isStringArray = (field:string) => {\n  return Array.isArray(props.form.fields[field]) && typeof(props.form.fields[field][0]) == 'string'\n}\n\nconst route = useRouter();\n\n\nreturn (_ctx: any,_cache: any) => {\n  const _component_v_chip = _resolveComponent(\"v-chip\")!\n  const _component_v_icon = _resolveComponent(\"v-icon\")!\n  const _component_nuxt_link = _resolveComponent(\"nuxt-link\")!\n  const _component_CommonForm = _resolveComponent(\"CommonForm\")!\n  const _component_CommonWidgets = _resolveComponent(\"CommonWidgets\")!\n  const _component_v_table = _resolveComponent(\"v-table\")!\n  const _component_v_chip_group = _resolveComponent(\"v-chip-group\")!\n\n  return (_ctx.form && _ctx.form.count > 0)\n    ? (_openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        (_ctx.headerTitle && _ctx.form)\n          ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.form)), 1))\n          : _createCommentVNode(\"\", true),\n        (_ctx.form.header.label)\n          ? (_openBlock(), _createBlock(_component_v_chip, {\n              key: 1,\n              variant: \"flat\",\n              style: {\"position\":\"absolute\",\"right\":\"0\",\"top\":\"0\"}\n            }, {\n              default: _withCtx(() => [\n                _createTextVNode(_toDisplayString(_ctx.form.header.label), 1)\n              ]),\n              _: 1\n            }))\n          : _createCommentVNode(\"\", true),\n        (_ctx.form)\n          ? (_openBlock(), _createBlock(_component_v_table, {\n              key: 2,\n              theme: \"dark\"\n            }, {\n              default: _withCtx(() => [\n                (_ctx.formTitle)\n                  ? (_openBlock(), _createElementBlock(\"thead\", _hoisted_3, [\n                      _createElementVNode(\"tr\", null, [\n                        _createElementVNode(\"th\", _hoisted_4, _toDisplayString(_unref(template)(_ctx.formTitle, _ctx.form)), 1)\n                      ])\n                    ]))\n                  : _createCommentVNode(\"\", true),\n                _createElementVNode(\"tbody\", null, [\n                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                    return (_openBlock(), _createElementBlock(\"tr\", null, [\n                      _createElementVNode(\"th\", _hoisted_5, [\n                        _createTextVNode(_toDisplayString(_ctx.form.formHeaders[field].label) + \"  \", 1),\n                        _createElementVNode(\"a\", {\n                          href: _ctx.form.formHeaders[field].iri,\n                          title: field\n                        }, [\n                          _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                        ], 8, _hoisted_6),\n                        (_ctx.info)\n                          ? (_openBlock(), _createElementBlock(\"div\", _hoisted_7, _toDisplayString(field), 1))\n                          : _createCommentVNode(\"\", true)\n                      ]),\n                      (!(field in _unref(registry)))\n                        ? (_openBlock(), _createElementBlock(\"td\", {\n                            key: 0,\n                            class: _normalizeClass(isSubForm(field) ? 'td-nest' : undefined)\n                          }, [\n                            (_ctx.form.fields._meta?.[field]?.type)\n                              ? (_openBlock(), _createBlock(_component_v_chip, {\n                                  key: 0,\n                                  size: \"x-small\"\n                                }, {\n                                  default: _withCtx(() => [\n                                    _createTextVNode(_toDisplayString(_ctx.form.fields._meta[field].type), 1)\n                                  ]),\n                                  _: 2\n                                }, 1024))\n                              : _createCommentVNode(\"\", true),\n                            _createElementVNode(\"div\", {\n                              title: field in _ctx.form.fields._meta! && _ctx.form.fields[field] != _ctx.form.fields._meta![field].value ? _ctx.form.fields._meta![field].value : null\n                            }, [\n                              (field == 'prez:link')\n                                ? (_openBlock(), _createBlock(_component_nuxt_link, {\n                                    key: 0,\n                                    to: _ctx.form.fields[field]\n                                  }, {\n                                    default: _withCtx(() => [\n                                      _createTextVNode(_toDisplayString(_ctx.form.fields[field]), 1)\n                                    ]),\n                                    _: 2\n                                  }, 1032, [\"to\"]))\n                                : _createCommentVNode(\"\", true),\n                              _createTextVNode(\" \" + _toDisplayString((typeof(_ctx.form.fields[field]) != 'object' && field != 'prez:link' ? _ctx.form.fields[field] : '')) + \" \" + _toDisplayString(isStringArray(field) ? _ctx.form.fields[field].join(', ') : '') + \" \", 1),\n                              (isSubForm(field))\n                                ? (_openBlock(true), _createElementBlock(_Fragment, { key: 1 }, _renderList(_ctx.form.fields[field], (f) => {\n                                    return (_openBlock(), _createBlock(_component_CommonForm, {\n                                      form: f,\n                                      \"exclude-fields\": _unref(excludeFields)\n                                    }, null, 8, [\"form\", \"exclude-fields\"]))\n                                  }), 256))\n                                : _createCommentVNode(\"\", true)\n                            ], 8, _hoisted_8)\n                          ], 2))\n                        : (_openBlock(), _createElementBlock(\"td\", _hoisted_9, [\n                            (field in _unref(registry))\n                              ? (_openBlock(), _createBlock(_component_CommonWidgets, {\n                                  key: 0,\n                                  form: _ctx.form,\n                                  info: _ctx.form.fields[field],\n                                  \"field-name\": field as keyof typeof registry\n                                }, null, 8, [\"form\", \"info\", \"field-name\"]))\n                              : _createCommentVNode(\"\", true)\n                          ]))\n                    ]))\n                  }), 256))\n                ])\n              ]),\n              _: 1\n            }))\n          : _createCommentVNode(\"\", true),\n        (_ctx.links)\n          ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 3 }, {\n              default: _withCtx(() => [\n                (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter(link=>link.title), (link) => {\n                  return (_openBlock(), _createBlock(_component_v_chip, null, {\n                    default: _withCtx(() => [\n                      _createTextVNode(_toDisplayString(link.title), 1)\n                    ]),\n                    _: 2\n                  }, 1024))\n                }), 256))\n              ]),\n              _: 1\n            }))\n          : _createCommentVNode(\"\", true)\n      ]))\n    : _createCommentVNode(\"\", true)\n}\n}\n\n})",
-      "start": 1701229710813,
-      "end": 1701229710813
+      "start": 1701230037531,
+      "end": 1701230037531
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710813,
-      "end": 1701229710813,
+      "start": 1701230037531,
+      "end": 1701230037531,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710814,
-      "end": 1701229710814,
+      "start": 1701230037531,
+      "end": 1701230037531,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710814,
-      "end": 1701229710814,
+      "start": 1701230037531,
+      "end": 1701230037531,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710814,
-      "end": 1701229710814,
+      "start": 1701230037531,
+      "end": 1701230037531,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
       "result": "import { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createBlock as _createBlock, createElementVNode as _createElementVNode, renderList as _renderList, Fragment as _Fragment, createVNode as _createVNode, normalizeClass as _normalizeClass, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\";\nconst _withScopeId = (n) => (_pushScopeId(\"data-v-6ce81e14\"), n = n(), _popScopeId(), n);\nconst _hoisted_1 = {\n  key: 0,\n  class: \"form\",\n  style: { \"position\": \"relative\" }\n};\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n};\nconst _hoisted_3 = { key: 0 };\nconst _hoisted_4 = { colspan: \"2\" };\nconst _hoisted_5 = { style: { \"white-space\": \"nowrap\" } };\nconst _hoisted_6 = [\"href\", \"title\"];\nconst _hoisted_7 = { key: 0 };\nconst _hoisted_8 = [\"title\"];\nconst _hoisted_9 = { key: 1 };\nimport { template } from \"~/helpers/str\";\nimport registry from \"./widgets/registry\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  props: {\n    form: {},\n    formTitle: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props) {\n    const props = __props;\n    const excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n    const customWidgets = {};\n    const fields = (props.fields ? props.fields : Object.keys(props.form.formHeaders)).filter((field) => {\n      if (!(field in props.form.formHeaders) || !(field in props.form.fields)) {\n        console.warn(`${field} not found in form\n(${Object.keys(props.form.formHeaders)})`);\n        return false;\n      }\n      if (field in registry) {\n        if (excludeFields.indexOf(field) >= 0) {\n          return false;\n        } else {\n          return true;\n        }\n      } else {\n        for (const idx in excludeFields) {\n          if (field.match(excludeFields[idx])) {\n            return false;\n          }\n        }\n        return true;\n      }\n    });\n    const isSubForm = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"object\";\n    };\n    const isStringArray = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"string\";\n    };\n    const route = useRouter();\n    return (_ctx, _cache) => {\n      const _component_v_chip = _resolveComponent(\"v-chip\");\n      const _component_v_icon = _resolveComponent(\"v-icon\");\n      const _component_nuxt_link = _resolveComponent(\"nuxt-link\");\n      const _component_CommonForm = _resolveComponent(\"CommonForm\");\n      const _component_CommonWidgets = _resolveComponent(\"CommonWidgets\");\n      const _component_v_table = _resolveComponent(\"v-table\");\n      const _component_v_chip_group = _resolveComponent(\"v-chip-group\");\n      return _ctx.form && _ctx.form.count > 0 ? (_openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        _ctx.headerTitle && _ctx.form ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.form)), 1)) : _createCommentVNode(\"\", true),\n        _ctx.form.header.label ? (_openBlock(), _createBlock(_component_v_chip, {\n          key: 1,\n          variant: \"flat\",\n          style: { \"position\": \"absolute\", \"right\": \"0\", \"top\": \"0\" }\n        }, {\n          default: _withCtx(() => [\n            _createTextVNode(_toDisplayString(_ctx.form.header.label), 1)\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.form ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 2,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _ctx.formTitle ? (_openBlock(), _createElementBlock(\"thead\", _hoisted_3, [\n              _createElementVNode(\"tr\", null, [\n                _createElementVNode(\"th\", _hoisted_4, _toDisplayString(_unref(template)(_ctx.formTitle, _ctx.form)), 1)\n              ])\n            ])) : _createCommentVNode(\"\", true),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                return _openBlock(), _createElementBlock(\"tr\", null, [\n                  _createElementVNode(\"th\", _hoisted_5, [\n                    _createTextVNode(_toDisplayString(_ctx.form.formHeaders[field].label) + \"  \", 1),\n                    _createElementVNode(\"a\", {\n                      href: _ctx.form.formHeaders[field].iri,\n                      title: field\n                    }, [\n                      _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                    ], 8, _hoisted_6),\n                    _ctx.info ? (_openBlock(), _createElementBlock(\"div\", _hoisted_7, _toDisplayString(field), 1)) : _createCommentVNode(\"\", true)\n                  ]),\n                  !(field in _unref(registry)) ? (_openBlock(), _createElementBlock(\"td\", {\n                    key: 0,\n                    class: _normalizeClass(isSubForm(field) ? \"td-nest\" : void 0)\n                  }, [\n                    _ctx.form.fields._meta?.[field]?.type ? (_openBlock(), _createBlock(_component_v_chip, {\n                      key: 0,\n                      size: \"x-small\"\n                    }, {\n                      default: _withCtx(() => [\n                        _createTextVNode(_toDisplayString(_ctx.form.fields._meta[field].type), 1)\n                      ]),\n                      _: 2\n                    }, 1024)) : _createCommentVNode(\"\", true),\n                    _createElementVNode(\"div\", {\n                      title: field in _ctx.form.fields._meta && _ctx.form.fields[field] != _ctx.form.fields._meta[field].value ? _ctx.form.fields._meta[field].value : null\n                    }, [\n                      field == \"prez:link\" ? (_openBlock(), _createBlock(_component_nuxt_link, {\n                        key: 0,\n                        to: _ctx.form.fields[field]\n                      }, {\n                        default: _withCtx(() => [\n                          _createTextVNode(_toDisplayString(_ctx.form.fields[field]), 1)\n                        ]),\n                        _: 2\n                      }, 1032, [\"to\"])) : _createCommentVNode(\"\", true),\n                      _createTextVNode(\" \" + _toDisplayString(typeof _ctx.form.fields[field] != \"object\" && field != \"prez:link\" ? _ctx.form.fields[field] : \"\") + \" \" + _toDisplayString(isStringArray(field) ? _ctx.form.fields[field].join(\", \") : \"\") + \" \", 1),\n                      isSubForm(field) ? (_openBlock(true), _createElementBlock(_Fragment, { key: 1 }, _renderList(_ctx.form.fields[field], (f) => {\n                        return _openBlock(), _createBlock(_component_CommonForm, {\n                          form: f,\n                          \"exclude-fields\": _unref(excludeFields)\n                        }, null, 8, [\"form\", \"exclude-fields\"]);\n                      }), 256)) : _createCommentVNode(\"\", true)\n                    ], 8, _hoisted_8)\n                  ], 2)) : (_openBlock(), _createElementBlock(\"td\", _hoisted_9, [\n                    field in _unref(registry) ? (_openBlock(), _createBlock(_component_CommonWidgets, {\n                      key: 0,\n                      form: _ctx.form,\n                      info: _ctx.form.fields[field],\n                      \"field-name\": field\n                    }, null, 8, [\"form\", \"info\", \"field-name\"])) : _createCommentVNode(\"\", true)\n                  ]))\n                ]);\n              }), 256))\n            ])\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.links ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 3 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter((link) => link.title), (link) => {\n              return _openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024);\n            }), 256))\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true)\n      ])) : _createCommentVNode(\"\", true);\n    };\n  }\n});\n",
-      "start": 1701229710814,
-      "end": 1701229710914,
+      "start": 1701230037531,
+      "end": 1701230037627,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -51,123 +51,123 @@
     },
     {
       "name": "vite:json",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701229710914,
-      "end": 1701229710914,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229710915,
-      "end": 1701229710915,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229710915,
-      "end": 1701229710915,
+      "start": 1701230037627,
+      "end": 1701230037627,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229710915,
-      "end": 1701229710915,
+      "start": 1701230037627,
+      "end": 1701230037628,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
       "result": "import { useRouter } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createBlock as _createBlock, createElementVNode as _createElementVNode, renderList as _renderList, Fragment as _Fragment, createVNode as _createVNode, normalizeClass as _normalizeClass, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\";\nconst _withScopeId = (n) => (_pushScopeId(\"data-v-6ce81e14\"), n = n(), _popScopeId(), n);\nconst _hoisted_1 = {\n  key: 0,\n  class: \"form\",\n  style: { \"position\": \"relative\" }\n};\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n};\nconst _hoisted_3 = { key: 0 };\nconst _hoisted_4 = { colspan: \"2\" };\nconst _hoisted_5 = { style: { \"white-space\": \"nowrap\" } };\nconst _hoisted_6 = [\"href\", \"title\"];\nconst _hoisted_7 = { key: 0 };\nconst _hoisted_8 = [\"title\"];\nconst _hoisted_9 = { key: 1 };\nimport { template } from \"~/helpers/str\";\nimport registry from \"./widgets/registry\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  props: {\n    form: {},\n    formTitle: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props) {\n    const props = __props;\n    const excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n    const customWidgets = {};\n    const fields = (props.fields ? props.fields : Object.keys(props.form.formHeaders)).filter((field) => {\n      if (!(field in props.form.formHeaders) || !(field in props.form.fields)) {\n        console.warn(`${field} not found in form\n(${Object.keys(props.form.formHeaders)})`);\n        return false;\n      }\n      if (field in registry) {\n        if (excludeFields.indexOf(field) >= 0) {\n          return false;\n        } else {\n          return true;\n        }\n      } else {\n        for (const idx in excludeFields) {\n          if (field.match(excludeFields[idx])) {\n            return false;\n          }\n        }\n        return true;\n      }\n    });\n    const isSubForm = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"object\";\n    };\n    const isStringArray = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"string\";\n    };\n    const route = useRouter();\n    return (_ctx, _cache) => {\n      const _component_v_chip = _resolveComponent(\"v-chip\");\n      const _component_v_icon = _resolveComponent(\"v-icon\");\n      const _component_nuxt_link = _resolveComponent(\"nuxt-link\");\n      const _component_CommonForm = _resolveComponent(\"CommonForm\");\n      const _component_CommonWidgets = _resolveComponent(\"CommonWidgets\");\n      const _component_v_table = _resolveComponent(\"v-table\");\n      const _component_v_chip_group = _resolveComponent(\"v-chip-group\");\n      return _ctx.form && _ctx.form.count > 0 ? (_openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        _ctx.headerTitle && _ctx.form ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.form)), 1)) : _createCommentVNode(\"\", true),\n        _ctx.form.header.label ? (_openBlock(), _createBlock(_component_v_chip, {\n          key: 1,\n          variant: \"flat\",\n          style: { \"position\": \"absolute\", \"right\": \"0\", \"top\": \"0\" }\n        }, {\n          default: _withCtx(() => [\n            _createTextVNode(_toDisplayString(_ctx.form.header.label), 1)\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.form ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 2,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _ctx.formTitle ? (_openBlock(), _createElementBlock(\"thead\", _hoisted_3, [\n              _createElementVNode(\"tr\", null, [\n                _createElementVNode(\"th\", _hoisted_4, _toDisplayString(_unref(template)(_ctx.formTitle, _ctx.form)), 1)\n              ])\n            ])) : _createCommentVNode(\"\", true),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                return _openBlock(), _createElementBlock(\"tr\", null, [\n                  _createElementVNode(\"th\", _hoisted_5, [\n                    _createTextVNode(_toDisplayString(_ctx.form.formHeaders[field].label) + \"  \", 1),\n                    _createElementVNode(\"a\", {\n                      href: _ctx.form.formHeaders[field].iri,\n                      title: field\n                    }, [\n                      _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                    ], 8, _hoisted_6),\n                    _ctx.info ? (_openBlock(), _createElementBlock(\"div\", _hoisted_7, _toDisplayString(field), 1)) : _createCommentVNode(\"\", true)\n                  ]),\n                  !(field in _unref(registry)) ? (_openBlock(), _createElementBlock(\"td\", {\n                    key: 0,\n                    class: _normalizeClass(isSubForm(field) ? \"td-nest\" : void 0)\n                  }, [\n                    _ctx.form.fields._meta?.[field]?.type ? (_openBlock(), _createBlock(_component_v_chip, {\n                      key: 0,\n                      size: \"x-small\"\n                    }, {\n                      default: _withCtx(() => [\n                        _createTextVNode(_toDisplayString(_ctx.form.fields._meta[field].type), 1)\n                      ]),\n                      _: 2\n                    }, 1024)) : _createCommentVNode(\"\", true),\n                    _createElementVNode(\"div\", {\n                      title: field in _ctx.form.fields._meta && _ctx.form.fields[field] != _ctx.form.fields._meta[field].value ? _ctx.form.fields._meta[field].value : null\n                    }, [\n                      field == \"prez:link\" ? (_openBlock(), _createBlock(_component_nuxt_link, {\n                        key: 0,\n                        to: _ctx.form.fields[field]\n                      }, {\n                        default: _withCtx(() => [\n                          _createTextVNode(_toDisplayString(_ctx.form.fields[field]), 1)\n                        ]),\n                        _: 2\n                      }, 1032, [\"to\"])) : _createCommentVNode(\"\", true),\n                      _createTextVNode(\" \" + _toDisplayString(typeof _ctx.form.fields[field] != \"object\" && field != \"prez:link\" ? _ctx.form.fields[field] : \"\") + \" \" + _toDisplayString(isStringArray(field) ? _ctx.form.fields[field].join(\", \") : \"\") + \" \", 1),\n                      isSubForm(field) ? (_openBlock(true), _createElementBlock(_Fragment, { key: 1 }, _renderList(_ctx.form.fields[field], (f) => {\n                        return _openBlock(), _createBlock(_component_CommonForm, {\n                          form: f,\n                          \"exclude-fields\": _unref(excludeFields)\n                        }, null, 8, [\"form\", \"exclude-fields\"]);\n                      }), 256)) : _createCommentVNode(\"\", true)\n                    ], 8, _hoisted_8)\n                  ], 2)) : (_openBlock(), _createElementBlock(\"td\", _hoisted_9, [\n                    field in _unref(registry) ? (_openBlock(), _createBlock(_component_CommonWidgets, {\n                      key: 0,\n                      form: _ctx.form,\n                      info: _ctx.form.fields[field],\n                      \"field-name\": field\n                    }, null, 8, [\"form\", \"info\", \"field-name\"])) : _createCommentVNode(\"\", true)\n                  ]))\n                ]);\n              }), 256))\n            ])\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.links ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 3 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter((link) => link.title), (link) => {\n              return _openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024);\n            }), 256))\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true)\n      ])) : _createCommentVNode(\"\", true);\n    };\n  }\n});\n",
-      "start": 1701229710915,
-      "end": 1701229710916,
+      "start": 1701230037628,
+      "end": 1701230037629,
       "order": "post",
       "sourcemaps": {
         "version": 3,
@@ -180,51 +180,51 @@
     },
     {
       "name": "unctx:transform",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/nuxt/dist/app/components/nuxt-link\";\nimport { default as __nuxt_component_1 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Form.vue\";\nimport { default as __nuxt_component_2 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/widgets/index.vue\";\nimport { useRouter } from '#app/composables/router';\nimport { defineComponent as _defineComponent } from \"vue\";\nimport { unref as _unref, toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock, createCommentVNode as _createCommentVNode, createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createBlock as _createBlock, createElementVNode as _createElementVNode, renderList as _renderList, Fragment as _Fragment, createVNode as _createVNode, normalizeClass as _normalizeClass, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\";\nconst _withScopeId = (n) => (_pushScopeId(\"data-v-6ce81e14\"), n = n(), _popScopeId(), n);\nconst _hoisted_1 = {\n  key: 0,\n  class: \"form\",\n  style: { \"position\": \"relative\" }\n};\nconst _hoisted_2 = {\n  key: 0,\n  class: \"text-h3 mb-5 mt-2\"\n};\nconst _hoisted_3 = { key: 0 };\nconst _hoisted_4 = { colspan: \"2\" };\nconst _hoisted_5 = { style: { \"white-space\": \"nowrap\" } };\nconst _hoisted_6 = [\"href\", \"title\"];\nconst _hoisted_7 = { key: 0 };\nconst _hoisted_8 = [\"title\"];\nconst _hoisted_9 = { key: 1 };\nimport { template } from \"~/helpers/str\";\nimport registry from \"./widgets/registry\";\nexport default /* @__PURE__ */ _defineComponent({\n  __name: \"Form\",\n  props: {\n    form: {},\n    formTitle: {},\n    headerTitle: {},\n    excludeFields: {},\n    fields: {},\n    info: { type: Boolean },\n    links: {}\n  },\n  setup(__props) {\n    const props = __props;\n    const excludeFields = props.excludeFields ? props.excludeFields : [/^prez:./];\n    const customWidgets = {};\n    const fields = (props.fields ? props.fields : Object.keys(props.form.formHeaders)).filter((field) => {\n      if (!(field in props.form.formHeaders) || !(field in props.form.fields)) {\n        console.warn(`${field} not found in form\n(${Object.keys(props.form.formHeaders)})`);\n        return false;\n      }\n      if (field in registry) {\n        if (excludeFields.indexOf(field) >= 0) {\n          return false;\n        } else {\n          return true;\n        }\n      } else {\n        for (const idx in excludeFields) {\n          if (field.match(excludeFields[idx])) {\n            return false;\n          }\n        }\n        return true;\n      }\n    });\n    const isSubForm = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"object\";\n    };\n    const isStringArray = (field) => {\n      return Array.isArray(props.form.fields[field]) && typeof props.form.fields[field][0] == \"string\";\n    };\n    const route = useRouter();\n    return (_ctx, _cache) => {\n      const _component_v_chip = _resolveComponent(\"v-chip\");\n      const _component_v_icon = _resolveComponent(\"v-icon\");\n      const _component_nuxt_link = __nuxt_component_0;\n      const _component_CommonForm = __nuxt_component_1;\n      const _component_CommonWidgets = __nuxt_component_2;\n      const _component_v_table = _resolveComponent(\"v-table\");\n      const _component_v_chip_group = _resolveComponent(\"v-chip-group\");\n      return _ctx.form && _ctx.form.count > 0 ? (_openBlock(), _createElementBlock(\"div\", _hoisted_1, [\n        _ctx.headerTitle && _ctx.form ? (_openBlock(), _createElementBlock(\"div\", _hoisted_2, _toDisplayString(_unref(template)(_ctx.headerTitle, _ctx.form)), 1)) : _createCommentVNode(\"\", true),\n        _ctx.form.header.label ? (_openBlock(), _createBlock(_component_v_chip, {\n          key: 1,\n          variant: \"flat\",\n          style: { \"position\": \"absolute\", \"right\": \"0\", \"top\": \"0\" }\n        }, {\n          default: _withCtx(() => [\n            _createTextVNode(_toDisplayString(_ctx.form.header.label), 1)\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.form ? (_openBlock(), _createBlock(_component_v_table, {\n          key: 2,\n          theme: \"dark\"\n        }, {\n          default: _withCtx(() => [\n            _ctx.formTitle ? (_openBlock(), _createElementBlock(\"thead\", _hoisted_3, [\n              _createElementVNode(\"tr\", null, [\n                _createElementVNode(\"th\", _hoisted_4, _toDisplayString(_unref(template)(_ctx.formTitle, _ctx.form)), 1)\n              ])\n            ])) : _createCommentVNode(\"\", true),\n            _createElementVNode(\"tbody\", null, [\n              (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(fields), (field) => {\n                return _openBlock(), _createElementBlock(\"tr\", null, [\n                  _createElementVNode(\"th\", _hoisted_5, [\n                    _createTextVNode(_toDisplayString(_ctx.form.formHeaders[field].label) + \"  \", 1),\n                    _createElementVNode(\"a\", {\n                      href: _ctx.form.formHeaders[field].iri,\n                      title: field\n                    }, [\n                      _createVNode(_component_v_icon, { icon: \"mdi-link\" })\n                    ], 8, _hoisted_6),\n                    _ctx.info ? (_openBlock(), _createElementBlock(\"div\", _hoisted_7, _toDisplayString(field), 1)) : _createCommentVNode(\"\", true)\n                  ]),\n                  !(field in _unref(registry)) ? (_openBlock(), _createElementBlock(\"td\", {\n                    key: 0,\n                    class: _normalizeClass(isSubForm(field) ? \"td-nest\" : void 0)\n                  }, [\n                    _ctx.form.fields._meta?.[field]?.type ? (_openBlock(), _createBlock(_component_v_chip, {\n                      key: 0,\n                      size: \"x-small\"\n                    }, {\n                      default: _withCtx(() => [\n                        _createTextVNode(_toDisplayString(_ctx.form.fields._meta[field].type), 1)\n                      ]),\n                      _: 2\n                    }, 1024)) : _createCommentVNode(\"\", true),\n                    _createElementVNode(\"div\", {\n                      title: field in _ctx.form.fields._meta && _ctx.form.fields[field] != _ctx.form.fields._meta[field].value ? _ctx.form.fields._meta[field].value : null\n                    }, [\n                      field == \"prez:link\" ? (_openBlock(), _createBlock(_component_nuxt_link, {\n                        key: 0,\n                        to: _ctx.form.fields[field]\n                      }, {\n                        default: _withCtx(() => [\n                          _createTextVNode(_toDisplayString(_ctx.form.fields[field]), 1)\n                        ]),\n                        _: 2\n                      }, 1032, [\"to\"])) : _createCommentVNode(\"\", true),\n                      _createTextVNode(\" \" + _toDisplayString(typeof _ctx.form.fields[field] != \"object\" && field != \"prez:link\" ? _ctx.form.fields[field] : \"\") + \" \" + _toDisplayString(isStringArray(field) ? _ctx.form.fields[field].join(\", \") : \"\") + \" \", 1),\n                      isSubForm(field) ? (_openBlock(true), _createElementBlock(_Fragment, { key: 1 }, _renderList(_ctx.form.fields[field], (f) => {\n                        return _openBlock(), _createBlock(_component_CommonForm, {\n                          form: f,\n                          \"exclude-fields\": _unref(excludeFields)\n                        }, null, 8, [\"form\", \"exclude-fields\"]);\n                      }), 256)) : _createCommentVNode(\"\", true)\n                    ], 8, _hoisted_8)\n                  ], 2)) : (_openBlock(), _createElementBlock(\"td\", _hoisted_9, [\n                    field in _unref(registry) ? (_openBlock(), _createBlock(_component_CommonWidgets, {\n                      key: 0,\n                      form: _ctx.form,\n                      info: _ctx.form.fields[field],\n                      \"field-name\": field\n                    }, null, 8, [\"form\", \"info\", \"field-name\"])) : _createCommentVNode(\"\", true)\n                  ]))\n                ]);\n              }), 256))\n            ])\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true),\n        _ctx.links ? (_openBlock(), _createBlock(_component_v_chip_group, { key: 3 }, {\n          default: _withCtx(() => [\n            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_ctx.links.filter((link) => link.title), (link) => {\n              return _openBlock(), _createBlock(_component_v_chip, null, {\n                default: _withCtx(() => [\n                  _createTextVNode(_toDisplayString(link.title), 1)\n                ]),\n                _: 2\n              }, 1024);\n            }), 256))\n          ]),\n          _: 1\n        })) : _createCommentVNode(\"\", true)\n      ])) : _createCommentVNode(\"\", true);\n    };\n  }\n});\n",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229710916,
-      "end": 1701229710916,
+      "start": 1701230037629,
+      "end": 1701230037629,
       "order": "normal"
     }
   ]

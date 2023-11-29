@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<template>\n  <v-tabs\n    v-model=\"tab\"\n    align-tabs=\"title\"\n  >\n  <nuxt-link to=\"/\"><v-tab>Home</v-tab></nuxt-link>\n  <nuxt-link to=\"/catalogs\"><v-tab>Catalogs</v-tab></nuxt-link>\n  <nuxt-link to=\"/sparql\"><v-tab>SPARQL</v-tab></nuxt-link>\n  <nuxt-link to=\"/about\"><v-tab>About</v-tab></nuxt-link>\n  </v-tabs>\n  <!-- <nav>\n    <ul class=\"menu\">\n      <li><nuxt-link to=\"/\">Home</nuxt-link></li>\n      <li>\n        <nuxt-link to=\"/catalogs\">Catalogs</nuxt-link>\n      </li>\n      <li><nuxt-link to=\"/sparql\">SPARQL</nuxt-link></li>\n      <li><nuxt-link to=\"/debug\">DEBUG</nuxt-link></li>\n      <li><nuxt-link to=\"/about\">About</nuxt-link></li>\n    </ul>\n  </nav> -->\n</template>\n\n<script setup>\nimport { RouterLink } from 'vue-router'; // Import RouterLink from Vue Router\n\n// Export the component for use\n</script>\n\n<style scoped>\n\n.v-tab {\n  border-bottom:0 !important;\n  color:#333 !important;\n}\n\nul.menu,\nul.menu ul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n/* Main menu styles */\nul.menu > li {\n  display: inline-block;\n  position: relative;\n  margin-right: 20px;\n}\n\nul.menu > li > a {\n  text-decoration: none;\n}\n\n/* Submenu styles */\nul.menu ul {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  display: none;\n}\n\nul.menu li:hover > ul {\n  display: block;\n}\n\nul.menu ul li {\n  display: block;\n  width: 200px;\n  background-color: #f0f0f0;\n}\n\nul.menu ul a {\n  padding: 10px;\n  display: block;\n  color: #333;\n  text-decoration: none;\n}\n\nul.menu ul a:hover {\n  background-color: #ccc;\n}\n</style>",
-      "start": 1701229709538,
-      "end": 1701229709582,
+      "start": 1701230036911,
+      "end": 1701230036942,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229709582,
-      "end": 1701229709582,
+      "start": 1701230036942,
+      "end": 1701230036942,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createVNode as _createVNode, openBlock as _openBlock, createBlock as _createBlock } from \"vue\"\n\nimport { RouterLink } from 'vue-router'; // Import RouterLink from Vue Router\n\n// Export the component for use\n\nconst _sfc_main = {\n  __name: 'Navigation',\n  setup(__props) {\n\n\nreturn (_ctx, _cache) => {\n  const _component_v_tab = _resolveComponent(\"v-tab\")\n  const _component_nuxt_link = _resolveComponent(\"nuxt-link\")\n  const _component_v_tabs = _resolveComponent(\"v-tabs\")\n\n  return (_openBlock(), _createBlock(_component_v_tabs, {\n    modelValue: _ctx.tab,\n    \"onUpdate:modelValue\": _cache[0] || (_cache[0] = $event => ((_ctx.tab) = $event)),\n    \"align-tabs\": \"title\"\n  }, {\n    default: _withCtx(() => [\n      _createVNode(_component_nuxt_link, { to: \"/\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"Home\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/catalogs\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"Catalogs\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/sparql\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"SPARQL\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/about\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"About\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      })\n    ]),\n    _: 1\n  }, 8, [\"modelValue\"]))\n}\n}\n\n}\n\n\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue?vue&type=style&index=0&scoped=d1121f0b&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-d1121f0b\"]])",
-      "start": 1701229709582,
-      "end": 1701229709584,
+      "start": 1701230036942,
+      "end": 1701230036943,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,153 +62,153 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036943,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036943,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
       "result": "import { default as __nuxt_component_0 } from \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/nuxt/dist/app/components/nuxt-link\";\nimport { createTextVNode as _createTextVNode, resolveComponent as _resolveComponent, withCtx as _withCtx, createVNode as _createVNode, openBlock as _openBlock, createBlock as _createBlock } from \"vue\"\n\nimport { RouterLink } from 'vue-router'; // Import RouterLink from Vue Router\n\n// Export the component for use\n\nconst _sfc_main = {\n  __name: 'Navigation',\n  setup(__props) {\n\n\nreturn (_ctx, _cache) => {\n  const _component_v_tab = _resolveComponent(\"v-tab\")\n  const _component_nuxt_link = __nuxt_component_0\n  const _component_v_tabs = _resolveComponent(\"v-tabs\")\n\n  return (_openBlock(), _createBlock(_component_v_tabs, {\n    modelValue: _ctx.tab,\n    \"onUpdate:modelValue\": _cache[0] || (_cache[0] = $event => ((_ctx.tab) = $event)),\n    \"align-tabs\": \"title\"\n  }, {\n    default: _withCtx(() => [\n      _createVNode(_component_nuxt_link, { to: \"/\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"Home\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/catalogs\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"Catalogs\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/sparql\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"SPARQL\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      }),\n      _createVNode(_component_nuxt_link, { to: \"/about\" }, {\n        default: _withCtx(() => [\n          _createVNode(_component_v_tab, null, {\n            default: _withCtx(() => [\n              _createTextVNode(\"About\")\n            ]),\n            _: 1\n          })\n        ]),\n        _: 1\n      })\n    ]),\n    _: 1\n  }, 8, [\"modelValue\"]))\n}\n}\n\n}\n\n\nimport \"/Users/hjohns/workspace/kurrawong/ogc-building-block-api/components/common/Navigation.vue?vue&type=style&index=0&scoped=d1121f0b&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-d1121f0b\"]])",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229709584,
-      "end": 1701229709584,
+      "start": 1701230036944,
+      "end": 1701230036944,
       "order": "normal"
     }
   ]

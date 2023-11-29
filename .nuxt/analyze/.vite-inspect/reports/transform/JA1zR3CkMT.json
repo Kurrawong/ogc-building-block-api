@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst { ArrayIsArray, ObjectSetPrototypeOf } = require('../../ours/primordials')\nconst { EventEmitter: EE } = require('events')\nfunction Stream(opts) {\n  EE.call(this, opts)\n}\nObjectSetPrototypeOf(Stream.prototype, EE.prototype)\nObjectSetPrototypeOf(Stream, EE)\nStream.prototype.pipe = function (dest, options) {\n  const source = this\n  function ondata(chunk) {\n    if (dest.writable && dest.write(chunk) === false && source.pause) {\n      source.pause()\n    }\n  }\n  source.on('data', ondata)\n  function ondrain() {\n    if (source.readable && source.resume) {\n      source.resume()\n    }\n  }\n  dest.on('drain', ondrain)\n\n  // If the 'end' option is not supplied, dest.end() will be called when\n  // source gets the 'end' or 'close' events.  Only dest.end() once.\n  if (!dest._isStdio && (!options || options.end !== false)) {\n    source.on('end', onend)\n    source.on('close', onclose)\n  }\n  let didOnEnd = false\n  function onend() {\n    if (didOnEnd) return\n    didOnEnd = true\n    dest.end()\n  }\n  function onclose() {\n    if (didOnEnd) return\n    didOnEnd = true\n    if (typeof dest.destroy === 'function') dest.destroy()\n  }\n\n  // Don't leave dangling pipes when there are errors.\n  function onerror(er) {\n    cleanup()\n    if (EE.listenerCount(this, 'error') === 0) {\n      this.emit('error', er)\n    }\n  }\n  prependListener(source, 'error', onerror)\n  prependListener(dest, 'error', onerror)\n\n  // Remove all the event listeners that were added.\n  function cleanup() {\n    source.removeListener('data', ondata)\n    dest.removeListener('drain', ondrain)\n    source.removeListener('end', onend)\n    source.removeListener('close', onclose)\n    source.removeListener('error', onerror)\n    dest.removeListener('error', onerror)\n    source.removeListener('end', cleanup)\n    source.removeListener('close', cleanup)\n    dest.removeListener('close', cleanup)\n  }\n  source.on('end', cleanup)\n  source.on('close', cleanup)\n  dest.on('close', cleanup)\n  dest.emit('pipe', source)\n\n  // Allow for unix-like usage: A.pipe(B).pipe(C)\n  return dest\n}\nfunction prependListener(emitter, event, fn) {\n  // Sadly this is not cacheable as some libraries bundle their own\n  // event emitter implementation with them.\n  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn)\n\n  // This is a hack to make sure that our error handler is attached before any\n  // userland ones.  NEVER DO THIS. This is here only because this code needs\n  // to continue to work with older versions of Node.js that do not include\n  // the prependListener() method. The goal is to eventually remove this hack.\n  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn)\n  else if (ArrayIsArray(emitter._events[event])) emitter._events[event].unshift(fn)\n  else emitter._events[event] = [fn, emitter._events[event]]\n}\nmodule.exports = {\n  Stream,\n  prependListener\n}\n",
-      "start": 1701229710921,
-      "end": 1701229710967,
+      "start": 1701230037632,
+      "end": 1701230037677,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710967,
-      "end": 1701229710967,
+      "start": 1701230037677,
+      "end": 1701230037677,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport require$$0 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/events/events.js?commonjs-proxy\";\n\n'use strict'\n\nconst { ArrayIsArray, ObjectSetPrototypeOf } = require$$0\nconst { EventEmitter: EE } = require$$1\nfunction Stream(opts) {\n  EE.call(this, opts)\n}\nObjectSetPrototypeOf(Stream.prototype, EE.prototype)\nObjectSetPrototypeOf(Stream, EE)\nStream.prototype.pipe = function (dest, options) {\n  const source = this\n  function ondata(chunk) {\n    if (dest.writable && dest.write(chunk) === false && source.pause) {\n      source.pause()\n    }\n  }\n  source.on('data', ondata)\n  function ondrain() {\n    if (source.readable && source.resume) {\n      source.resume()\n    }\n  }\n  dest.on('drain', ondrain)\n\n  // If the 'end' option is not supplied, dest.end() will be called when\n  // source gets the 'end' or 'close' events.  Only dest.end() once.\n  if (!dest._isStdio && (!options || options.end !== false)) {\n    source.on('end', onend)\n    source.on('close', onclose)\n  }\n  let didOnEnd = false\n  function onend() {\n    if (didOnEnd) return\n    didOnEnd = true\n    dest.end()\n  }\n  function onclose() {\n    if (didOnEnd) return\n    didOnEnd = true\n    if (typeof dest.destroy === 'function') dest.destroy()\n  }\n\n  // Don't leave dangling pipes when there are errors.\n  function onerror(er) {\n    cleanup()\n    if (EE.listenerCount(this, 'error') === 0) {\n      this.emit('error', er)\n    }\n  }\n  prependListener(source, 'error', onerror)\n  prependListener(dest, 'error', onerror)\n\n  // Remove all the event listeners that were added.\n  function cleanup() {\n    source.removeListener('data', ondata)\n    dest.removeListener('drain', ondrain)\n    source.removeListener('end', onend)\n    source.removeListener('close', onclose)\n    source.removeListener('error', onerror)\n    dest.removeListener('error', onerror)\n    source.removeListener('end', cleanup)\n    source.removeListener('close', cleanup)\n    dest.removeListener('close', cleanup)\n  }\n  source.on('end', cleanup)\n  source.on('close', cleanup)\n  dest.on('close', cleanup)\n  dest.emit('pipe', source)\n\n  // Allow for unix-like usage: A.pipe(B).pipe(C)\n  return dest\n}\nfunction prependListener(emitter, event, fn) {\n  // Sadly this is not cacheable as some libraries bundle their own\n  // event emitter implementation with them.\n  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn)\n\n  // This is a hack to make sure that our error handler is attached before any\n  // userland ones.  NEVER DO THIS. This is here only because this code needs\n  // to continue to work with older versions of Node.js that do not include\n  // the prependListener() method. The goal is to eventually remove this hack.\n  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn)\n  else if (ArrayIsArray(emitter._events[event])) emitter._events[event].unshift(fn)\n  else emitter._events[event] = [fn, emitter._events[event]]\n}\nvar legacy = {\n  Stream,\n  prependListener\n}\n\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(legacy);\nexport { legacy as __moduleExports };",
-      "start": 1701229710967,
-      "end": 1701229711021,
+      "start": 1701230037677,
+      "end": 1701230037727,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711021,
-      "end": 1701229711021,
+      "start": 1701230037727,
+      "end": 1701230037727,
       "order": "normal"
     }
   ]

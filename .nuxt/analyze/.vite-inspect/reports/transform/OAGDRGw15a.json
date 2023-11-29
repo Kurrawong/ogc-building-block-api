@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst CustomStream = require('../stream')\nconst promises = require('../stream/promises')\nconst originalDestroy = CustomStream.Readable.destroy\nmodule.exports = CustomStream.Readable\n\n// Explicit export naming is needed for ESM\nmodule.exports._uint8ArrayToBuffer = CustomStream._uint8ArrayToBuffer\nmodule.exports._isUint8Array = CustomStream._isUint8Array\nmodule.exports.isDisturbed = CustomStream.isDisturbed\nmodule.exports.isErrored = CustomStream.isErrored\nmodule.exports.isReadable = CustomStream.isReadable\nmodule.exports.Readable = CustomStream.Readable\nmodule.exports.Writable = CustomStream.Writable\nmodule.exports.Duplex = CustomStream.Duplex\nmodule.exports.Transform = CustomStream.Transform\nmodule.exports.PassThrough = CustomStream.PassThrough\nmodule.exports.addAbortSignal = CustomStream.addAbortSignal\nmodule.exports.finished = CustomStream.finished\nmodule.exports.destroy = CustomStream.destroy\nmodule.exports.destroy = originalDestroy\nmodule.exports.pipeline = CustomStream.pipeline\nmodule.exports.compose = CustomStream.compose\nObject.defineProperty(CustomStream, 'promises', {\n  configurable: true,\n  enumerable: true,\n  get() {\n    return promises\n  }\n})\nmodule.exports.Stream = CustomStream.Stream\n\n// Allow default importing\nmodule.exports.default = module.exports\n",
-      "start": 1701229710825,
-      "end": 1701229710873,
+      "start": 1701230037540,
+      "end": 1701230037586,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710873,
-      "end": 1701229710873,
+      "start": 1701230037586,
+      "end": 1701230037586,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport { __module as browserModule } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/browser.js?commonjs-module\";\nvar browser = browserModule.exports;\nimport { __require as require$$0 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/stream.js?commonjs-wrapped\";\nimport { __require as require$$1 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/stream/promises.js?commonjs-wrapped\";\n\n(function (module) {\n\t'use strict'\n\n\tconst CustomStream = require$$0()\n\tconst promises = require$$1()\n\tconst originalDestroy = CustomStream.Readable.destroy\n\tmodule.exports = CustomStream.Readable\n\n\t// Explicit export naming is needed for ESM\n\tmodule.exports._uint8ArrayToBuffer = CustomStream._uint8ArrayToBuffer\n\tmodule.exports._isUint8Array = CustomStream._isUint8Array\n\tmodule.exports.isDisturbed = CustomStream.isDisturbed\n\tmodule.exports.isErrored = CustomStream.isErrored\n\tmodule.exports.isReadable = CustomStream.isReadable\n\tmodule.exports.Readable = CustomStream.Readable\n\tmodule.exports.Writable = CustomStream.Writable\n\tmodule.exports.Duplex = CustomStream.Duplex\n\tmodule.exports.Transform = CustomStream.Transform\n\tmodule.exports.PassThrough = CustomStream.PassThrough\n\tmodule.exports.addAbortSignal = CustomStream.addAbortSignal\n\tmodule.exports.finished = CustomStream.finished\n\tmodule.exports.destroy = CustomStream.destroy\n\tmodule.exports.destroy = originalDestroy\n\tmodule.exports.pipeline = CustomStream.pipeline\n\tmodule.exports.compose = CustomStream.compose\n\tObject.defineProperty(CustomStream, 'promises', {\n\t  configurable: true,\n\t  enumerable: true,\n\t  get() {\n\t    return promises\n\t  }\n\t})\n\tmodule.exports.Stream = CustomStream.Stream\n\n\t// Allow default importing\n\tmodule.exports.default = module.exports \n} (browserModule));\n\nvar browserExports = browserModule.exports;\nexport default /*@__PURE__*/commonjsHelpers.getDefaultExportFromCjs(browserExports);\nexport { browserExports as __moduleExports };",
-      "start": 1701229710873,
-      "end": 1701229711063,
+      "start": 1701230037586,
+      "end": 1701230037766,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711063,
-      "end": 1701229711063,
+      "start": 1701230037766,
+      "end": 1701230037766,
       "order": "normal"
     }
   ]

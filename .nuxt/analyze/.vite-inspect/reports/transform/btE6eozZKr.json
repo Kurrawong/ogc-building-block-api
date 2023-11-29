@@ -4,135 +4,135 @@
     {
       "name": "vite:load-fallback",
       "result": "'use strict'\n\nconst AbortController = globalThis.AbortController || require('abort-controller').AbortController\nconst {\n  codes: { ERR_INVALID_ARG_VALUE, ERR_INVALID_ARG_TYPE, ERR_MISSING_ARGS, ERR_OUT_OF_RANGE },\n  AbortError\n} = require('../../ours/errors')\nconst { validateAbortSignal, validateInteger, validateObject } = require('../validators')\nconst kWeakHandler = require('../../ours/primordials').Symbol('kWeak')\nconst { finished } = require('./end-of-stream')\nconst staticCompose = require('./compose')\nconst { addAbortSignalNoValidate } = require('./add-abort-signal')\nconst { isWritable, isNodeStream } = require('./utils')\nconst {\n  ArrayPrototypePush,\n  MathFloor,\n  Number,\n  NumberIsNaN,\n  Promise,\n  PromiseReject,\n  PromisePrototypeThen,\n  Symbol\n} = require('../../ours/primordials')\nconst kEmpty = Symbol('kEmpty')\nconst kEof = Symbol('kEof')\nfunction compose(stream, options) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  if (isNodeStream(stream) && !isWritable(stream)) {\n    throw new ERR_INVALID_ARG_VALUE('stream', stream, 'must be writable')\n  }\n  const composedStream = staticCompose(this, stream)\n  if (options !== null && options !== undefined && options.signal) {\n    // Not validating as we already validated before\n    addAbortSignalNoValidate(options.signal, composedStream)\n  }\n  return composedStream\n}\nfunction map(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  let concurrency = 1\n  if ((options === null || options === undefined ? undefined : options.concurrency) != null) {\n    concurrency = MathFloor(options.concurrency)\n  }\n  validateInteger(concurrency, 'concurrency', 1)\n  return async function* map() {\n    var _options$signal, _options$signal2\n    const ac = new AbortController()\n    const stream = this\n    const queue = []\n    const signal = ac.signal\n    const signalOpt = {\n      signal\n    }\n    const abort = () => ac.abort()\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal = options.signal) !== null &&\n      _options$signal !== undefined &&\n      _options$signal.aborted\n    ) {\n      abort()\n    }\n    options === null || options === undefined\n      ? undefined\n      : (_options$signal2 = options.signal) === null || _options$signal2 === undefined\n      ? undefined\n      : _options$signal2.addEventListener('abort', abort)\n    let next\n    let resume\n    let done = false\n    function onDone() {\n      done = true\n    }\n    async function pump() {\n      try {\n        for await (let val of stream) {\n          var _val\n          if (done) {\n            return\n          }\n          if (signal.aborted) {\n            throw new AbortError()\n          }\n          try {\n            val = fn(val, signalOpt)\n          } catch (err) {\n            val = PromiseReject(err)\n          }\n          if (val === kEmpty) {\n            continue\n          }\n          if (typeof ((_val = val) === null || _val === undefined ? undefined : _val.catch) === 'function') {\n            val.catch(onDone)\n          }\n          queue.push(val)\n          if (next) {\n            next()\n            next = null\n          }\n          if (!done && queue.length && queue.length >= concurrency) {\n            await new Promise((resolve) => {\n              resume = resolve\n            })\n          }\n        }\n        queue.push(kEof)\n      } catch (err) {\n        const val = PromiseReject(err)\n        PromisePrototypeThen(val, undefined, onDone)\n        queue.push(val)\n      } finally {\n        var _options$signal3\n        done = true\n        if (next) {\n          next()\n          next = null\n        }\n        options === null || options === undefined\n          ? undefined\n          : (_options$signal3 = options.signal) === null || _options$signal3 === undefined\n          ? undefined\n          : _options$signal3.removeEventListener('abort', abort)\n      }\n    }\n    pump()\n    try {\n      while (true) {\n        while (queue.length > 0) {\n          const val = await queue[0]\n          if (val === kEof) {\n            return\n          }\n          if (signal.aborted) {\n            throw new AbortError()\n          }\n          if (val !== kEmpty) {\n            yield val\n          }\n          queue.shift()\n          if (resume) {\n            resume()\n            resume = null\n          }\n        }\n        await new Promise((resolve) => {\n          next = resolve\n        })\n      }\n    } finally {\n      ac.abort()\n      done = true\n      if (resume) {\n        resume()\n        resume = null\n      }\n    }\n  }.call(this)\n}\nfunction asIndexedPairs(options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  return async function* asIndexedPairs() {\n    let index = 0\n    for await (const val of this) {\n      var _options$signal4\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal4 = options.signal) !== null &&\n        _options$signal4 !== undefined &&\n        _options$signal4.aborted\n      ) {\n        throw new AbortError({\n          cause: options.signal.reason\n        })\n      }\n      yield [index++, val]\n    }\n  }.call(this)\n}\nasync function some(fn, options = undefined) {\n  for await (const unused of filter.call(this, fn, options)) {\n    return true\n  }\n  return false\n}\nasync function every(fn, options = undefined) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  // https://en.wikipedia.org/wiki/De_Morgan%27s_laws\n  return !(await some.call(\n    this,\n    async (...args) => {\n      return !(await fn(...args))\n    },\n    options\n  ))\n}\nasync function find(fn, options) {\n  for await (const result of filter.call(this, fn, options)) {\n    return result\n  }\n  return undefined\n}\nasync function forEach(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  async function forEachFn(value, options) {\n    await fn(value, options)\n    return kEmpty\n  }\n  // eslint-disable-next-line no-unused-vars\n  for await (const unused of map.call(this, forEachFn, options));\n}\nfunction filter(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  async function filterFn(value, options) {\n    if (await fn(value, options)) {\n      return value\n    }\n    return kEmpty\n  }\n  return map.call(this, filterFn, options)\n}\n\n// Specific to provide better error to reduce since the argument is only\n// missing if the stream has no items in it - but the code is still appropriate\nclass ReduceAwareErrMissingArgs extends ERR_MISSING_ARGS {\n  constructor() {\n    super('reduce')\n    this.message = 'Reduce of an empty stream requires an initial value'\n  }\n}\nasync function reduce(reducer, initialValue, options) {\n  var _options$signal5\n  if (typeof reducer !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('reducer', ['Function', 'AsyncFunction'], reducer)\n  }\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  let hasInitialValue = arguments.length > 1\n  if (\n    options !== null &&\n    options !== undefined &&\n    (_options$signal5 = options.signal) !== null &&\n    _options$signal5 !== undefined &&\n    _options$signal5.aborted\n  ) {\n    const err = new AbortError(undefined, {\n      cause: options.signal.reason\n    })\n    this.once('error', () => {}) // The error is already propagated\n    await finished(this.destroy(err))\n    throw err\n  }\n  const ac = new AbortController()\n  const signal = ac.signal\n  if (options !== null && options !== undefined && options.signal) {\n    const opts = {\n      once: true,\n      [kWeakHandler]: this\n    }\n    options.signal.addEventListener('abort', () => ac.abort(), opts)\n  }\n  let gotAnyItemFromStream = false\n  try {\n    for await (const value of this) {\n      var _options$signal6\n      gotAnyItemFromStream = true\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal6 = options.signal) !== null &&\n        _options$signal6 !== undefined &&\n        _options$signal6.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (!hasInitialValue) {\n        initialValue = value\n        hasInitialValue = true\n      } else {\n        initialValue = await reducer(initialValue, value, {\n          signal\n        })\n      }\n    }\n    if (!gotAnyItemFromStream && !hasInitialValue) {\n      throw new ReduceAwareErrMissingArgs()\n    }\n  } finally {\n    ac.abort()\n  }\n  return initialValue\n}\nasync function toArray(options) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  const result = []\n  for await (const val of this) {\n    var _options$signal7\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal7 = options.signal) !== null &&\n      _options$signal7 !== undefined &&\n      _options$signal7.aborted\n    ) {\n      throw new AbortError(undefined, {\n        cause: options.signal.reason\n      })\n    }\n    ArrayPrototypePush(result, val)\n  }\n  return result\n}\nfunction flatMap(fn, options) {\n  const values = map.call(this, fn, options)\n  return async function* flatMap() {\n    for await (const val of values) {\n      yield* val\n    }\n  }.call(this)\n}\nfunction toIntegerOrInfinity(number) {\n  // We coerce here to align with the spec\n  // https://github.com/tc39/proposal-iterator-helpers/issues/169\n  number = Number(number)\n  if (NumberIsNaN(number)) {\n    return 0\n  }\n  if (number < 0) {\n    throw new ERR_OUT_OF_RANGE('number', '>= 0', number)\n  }\n  return number\n}\nfunction drop(number, options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  number = toIntegerOrInfinity(number)\n  return async function* drop() {\n    var _options$signal8\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal8 = options.signal) !== null &&\n      _options$signal8 !== undefined &&\n      _options$signal8.aborted\n    ) {\n      throw new AbortError()\n    }\n    for await (const val of this) {\n      var _options$signal9\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal9 = options.signal) !== null &&\n        _options$signal9 !== undefined &&\n        _options$signal9.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (number-- <= 0) {\n        yield val\n      }\n    }\n  }.call(this)\n}\nfunction take(number, options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  number = toIntegerOrInfinity(number)\n  return async function* take() {\n    var _options$signal10\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal10 = options.signal) !== null &&\n      _options$signal10 !== undefined &&\n      _options$signal10.aborted\n    ) {\n      throw new AbortError()\n    }\n    for await (const val of this) {\n      var _options$signal11\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal11 = options.signal) !== null &&\n        _options$signal11 !== undefined &&\n        _options$signal11.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (number-- > 0) {\n        yield val\n      } else {\n        return\n      }\n    }\n  }.call(this)\n}\nmodule.exports.streamReturningOperators = {\n  asIndexedPairs,\n  drop,\n  filter,\n  flatMap,\n  map,\n  take,\n  compose\n}\nmodule.exports.promiseReturningOperators = {\n  every,\n  forEach,\n  reduce,\n  toArray,\n  some,\n  find\n}\n",
-      "start": 1701229710908,
-      "end": 1701229710943,
+      "start": 1701230037619,
+      "end": 1701230037655,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1701229710944,
-      "end": 1701229710944,
+      "start": 1701230037655,
+      "end": 1701230037655,
       "order": "normal"
     },
     {
       "name": "commonjs",
       "result": "import * as commonjsHelpers from \"\u0000commonjsHelpers.js\";\nimport { __exports as operators } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/operators.js?commonjs-exports\";\nimport { __require as require$$0 } from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/unenv/runtime/mock/empty.cjs?commonjs-wrapped\";\nimport require$$1 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/errors.js?commonjs-proxy\";\nimport require$$2 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/validators.js?commonjs-proxy\";\nimport require$$3 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/ours/primordials.js?commonjs-proxy\";\nimport require$$4 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/end-of-stream.js?commonjs-proxy\";\nimport require$$5 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/compose.js?commonjs-proxy\";\nimport require$$6 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/add-abort-signal.js?commonjs-proxy\";\nimport require$$7 from \"\\u0000/Users/hjohns/workspace/kurrawong/ogc-building-block-api/node_modules/n3/node_modules/readable-stream/lib/internal/streams/utils.js?commonjs-proxy\";\n\n'use strict'\n\nconst AbortController = globalThis.AbortController || require$$0().AbortController\nconst {\n  codes: { ERR_INVALID_ARG_VALUE, ERR_INVALID_ARG_TYPE, ERR_MISSING_ARGS, ERR_OUT_OF_RANGE },\n  AbortError\n} = require$$1\nconst { validateAbortSignal, validateInteger, validateObject } = require$$2\nconst kWeakHandler = require$$3.Symbol('kWeak')\nconst { finished } = require$$4\nconst staticCompose = require$$5\nconst { addAbortSignalNoValidate } = require$$6\nconst { isWritable, isNodeStream } = require$$7\nconst {\n  ArrayPrototypePush,\n  MathFloor,\n  Number,\n  NumberIsNaN,\n  Promise,\n  PromiseReject,\n  PromisePrototypeThen,\n  Symbol\n} = require$$3\nconst kEmpty = Symbol('kEmpty')\nconst kEof = Symbol('kEof')\nfunction compose(stream, options) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  if (isNodeStream(stream) && !isWritable(stream)) {\n    throw new ERR_INVALID_ARG_VALUE('stream', stream, 'must be writable')\n  }\n  const composedStream = staticCompose(this, stream)\n  if (options !== null && options !== undefined && options.signal) {\n    // Not validating as we already validated before\n    addAbortSignalNoValidate(options.signal, composedStream)\n  }\n  return composedStream\n}\nfunction map(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  let concurrency = 1\n  if ((options === null || options === undefined ? undefined : options.concurrency) != null) {\n    concurrency = MathFloor(options.concurrency)\n  }\n  validateInteger(concurrency, 'concurrency', 1)\n  return async function* map() {\n    var _options$signal, _options$signal2\n    const ac = new AbortController()\n    const stream = this\n    const queue = []\n    const signal = ac.signal\n    const signalOpt = {\n      signal\n    }\n    const abort = () => ac.abort()\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal = options.signal) !== null &&\n      _options$signal !== undefined &&\n      _options$signal.aborted\n    ) {\n      abort()\n    }\n    options === null || options === undefined\n      ? undefined\n      : (_options$signal2 = options.signal) === null || _options$signal2 === undefined\n      ? undefined\n      : _options$signal2.addEventListener('abort', abort)\n    let next\n    let resume\n    let done = false\n    function onDone() {\n      done = true\n    }\n    async function pump() {\n      try {\n        for await (let val of stream) {\n          var _val\n          if (done) {\n            return\n          }\n          if (signal.aborted) {\n            throw new AbortError()\n          }\n          try {\n            val = fn(val, signalOpt)\n          } catch (err) {\n            val = PromiseReject(err)\n          }\n          if (val === kEmpty) {\n            continue\n          }\n          if (typeof ((_val = val) === null || _val === undefined ? undefined : _val.catch) === 'function') {\n            val.catch(onDone)\n          }\n          queue.push(val)\n          if (next) {\n            next()\n            next = null\n          }\n          if (!done && queue.length && queue.length >= concurrency) {\n            await new Promise((resolve) => {\n              resume = resolve\n            })\n          }\n        }\n        queue.push(kEof)\n      } catch (err) {\n        const val = PromiseReject(err)\n        PromisePrototypeThen(val, undefined, onDone)\n        queue.push(val)\n      } finally {\n        var _options$signal3\n        done = true\n        if (next) {\n          next()\n          next = null\n        }\n        options === null || options === undefined\n          ? undefined\n          : (_options$signal3 = options.signal) === null || _options$signal3 === undefined\n          ? undefined\n          : _options$signal3.removeEventListener('abort', abort)\n      }\n    }\n    pump()\n    try {\n      while (true) {\n        while (queue.length > 0) {\n          const val = await queue[0]\n          if (val === kEof) {\n            return\n          }\n          if (signal.aborted) {\n            throw new AbortError()\n          }\n          if (val !== kEmpty) {\n            yield val\n          }\n          queue.shift()\n          if (resume) {\n            resume()\n            resume = null\n          }\n        }\n        await new Promise((resolve) => {\n          next = resolve\n        })\n      }\n    } finally {\n      ac.abort()\n      done = true\n      if (resume) {\n        resume()\n        resume = null\n      }\n    }\n  }.call(this)\n}\nfunction asIndexedPairs(options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  return async function* asIndexedPairs() {\n    let index = 0\n    for await (const val of this) {\n      var _options$signal4\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal4 = options.signal) !== null &&\n        _options$signal4 !== undefined &&\n        _options$signal4.aborted\n      ) {\n        throw new AbortError({\n          cause: options.signal.reason\n        })\n      }\n      yield [index++, val]\n    }\n  }.call(this)\n}\nasync function some(fn, options = undefined) {\n  for await (const unused of filter.call(this, fn, options)) {\n    return true\n  }\n  return false\n}\nasync function every(fn, options = undefined) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  // https://en.wikipedia.org/wiki/De_Morgan%27s_laws\n  return !(await some.call(\n    this,\n    async (...args) => {\n      return !(await fn(...args))\n    },\n    options\n  ))\n}\nasync function find(fn, options) {\n  for await (const result of filter.call(this, fn, options)) {\n    return result\n  }\n  return undefined\n}\nasync function forEach(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  async function forEachFn(value, options) {\n    await fn(value, options)\n    return kEmpty\n  }\n  // eslint-disable-next-line no-unused-vars\n  for await (const unused of map.call(this, forEachFn, options));\n}\nfunction filter(fn, options) {\n  if (typeof fn !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'AsyncFunction'], fn)\n  }\n  async function filterFn(value, options) {\n    if (await fn(value, options)) {\n      return value\n    }\n    return kEmpty\n  }\n  return map.call(this, filterFn, options)\n}\n\n// Specific to provide better error to reduce since the argument is only\n// missing if the stream has no items in it - but the code is still appropriate\nclass ReduceAwareErrMissingArgs extends ERR_MISSING_ARGS {\n  constructor() {\n    super('reduce')\n    this.message = 'Reduce of an empty stream requires an initial value'\n  }\n}\nasync function reduce(reducer, initialValue, options) {\n  var _options$signal5\n  if (typeof reducer !== 'function') {\n    throw new ERR_INVALID_ARG_TYPE('reducer', ['Function', 'AsyncFunction'], reducer)\n  }\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  let hasInitialValue = arguments.length > 1\n  if (\n    options !== null &&\n    options !== undefined &&\n    (_options$signal5 = options.signal) !== null &&\n    _options$signal5 !== undefined &&\n    _options$signal5.aborted\n  ) {\n    const err = new AbortError(undefined, {\n      cause: options.signal.reason\n    })\n    this.once('error', () => {}) // The error is already propagated\n    await finished(this.destroy(err))\n    throw err\n  }\n  const ac = new AbortController()\n  const signal = ac.signal\n  if (options !== null && options !== undefined && options.signal) {\n    const opts = {\n      once: true,\n      [kWeakHandler]: this\n    }\n    options.signal.addEventListener('abort', () => ac.abort(), opts)\n  }\n  let gotAnyItemFromStream = false\n  try {\n    for await (const value of this) {\n      var _options$signal6\n      gotAnyItemFromStream = true\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal6 = options.signal) !== null &&\n        _options$signal6 !== undefined &&\n        _options$signal6.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (!hasInitialValue) {\n        initialValue = value\n        hasInitialValue = true\n      } else {\n        initialValue = await reducer(initialValue, value, {\n          signal\n        })\n      }\n    }\n    if (!gotAnyItemFromStream && !hasInitialValue) {\n      throw new ReduceAwareErrMissingArgs()\n    }\n  } finally {\n    ac.abort()\n  }\n  return initialValue\n}\nasync function toArray(options) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  const result = []\n  for await (const val of this) {\n    var _options$signal7\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal7 = options.signal) !== null &&\n      _options$signal7 !== undefined &&\n      _options$signal7.aborted\n    ) {\n      throw new AbortError(undefined, {\n        cause: options.signal.reason\n      })\n    }\n    ArrayPrototypePush(result, val)\n  }\n  return result\n}\nfunction flatMap(fn, options) {\n  const values = map.call(this, fn, options)\n  return async function* flatMap() {\n    for await (const val of values) {\n      yield* val\n    }\n  }.call(this)\n}\nfunction toIntegerOrInfinity(number) {\n  // We coerce here to align with the spec\n  // https://github.com/tc39/proposal-iterator-helpers/issues/169\n  number = Number(number)\n  if (NumberIsNaN(number)) {\n    return 0\n  }\n  if (number < 0) {\n    throw new ERR_OUT_OF_RANGE('number', '>= 0', number)\n  }\n  return number\n}\nfunction drop(number, options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  number = toIntegerOrInfinity(number)\n  return async function* drop() {\n    var _options$signal8\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal8 = options.signal) !== null &&\n      _options$signal8 !== undefined &&\n      _options$signal8.aborted\n    ) {\n      throw new AbortError()\n    }\n    for await (const val of this) {\n      var _options$signal9\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal9 = options.signal) !== null &&\n        _options$signal9 !== undefined &&\n        _options$signal9.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (number-- <= 0) {\n        yield val\n      }\n    }\n  }.call(this)\n}\nfunction take(number, options = undefined) {\n  if (options != null) {\n    validateObject(options, 'options')\n  }\n  if ((options === null || options === undefined ? undefined : options.signal) != null) {\n    validateAbortSignal(options.signal, 'options.signal')\n  }\n  number = toIntegerOrInfinity(number)\n  return async function* take() {\n    var _options$signal10\n    if (\n      options !== null &&\n      options !== undefined &&\n      (_options$signal10 = options.signal) !== null &&\n      _options$signal10 !== undefined &&\n      _options$signal10.aborted\n    ) {\n      throw new AbortError()\n    }\n    for await (const val of this) {\n      var _options$signal11\n      if (\n        options !== null &&\n        options !== undefined &&\n        (_options$signal11 = options.signal) !== null &&\n        _options$signal11 !== undefined &&\n        _options$signal11.aborted\n      ) {\n        throw new AbortError()\n      }\n      if (number-- > 0) {\n        yield val\n      } else {\n        return\n      }\n    }\n  }.call(this)\n}\nvar streamReturningOperators = operators.streamReturningOperators = {\n  asIndexedPairs,\n  drop,\n  filter,\n  flatMap,\n  map,\n  take,\n  compose\n}\nvar promiseReturningOperators = operators.promiseReturningOperators = {\n  every,\n  forEach,\n  reduce,\n  toArray,\n  some,\n  find\n}\n\nexport { operators as __moduleExports, streamReturningOperators, promiseReturningOperators, operators as default };",
-      "start": 1701229710944,
-      "end": 1701229711059,
+      "start": 1701230037655,
+      "end": 1701230037764,
       "order": "normal",
       "sourcemaps": {
         "version": 3,
@@ -149,74 +149,74 @@
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:pages-macros-transform",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:route-injection-plugin",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1701229711059,
-      "end": 1701229711059,
+      "start": 1701230037764,
+      "end": 1701230037764,
       "order": "normal"
     }
   ]
